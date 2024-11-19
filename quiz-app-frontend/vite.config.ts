@@ -4,20 +4,29 @@ import fs from 'fs'
 import path from 'path'
 
 
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    https: {
-      key: fs.readFileSync(path.resolve('./cert/', 'key.pem')),
-      cert: fs.readFileSync(path.resolve('./cert/', 'cert.pem')),
-    },
-    proxy: {
-      '/api': {
-        target: 'https://localhost:3000/', // Backend server
-        changeOrigin: true,
-        secure: false, // Disable certificate verification
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-    },
-  },
+export default defineConfig(({ command, mode }) => {
+   const serverConfig =
+       command === 'serve'
+          ? {
+             host: 'frontend.quiz-app.test',
+             port: 5173,
+             https: {
+               key: fs.readFileSync('./cert/key.pem'),
+               cert: fs.readFileSync('./cert/cert.pem'),
+             },
+             proxy: {
+               '/api': {
+                 target: 'https://localhost:3000/', // Backend server
+                 changeOrigin: true,
+                 secure: false,
+                 rewrite: (path) => path.replace(/^\/api/, ''),
+               },
+             },
+           }
+            : undefined;
+
+  return {
+    plugins: [react()],
+    server: serverConfig,
+  }
 })
