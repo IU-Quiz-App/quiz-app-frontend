@@ -15,9 +15,9 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
         return {
             statusCode: 200,
             headers: {
-                "Access-Control-Allow-Origin": "*", // Allow all origins
-                "Access-Control-Allow-Headers": "Content-Type", // Allow specific headers
-                "Access-Control-Allow-Methods": "GET, POST, OPTIONS", // Allow specific methods
+                'Access-Control-Allow-Origin': '*', // Allow all origins
+                'Access-Control-Allow-Headers': 'Content-Type', // Allow specific headers
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS', // Allow specific methods
             },
             body: JSON.stringify({
                 message: 'hello world',
@@ -27,6 +27,11 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
         console.log(err);
         return {
             statusCode: 500,
+            headers: {
+                'Access-Control-Allow-Origin': '*', // Allow all origins
+                'Access-Control-Allow-Headers': 'Content-Type', // Allow specific headers
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS', // Allow specific methods
+            },
             body: JSON.stringify({
                 message: 'some error happened',
             }),

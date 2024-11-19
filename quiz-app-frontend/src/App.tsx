@@ -7,8 +7,10 @@ function App() {
     const [data, setData] = useState<string>("");
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_URL}/hello`)
-            .then((response) => response.json())
+        fetch(`api                                                                                                                                                                                                                                                                                                                                                                                          /hello`)
+            .then((response) =>
+                response.json()
+            )
             .then((data) => setData(data.message))
             .catch((err) => console.error(err));
     }, []);

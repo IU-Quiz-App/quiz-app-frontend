@@ -20,6 +20,10 @@ Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
+      StageName: dev
+      Cors:
+        AllowOrigins: "*"
+        AllowMethods: "'GET,POST,OPTIONS'"
       CodeUri: hello-world/
       Handler: app.lambdaHandler
       Runtime: nodejs20.x
