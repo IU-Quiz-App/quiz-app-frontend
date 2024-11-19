@@ -13,7 +13,7 @@ export default defineConfig({
     },
     proxy: {
       '/api': {
-        target: 'https://localhost:3000', // Backend server
+        target: 'https://localhost:3000/', // Backend server
         changeOrigin: true,
         secure: false, // Disable certificate verification
         rewrite: (path) => path.replace(/^\/api/, ''),

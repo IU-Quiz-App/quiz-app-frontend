@@ -7,7 +7,7 @@ function App() {
     const [data, setData] = useState<string>("");
 
     useEffect(() => {
-        fetch(`api                                                                                                                                                                                                                                                                                                                                                                                          /hello`)
+        fetch('api/hello')
             .then((response) =>
                 response.json()
             )
