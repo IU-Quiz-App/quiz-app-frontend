@@ -8,7 +8,7 @@ export default defineConfig(({ command, mode }) => {
    const serverConfig =
        command === 'serve'
           ? {
-             host: 'frontend.quiz-app.test',
+             host: 'frontend.quiz-app-frontend.test',
              port: 5173,
              https: {
                key: fs.readFileSync('./cert/key.pem'),
