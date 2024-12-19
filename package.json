@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "dev": "quiz-app-frontend/node_modules/.bin/vite",
+    "build": "quiz-app-frontend/node_modules/.bin/tsc -b && vite build",
+    "lint": "quiz-app-frontend/node_modules/.bin/eslint .",
+    "preview": "quiz-app-frontend/node_modules/.bin/vite preview"
   },
   "dependencies": {
     "react": "^18.3.1",
