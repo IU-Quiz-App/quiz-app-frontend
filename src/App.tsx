@@ -15,7 +15,7 @@ function App() {
   return (
       <div className={'min-h-screen h-screen flex-1 bg-primary'}>
           <div className={'flex h-full items-center justify-center'}>
-              <div className="text-white">{data ? data : "Loading..."}</div>
+              <div className="text-white">{data ? data : "Loading... 123"}</div>
           </div>
       </div>
   )
