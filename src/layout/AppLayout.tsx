@@ -8,13 +8,14 @@ const AppLayout: React.FC<AppLayoutProps> = () => {
 
     return (
         <main
-            className="h-full flex flex-row overflow-hidden bg-purple-50 overflow-x-clip fixed w-full font-semibold font-mono"
+            className="h-full flex flex-row overflow-hidden bg-purple-50 overflow-x-clip fixed w-full font-semibold font-sans"
         >
             <div className={'flex flex-col w-full'}>
-                <div className={'flex h-24 bg-gradient-to-b from-blue-400 to-blue-500 w-full p-4 items-center'}>
-                    <Link to={'/'}>
+                <div className={'flex h-24 bg-gray-700 p-4 items-center'}>
+                    <Link to={'/'} className={'flex flex-row items-center' }>
+                        <img src={'public/iu-quiz-app-logo.png'} alt={'logo'} className={'h-16 w-16'} />
                         <span className={'text-white'}>
-                            Quiz-App
+                            uiz-App
                         </span>
                     </Link>
                 </div>
