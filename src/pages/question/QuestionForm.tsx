@@ -118,6 +118,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
                 value={questionText}
                 onChange={handleQuestionTextChange}
                 errorMessage={errors['question'] as string}
+                required
             />
 
             <div className={'flex flex-col gap-4'}>
@@ -130,6 +131,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
                         value={answers[0].text}
                         onChange={handleAnswerTextChange(0)}
                         errorMessage={errors['answer1'] as string}
+                        required
                     />
 
                     <TextAreaInput
@@ -140,6 +142,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
                         value={answers[1].text}
                         onChange={handleAnswerTextChange(1)}
                         errorMessage={errors['answer2'] as string}
+                        required
                     />
                 </div>
 
@@ -153,6 +156,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
                         value={answers[2].text}
                         onChange={handleAnswerTextChange(2)}
                         errorMessage={errors['answer3'] as string}
+                        required
                     />
 
                     <TextAreaInput
@@ -163,6 +167,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
                         value={answers[3].text}
                         onChange={handleAnswerTextChange(3)}
                         errorMessage={errors['answer4'] as string}
+                        required
                     />
                 </div>
             </div>

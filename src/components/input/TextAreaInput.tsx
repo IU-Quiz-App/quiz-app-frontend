@@ -11,13 +11,14 @@ interface TextAreaInputProps {
     placeholder?: string
     value?: string
     errorMessage?: string
+    required?: boolean
 }
 
-const TextAreaInput: React.FC<TextAreaInputProps> = ({ id, name, className, onChange, label, placeholder, value, errorMessage }) => {
+const TextAreaInput: React.FC<TextAreaInputProps> = ({ id, name, className, onChange, label, placeholder, value, errorMessage, required }) => {
 
     return (
         <div className={'flex flex-col w-full gap-2'}>
-            {label && <InputLabel id={id} label={label} htmlFor={id} required={true}/>}
+            {label && <InputLabel id={id} label={label} htmlFor={id} required={required}/>}
             <InputError id={id} message={errorMessage}>
                 <textarea
                     id={id}
