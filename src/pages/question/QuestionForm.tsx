@@ -6,7 +6,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { saveQuestion } from "../../services/Api.ts";
 
 interface QuestionFormProps {
-    question: Question;
+    question?: Question;
 }
 
 const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
@@ -26,7 +26,8 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
         if (question) {
             setCourse(question.course);
             setQuestionText(question.text);
-            setWrongAnswers(question.answers.filter((answer) => answer.isTrue));
+            setWrongAnswers(question.answers.filter((answer) => !answer.isTrue));
+            setCorrectAnswer(question.answers.filter((answer) => answer.isTrue)[0]);
         }
     }, [question]);
 
@@ -49,12 +50,12 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
         setCourse(event.target.value);
     }
 
-    const handleWrongAnswerTextChange = (index: number) => (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const handleWrongAnswerTextChange = (index: 0 | 1 | 2) => (event: ChangeEvent<HTMLTextAreaElement>) => {
         setWrongAnswers((prev) => {
             const newAnswers = [...prev];
             newAnswers[index] = {
                 text: event.target.value,
-                explanation: '',
+                explanation: prev[index].explanation,
                 isTrue: false
             }
             return newAnswers;
@@ -62,9 +63,8 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
     }
 
     const handleCorrectAnswerTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-        console.log("Check")
-        setCorrectAnswer(() => {
-            return { text: event.target.value, explanation: '', isTrue: true };
+        setCorrectAnswer((prev) => {
+            return { ...prev, text: event.target.value };
         });
     }
 
@@ -115,7 +115,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
             return;
         }
 
-        const answerList = [...wrongAnswers, correctAnswer]
+        const answerList = [correctAnswer, ...wrongAnswers]
 
         const newQuestion: Question = {
             id: question?.id,
