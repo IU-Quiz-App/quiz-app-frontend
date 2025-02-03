@@ -4,10 +4,11 @@ export type Question = {
     course: string;
     text: string;
     answers: Answer[];
-    correctAnswer: 1 | 2 | 3 | 4;
 }
 
 export type Answer = {
+    uuid?: string;
+    isTrue: boolean;
     text: string;
     explanation: string;
 }

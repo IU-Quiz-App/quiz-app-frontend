@@ -1,9 +1,9 @@
 import TextInput from "../../components/input/TextInput.tsx";
 import TextAreaInput from "../../components/input/TextAreaInput.tsx";
 import Button from "../../components/Button.tsx";
-import {Answer, Question} from "../../services/Types.ts";
-import {ChangeEvent, useEffect, useState} from "react";
-import {saveQuestion} from "../../services/Api.ts";
+import { Answer, Question } from "../../services/Types.ts";
+import { ChangeEvent, useEffect, useState } from "react";
+import { saveQuestion } from "../../services/Api.ts";
 
 interface QuestionFormProps {
     question: Question;
@@ -13,34 +13,32 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
 
     const [course, setCourse] = useState('');
     const [questionText, setQuestionText] = useState<string>('');
-    const [answers, setAnswers] = useState<Answer[]>([
-        { text: '', explanation: '' },
-        { text: '', explanation: '' },
-        { text: '', explanation: '' },
-        { text: '', explanation: '' },
+    const [wrongAnswers, setWrongAnswers] = useState<Answer[]>([
+        { text: '', explanation: '', isTrue: false },
+        { text: '', explanation: '', isTrue: false },
+        { text: '', explanation: '', isTrue: false },
     ]);
-    const [correctAnswer, setCorrectAnswer] = useState<1|2|3|4|undefined>(undefined);
+    const [correctAnswer, setCorrectAnswer] = useState<Answer>({ text: '', explanation: '', isTrue: true });
 
-    const [errors, setErrors] = useState<{[key: string]: string}>({});
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     useEffect(() => {
-        if(question) {
+        if (question) {
             setCourse(question.course);
             setQuestionText(question.text);
-            setAnswers(question.answers);
+            setWrongAnswers(question.answers.filter((answer) => answer.isTrue));
         }
-    } ,[question]);
+    }, [question]);
 
     const setDefaultValues = () => {
         setCourse('');
         setQuestionText('');
-        setAnswers([
-            { text: '', explanation: '' },
-            { text: '', explanation: '' },
-            { text: '', explanation: '' },
-            { text: '', explanation: '' },
+        setWrongAnswers([
+            { text: '', explanation: '', isTrue: false },
+            { text: '', explanation: '', isTrue: false },
+            { text: '', explanation: '', isTrue: false },
         ]);
-        setCorrectAnswer(undefined);
+        setCorrectAnswer({ text: '', explanation: '', isTrue: true });
     }
 
     const handleQuestionTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -51,14 +49,22 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
         setCourse(event.target.value);
     }
 
-    const handleAnswerTextChange = (index: number) => (event: ChangeEvent<HTMLTextAreaElement>) => {
-        setAnswers((prev) => {
+    const handleWrongAnswerTextChange = (index: number) => (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setWrongAnswers((prev) => {
             const newAnswers = [...prev];
             newAnswers[index] = {
                 text: event.target.value,
                 explanation: '',
+                isTrue: false
             }
             return newAnswers;
+        });
+    }
+
+    const handleCorrectAnswerTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        console.log("Check")
+        setCorrectAnswer(() => {
+            return { text: event.target.value, explanation: '', isTrue: true };
         });
     }
 
@@ -80,13 +86,13 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
             hasError = true;
         }
 
-        answers.forEach((answer, index) => {
+        wrongAnswers.forEach((answer, index) => {
             if (answer.text === '') {
 
                 setTimeout(() => {
                     setErrors((prev) => ({
                         ...prev,
-                        [`answer${index + 1}`]: 'Die Antwort darf nicht leer sein',
+                        [`wrongAnswer${index + 1}`]: 'Die falsche Antwort darf nicht leer sein',
                     }));
                 });
 
@@ -94,16 +100,28 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
             }
         });
 
+        if (correctAnswer.text === '') {
+            setTimeout(() => {
+                setErrors((prev) => ({
+                    ...prev,
+                    [`correctAnswer`]: 'Die richtige Antwort darf nicht leer sein',
+                }));
+            });
+
+            hasError = true;
+        }
+
         if (hasError) {
             return;
         }
+
+        const answerList = [...wrongAnswers, correctAnswer]
 
         const newQuestion: Question = {
             id: question?.id,
             course: course,
             text: questionText,
-            answers: answers,
-            correctAnswer: 1,
+            answers: answerList
         }
 
         saveQuestion(newQuestion);
@@ -141,49 +159,47 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
             <div className={'flex flex-col gap-4'}>
                 <div className={"flex flex-row w-full gap-4"}>
                     <TextAreaInput
-                        id={'answer1'}
-                        name={'answer1'}
-                        label={'Antwort 1'}
-                        className={'grow h-28'}
-                        value={answers[0].text}
-                        onChange={handleAnswerTextChange(0)}
-                        errorMessage={errors['answer1'] as string}
+                        id={'correctAnswer'}
+                        name={'correctAnswer'}
+                        label={'Korrekte Antwort'}
+                        className={'grow h-28 bg-green-100'}
+                        value={correctAnswer.text}
+                        onChange={handleCorrectAnswerTextChange}
+                        errorMessage={errors['correctAnswer'] as string}
                         required
                     />
 
                     <TextAreaInput
-                        id={'answer2'}
-                        name={'answer2'}
-                        label={'Antwort 2'}
+                        id={'wrongAnswer1'}
+                        name={'wrongAnswer1'}
+                        label={'Falsche Antwort 1'}
                         className={'grow h-28'}
-                        value={answers[1].text}
-                        onChange={handleAnswerTextChange(1)}
-                        errorMessage={errors['answer2'] as string}
+                        value={wrongAnswers[0].text}
+                        onChange={handleWrongAnswerTextChange(0)}
+                        errorMessage={errors['wrongAnswer1'] as string}
                         required
                     />
                 </div>
 
                 <div className={"flex flex-row w-full gap-4"}>
-
                     <TextAreaInput
-                        id={'answer3'}
-                        name={'answer3'}
-                        label={'Antwort 3'}
+                        id={'wrongAnswer2'}
+                        name={'wrongAnswer2'}
+                        label={'Falsche Antwort 2'}
                         className={'grow h-28'}
-                        value={answers[2].text}
-                        onChange={handleAnswerTextChange(2)}
-                        errorMessage={errors['answer3'] as string}
+                        value={wrongAnswers[1].text}
+                        onChange={handleWrongAnswerTextChange(1)}
+                        errorMessage={errors['wrongAnswer2'] as string}
                         required
                     />
-
                     <TextAreaInput
-                        id={'answer4'}
-                        name={'answer4'}
-                        label={'Antwort 4'}
+                        id={'wrongAnswer3'}
+                        name={'wrongAnswer3'}
+                        label={'Falsche Antwort 3'}
                         className={'grow h-28'}
-                        value={answers[3].text}
-                        onChange={handleAnswerTextChange(3)}
-                        errorMessage={errors['answer4'] as string}
+                        value={wrongAnswers[2].text}
+                        onChange={handleWrongAnswerTextChange(2)}
+                        errorMessage={errors['wrongAnswer3'] as string}
                         required
                     />
                 </div>

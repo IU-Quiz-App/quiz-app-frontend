@@ -9,18 +9,18 @@ interface InputLabelProps {
 }
 
 export const InputLabel: FC<InputLabelProps> = ({
-                                                    id,
-                                                    label,
-                                                    className = '',
-                                                    htmlFor,
-                                                    required = false,
-                                                }) => {
+    id,
+    label,
+    className = '',
+    htmlFor,
+    required = false,
+}) => {
     return (
         <label
             id={`${id}-input-label`}
             data-testid={`${id}-input-label`}
             htmlFor={htmlFor}
-            className={`block text-sm font-semibold w-32 ${className}`}
+            className={`block text-sm font-semibold w-full ${className}`}
         >
             {label}
             {required && <span className="text-red-500">{' *'}</span>}
