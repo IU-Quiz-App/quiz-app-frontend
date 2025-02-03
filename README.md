@@ -48,3 +48,9 @@ export default tseslint.config({
   },
 })
 ```
+
+# Build application
+
+- Install node (at least v23.7.0)
+- Go to Root module and run "npm install"
+- Go to Root module and run "npm run dev" to run the application on localhost
