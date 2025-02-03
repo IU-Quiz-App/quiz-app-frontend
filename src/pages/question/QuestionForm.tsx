@@ -31,6 +31,18 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
         }
     } ,[question]);
 
+    const setDefaultValues = () => {
+        setCourse('');
+        setQuestionText('');
+        setAnswers([
+            { text: '', explanation: '' },
+            { text: '', explanation: '' },
+            { text: '', explanation: '' },
+            { text: '', explanation: '' },
+        ]);
+        setCorrectAnswer(undefined);
+    }
+
     const handleQuestionTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setQuestionText(event.target.value);
     }
@@ -57,25 +69,29 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
         let hasError = false;
 
 
-        setTimeout(() => {
-            if (questionText === '') {
+        if (questionText === '') {
+
+            setTimeout(() => {
                 setErrors((prev) => ({
                     ...prev,
                     question: 'Die Frage darf nicht leer sein',
                 }));
-                hasError = true;
-            }
+            });
+            hasError = true;
+        }
 
-            answers.forEach((answer, index) => {
-                if (answer.text === '') {
+        answers.forEach((answer, index) => {
+            if (answer.text === '') {
+
+                setTimeout(() => {
                     setErrors((prev) => ({
                         ...prev,
                         [`answer${index + 1}`]: 'Die Antwort darf nicht leer sein',
                     }));
+                });
 
-                    hasError = true;
-                }
-            });
+                hasError = true;
+            }
         });
 
         if (hasError) {
@@ -92,6 +108,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
 
         saveQuestion(newQuestion);
 
+        setDefaultValues();
     }
 
     return (
