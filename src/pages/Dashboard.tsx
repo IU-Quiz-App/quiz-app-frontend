@@ -11,6 +11,10 @@ const Dashboard: React.FC = () => {
             <Button variant={'primary'} className={'w-fit h-fit'} route={'/question/form'}>
                 Frage erstellen
             </Button>
+
+            <Button variant={'primary'} className={'w-fit h-fit'} route={'/questions'}>
+                Alle Fragen anzeigen
+            </Button>
         </div>
     )
 

@@ -3,13 +3,17 @@ import TextAreaInput from "../../components/input/TextAreaInput.tsx";
 import Button from "../../components/Button.tsx";
 import { Answer, Question } from "../../services/Types.ts";
 import { ChangeEvent, useEffect, useState } from "react";
-import { saveQuestion } from "../../services/Api.ts";
+import {getQuestion, saveQuestion} from "../../services/Api.ts";
+import {useParams} from "react-router-dom";
 
 interface QuestionFormProps {
-    question?: Question;
+    uuid?: string | undefined;
 }
 
-const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
+const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
+    const { uuid: uuidParam } = useParams();
+
+    uuid = uuid || uuidParam;
 
     const [course, setCourse] = useState('');
     const [questionText, setQuestionText] = useState<string>('');
@@ -23,13 +27,29 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     useEffect(() => {
-        if (question) {
+        const fetchData = async () => {
+            if (!uuid) {
+                return;
+            }
+            const question = await getQuestion(uuid);
+
+            if (!question) {
+                return;
+            }
+
+            console.log(question);
+
             setCourse(question.course);
             setQuestionText(question.text);
-            setWrongAnswers(question.answers.filter((answer) => !answer.isTrue));
-            setCorrectAnswer(question.answers.filter((answer) => answer.isTrue)[0]);
+            setWrongAnswers(question.answers.slice(1));
+            setCorrectAnswer(question.answers[0]);
         }
-    }, [question]);
+
+            fetchData()
+                .catch((error) => {
+                    console.error(error);
+                });
+    }, [uuid]);
 
     const setDefaultValues = () => {
         setCourse('');
@@ -118,7 +138,9 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ question }) => {
         const answerList = [correctAnswer, ...wrongAnswers]
 
         const newQuestion: Question = {
-            id: question?.id,
+            uuid: uuid,
+            public: true,
+            status: 'created',
             course: course,
             text: questionText,
             answers: answerList

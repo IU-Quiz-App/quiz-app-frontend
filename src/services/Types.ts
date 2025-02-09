@@ -1,6 +1,5 @@
 
-export type Question = {
-    uuid?: string;
+export interface Question extends Item {
     course: string;
     text: string;
     public: boolean;
@@ -10,9 +9,12 @@ export type Question = {
     answers: Answer[];
 }
 
-export type Answer = {
-    uuid?: string;
+export interface Answer extends Item {
     isTrue: boolean;
     text: string;
     explanation: string;
+}
+
+export interface Item {
+    uuid?: string;
 }
