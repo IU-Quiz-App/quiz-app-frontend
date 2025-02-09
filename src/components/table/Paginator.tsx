@@ -54,8 +54,8 @@ const Pagination: FC<PaginationProps> = ({
             onClick={() => paginate(number)}
             className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium hover:border-gray-300 hover:text-gray-700 ${
                 currentPage === number
-                    ? 'border-primary-3 text-primary-3'
-                    : 'border-transparent text-gray-500'
+                    ? 'text-gray-500 border-gray-300' 
+                    : 'text-gray-300 border-transparent'
             }`}
         >
             {number}
@@ -76,7 +76,7 @@ const Pagination: FC<PaginationProps> = ({
                         className="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
                     >
                         <ChevronLeftIcon
-                            className="mr-3 h-3 w-3 text-primary-2"
+                            className="mr-3 h-3 w-3"
                             strokeWidth="6"
                             aria-hidden="true"
                         />
@@ -108,7 +108,7 @@ const Pagination: FC<PaginationProps> = ({
                     >
                         Vorwärts
                         <ChevronRightIcon
-                            className="ml-3 h-3 w-3 text-primary-2"
+                            className="ml-3 h-3 w-3"
                             strokeWidth="6"
                             aria-hidden="true"
                         />
