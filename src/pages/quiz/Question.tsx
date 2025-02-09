@@ -1,5 +1,5 @@
-import Box from "../components/Box.tsx";
-import Button from "../components/Button.tsx";
+import Box from "../../components/Box.tsx";
+import Button from "../../components/Button.tsx";
 import {useState} from "react";
 
 const Question: React.FC = () => {

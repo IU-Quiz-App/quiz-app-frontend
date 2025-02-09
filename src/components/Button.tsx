@@ -27,7 +27,7 @@ const Button: React.FC<ButtonProps> = ({ children, onClick, className, route, co
     const variantClasses = (variant: string) => {
         switch (variant) {
             case 'primary':
-                return `bg-gradient-to-bl from-${color}-200 to-${color}-400 border-${color}-200 shadow-${color}-800 text-${color}-100`
+                return `bg-gradient-to-bl from-${color}-200 to-${color}-400 border-${color}-200 shadow-${color}-800 text-${color}-50`
             case 'secondary':
                 return `bg-gradient-to-bl from-${color}-400 to-${color}-600 border-${color}-600 shadow-${color}-900 text-${color}-100`
             case 'tertiary':
@@ -38,7 +38,7 @@ const Button: React.FC<ButtonProps> = ({ children, onClick, className, route, co
     return (
         <div
             onClick={handleClick}
-            className={`cursor-pointer flex items-center justify-center border-2 rounded-md h-fit w-fit p-4 shadow-md overflow-hidden ${variantClasses(variant)} ${className}`}
+            className={`font-normal cursor-pointer flex items-center justify-center border-2 rounded-md h-fit w-fit p-4 shadow-md overflow-hidden ${variantClasses(variant)} ${className}`}
         >
             {children}
         </div>
