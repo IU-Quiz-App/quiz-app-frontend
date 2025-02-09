@@ -1,6 +1,7 @@
 import axios from 'axios';
 import config from './Config.ts';
 import {Question} from "./Types.ts";
+import TestQuestions from "../__tests__/questions.json";
 
 const apiClient = axios.create({
     baseURL: config.ApiURL,
@@ -9,6 +10,10 @@ const apiClient = axios.create({
 });
 
 apiClient.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+export async function getQuestion(uuid: string): Promise<Question> {
+    return TestQuestions[0] as Question;
+}
 
 export async function saveQuestion(question: Question): Promise<void> {
     console.log(question);
@@ -23,5 +28,6 @@ export async function deleteQuestion(question: Question): Promise<void> {
 }
 
 export async function getAllQuestions(): Promise<Question[]> {
-    return [];
+
+    return TestQuestions as Question[];
 }
