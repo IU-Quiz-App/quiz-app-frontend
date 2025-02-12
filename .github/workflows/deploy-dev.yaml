@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - develop
+      - master
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -31,6 +32,14 @@ jobs:
 
       - name: Deploy to S3
         run: aws s3 sync dist s3://iu-quiz-frontend-dev --delete
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          DISTRIBUTION_ID=$(aws cloudfront list-distributions --output json | jq -r '.DistributionList.Items[] | select(.Aliases.Items[] == "dev.iu-quiz.de") | .Id')
+          aws cloudfront create-invalidation \
+            --distribution-id $DISTRIBUTION_ID \
+            --paths "/*"
+
 #TODO: Invalidate CloudFront  distribution
 # List CloudFront Distribution ID by aws cli and filter on dev distribution with --query
 # aws cloudfront list-distributions --query "QueryToOutputIDWhereAliasContainsDev"
