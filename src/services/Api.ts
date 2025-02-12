@@ -23,7 +23,7 @@ export async function getQuestion(uuid: string): Promise<Question> {
 export async function saveQuestion(question: Question): Promise<void> {
     axios.post(`${config.ApiURL}/question`, question)
         .then((response) => {
-            console.log(response);
+            console.log(response.data);
         });
 }
 
