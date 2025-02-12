@@ -12,11 +12,19 @@ const apiClient = axios.create({
 apiClient.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 export async function getQuestion(uuid: string): Promise<Question> {
-    return TestQuestions[0] as Question;
+    axios.get(`${config.ApiURL}/question`, {uuid: uuid} as never)
+        .then((response) => {
+            return response.data as Question;
+        });
+
+    return undefined as never;
 }
 
 export async function saveQuestion(question: Question): Promise<void> {
-    console.log(question);
+    axios.post(`${config.ApiURL}/question`, question)
+        .then((response) => {
+            console.log(response);
+        });
 }
 
 export async function updateQuestion(question: Question): Promise<void> {
@@ -29,5 +37,5 @@ export async function deleteQuestion(question: Question): Promise<void> {
 
 export async function getAllQuestions(): Promise<Question[]> {
 
-    return TestQuestions as Question[];
+    return TestQuestions as unknown as Question[];
 }
