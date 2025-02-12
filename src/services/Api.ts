@@ -6,7 +6,6 @@ import TestQuestions from "../__tests__/questions.json";
 const apiClient = axios.create({
     baseURL: config.ApiURL,
     withCredentials: true,
-    withXSRFToken: true,
 });
 
 apiClient.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
