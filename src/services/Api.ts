@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from './Config.ts';
-import {Question} from "./Types.ts";
+import { Item, Question } from "./Types.ts";
 import TestQuestions from "../__tests__/questions.json";
 
 const apiClient = axios.create({
@@ -23,8 +23,8 @@ export async function updateQuestion(question: Question): Promise<void> {
     console.log(question);
 }
 
-export async function deleteQuestion(question: Question): Promise<void> {
-    console.log(question);
+export async function deleteQuestion(questionId: Item): Promise<void> {
+    console.log(questionId);
 }
 
 export async function getAllQuestions(): Promise<Question[]> {
