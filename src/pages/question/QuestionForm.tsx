@@ -3,8 +3,8 @@ import TextAreaInput from "../../components/input/TextAreaInput.tsx";
 import Button from "../../components/Button.tsx";
 import { Answer, Question } from "../../services/Types.ts";
 import { ChangeEvent, useEffect, useState } from "react";
-import {getQuestion, saveQuestion} from "../../services/Api.ts";
-import {useParams} from "react-router-dom";
+import { getQuestion, saveQuestion } from "../../services/Api.ts";
+import { useParams } from "react-router-dom";
 
 interface QuestionFormProps {
     uuid?: string | undefined;
@@ -45,10 +45,10 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
             setCorrectAnswer(question.answers[0]);
         }
 
-            fetchData()
-                .catch((error) => {
-                    console.error(error);
-                });
+        fetchData()
+            .catch((error) => {
+                console.error(error);
+            });
     }, [uuid]);
 
     const setDefaultValues = () => {
@@ -139,7 +139,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
 
         const newQuestion: Question = {
             uuid: uuid,
-            public: true,
+            public: "false",
             status: 'created',
             course: course,
             text: questionText,
