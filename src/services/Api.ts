@@ -36,7 +36,7 @@ export async function deleteQuestion(question: Question): Promise<void> {
 
 export async function getAllQuestions(): Promise<Question[]> {
 
-    axios.get(`${config.ApiURL}/question?user_id=23479lsdfkjPhilipp`)
+    axios.get(`${config.ApiURL}/questions?user_id=23479lsdfkjPhilipp`)
         .then((response) => {
             return response.data as Question;
         });
