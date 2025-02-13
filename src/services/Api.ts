@@ -38,6 +38,8 @@ export async function getAllQuestions(): Promise<Question[]> {
 
     axios.get(`${config.ApiURL}/questions?user_id=23479lsdfkjPhilipp`)
         .then((response) => {
+            console.log('Received response:', response);
+            console.log('Received response.data:', response.data);
             return response.data as Question;
         });
 
