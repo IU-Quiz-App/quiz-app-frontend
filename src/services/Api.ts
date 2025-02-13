@@ -10,24 +10,24 @@ const apiClient = axios.create({
 
 apiClient.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-//export async function getQuestion(uuid: string): Promise<Question> {
-//    axios.get(`${config.ApiURL}/question`, { uuid: uuid } as never)
-//        .then((response) => {
-//            return response.data as Question;
-//        });
-//
-//    return undefined as never;
-//}
-
 export async function getQuestion(uuid: string): Promise<Question> {
-    try {
-        const response = await apiClient.get<Question>(`/question/${uuid}`);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching question:", error);
-        throw error;
-    }
+    axios.get(`${config.ApiURL}/question/${uuid}`, { uuid: uuid } as never)
+        .then((response) => {
+            return response.data as Question;
+        });
+
+    return undefined as never;
 }
+
+//export async function getQuestion(uuid: string): Promise<Question> {
+//    try {
+//        const response = await apiClient.get<Question>(`/question/${uuid}`);
+//        return response.data;
+//    } catch (error) {
+//        console.error("Error fetching question:", error);
+//        throw error;
+//    }
+//}
 
 export async function saveQuestion(question: Question): Promise<void> {
     axios.post(`${config.ApiURL}/question`, question)
