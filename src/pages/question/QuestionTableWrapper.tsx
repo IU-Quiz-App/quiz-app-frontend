@@ -14,6 +14,7 @@ export const FlyersTableWrapper: FC = () => {
         const fetchData = async () => {
             try {
                 const questions = await getAllQuestions();
+                console.log('Fetched questions:', questions);
                 setQuestions(questions);
             } catch (error) {
                 console.error(error);

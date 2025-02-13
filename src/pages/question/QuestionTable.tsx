@@ -1,9 +1,9 @@
 import Box from '@components/Box.tsx';
 import Table from '@components/table/Table';
-import {Question} from "@services/Types.ts";
-import {FC} from "react";
-import {useNavigate} from "react-router-dom";
-import {PencilSquareIcon} from "@heroicons/react/24/outline";
+import { Question } from "@services/Types.ts";
+import { FC } from "react";
+import { useNavigate } from "react-router-dom";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 
 
 interface QuestionTableProps {
@@ -13,6 +13,8 @@ interface QuestionTableProps {
 const QuestionTable: FC<QuestionTableProps> = ({ questions }) => {
 
     const navigate = useNavigate();
+
+    console.log('Received questions:', questions);
 
     if (questions.length === 0) {
         return <Box>Loading...</Box>
@@ -31,8 +33,8 @@ const QuestionTable: FC<QuestionTableProps> = ({ questions }) => {
         <Table
             data={questions}
             tableColumns={[
-                { key: 'uuid', label: 'UUID'},
-                { key: 'text', label: 'Text'},
+                { key: 'uuid', label: 'UUID' },
+                { key: 'text', label: 'Text' },
                 { key: 'actions', label: 'Aktion', render: renderActions }
             ]}
         />
