@@ -14,8 +14,6 @@ const QuestionTable: FC<QuestionTableProps> = ({ questions }) => {
 
     const navigate = useNavigate();
 
-    console.log('Received questions:', questions);
-
     if (questions.length === 0) {
         return <Box>Loading...</Box>
     }
