@@ -3,7 +3,7 @@ import TextAreaInput from "../../components/input/TextAreaInput.tsx";
 import Button from "../../components/Button.tsx";
 import { Answer, Question } from "../../services/Types.ts";
 import { ChangeEvent, useEffect, useState } from "react";
-import { getQuestion, saveQuestion } from "../../services/Api.ts";
+import { getQuestion, saveQuestion, deleteQuestion } from "../../services/Api.ts";
 import { useParams } from "react-router-dom";
 
 interface QuestionFormProps {
@@ -151,6 +151,12 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
         setDefaultValues();
     }
 
+    const handleDelete = () => {
+        console.log('delete question with id', uuid);
+
+        deleteQuestion({ uuid: uuid });
+    }
+
     return (
         <div className={'w-full flex flex-col gap-6'}>
             <div className={'text-2xl mb-6'}>
@@ -227,9 +233,12 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                 </div>
             </div>
 
-            <div className={'w-full flex items-end mt-8 justify-end'}>
+            <div className={'w-full flex items-end mt-8 justify-end gap-4'}>
                 <Button onClick={handleSave}>
                     Speichern
+                </Button>
+                <Button onClick={handleDelete} color="red" variant="primary" route="/questions">
+                    Löschen
                 </Button>
             </div>
         </div>
