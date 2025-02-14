@@ -3,8 +3,8 @@ import TextAreaInput from "../../components/input/TextAreaInput.tsx";
 import Button from "../../components/Button.tsx";
 import { Answer, Question } from "../../services/Types.ts";
 import { ChangeEvent, useEffect, useState } from "react";
-import { getQuestion, saveQuestion, deleteQuestion } from "../../services/Api.ts";
-import { useParams } from "react-router-dom";
+import {getQuestion, saveQuestion, deleteQuestion, updateQuestion} from "../../services/Api.ts";
+import {useNavigate, useParams} from "react-router-dom";
 
 interface QuestionFormProps {
     uuid?: string | undefined;
@@ -12,6 +12,7 @@ interface QuestionFormProps {
 
 const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
     const { uuid: uuidParam } = useParams();
+    const navigate = useNavigate();
 
     uuid = uuid || uuidParam;
 
@@ -94,6 +95,17 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
 
         let hasError = false;
 
+        if (course === '') {
+
+            setTimeout(() => {
+                setErrors((prev) => ({
+                    ...prev,
+                    course: 'Es muss ein Kurs angegeben werden',
+                }));
+            });
+            hasError = true;
+        }
+
 
         if (questionText === '') {
 
@@ -146,9 +158,22 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
             answers: answerList
         }
 
-        saveQuestion(newQuestion);
+        if (uuid) {
+            updateQuestion(newQuestion).then((success) => {
+                if (success) {
+                    setDefaultValues();
+                    navigate('/questions');
+                }
+            });
+            return;
+        }
 
-        setDefaultValues();
+        saveQuestion(newQuestion).then((success) => {
+            if (success) {
+                setDefaultValues();
+                navigate('/questions');
+            }
+        });
     }
 
     const handleDelete = () => {
@@ -170,7 +195,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                 className={'w-32'}
                 value={course}
                 onChange={handleCourseTextChange}
-                errorMessage={''}
+                errorMessage={errors['course'] as string}
             />
 
             <TextAreaInput
@@ -237,9 +262,11 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                 <Button onClick={handleSave}>
                     Speichern
                 </Button>
-                <Button onClick={handleDelete} color="red" variant="primary" route="/questions">
-                    Löschen
-                </Button>
+                {uuid && (
+                    <Button onClick={handleDelete} color="red" variant="primary" route="/questions">
+                        Löschen
+                    </Button>
+                )}
             </div>
         </div>
     )
