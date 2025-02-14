@@ -1,7 +1,6 @@
 import axios from 'axios';
 import config from './Config.ts';
 import { Item, Question } from "./Types.ts";
-import TestQuestions from "../__tests__/questions.json";
 
 const apiClient = axios.create({
     baseURL: config.ApiURL,
@@ -36,9 +35,10 @@ export async function deleteQuestion(questionId: Item): Promise<void> {
     console.log(questionId);
 }
 
-export async function getAllQuestions(): Promise<Question[]> {
+export async function getAllQuestionsByUser(): Promise<Question[]> {
     try {
-        const response = await axios.get(`${config.ApiURL}/questions?user_id=23479lsdfkjPhilipp`);
+        const userId = '23479lsdfkjPhilipp';
+        const response = await axios.get(`${config.ApiURL}/questions?user_id=${userId}`);
         return response.data as Question[];
     } catch (error) {
         console.error('Failed to fetch questions:', error);

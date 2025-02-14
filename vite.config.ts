@@ -15,5 +15,20 @@ export default defineConfig(() => {
         '@services': '/src/services',
       },
     },
+    server: {
+      proxy: {
+        '/api': {
+          target: 'https://api.dev.iu-quiz.de',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq) => {
+              proxyReq.setHeader('Origin', 'https://www.dev.iu-quiz.de')
+            });
+          },
+        },
+      }
+    }
   }
 })

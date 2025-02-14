@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { getAllQuestions } from "@services/Api.ts";
+import { getAllQuestionsByUser } from "@services/Api.ts";
 import { Question } from "@services/Types.ts";
 import Box from "@components/Box.tsx";
 import QuestionTable from "@pages/question/QuestionTable.tsx";
@@ -13,7 +13,7 @@ export const FlyersTableWrapper: FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const questions = await getAllQuestions();
+                const questions = await getAllQuestionsByUser();
                 setQuestions(questions);
             } catch (error) {
                 console.error(error);
