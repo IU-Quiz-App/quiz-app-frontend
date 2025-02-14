@@ -6,17 +6,26 @@ import TestQuestions from "../__tests__/questions.json";
 const apiClient = axios.create({
     baseURL: config.ApiURL,
     withCredentials: true,
-    withXSRFToken: true,
 });
 
 apiClient.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 export async function getQuestion(uuid: string): Promise<Question> {
-    return TestQuestions[0] as Question;
+    try {
+        const response = await axios.get(`${config.ApiURL}/question/${uuid}`);
+        console.log('Response data of one question:', response.data);
+        return response.data as Question;
+    } catch (error) {
+        console.error('Failed to fetch question:', error);
+        throw error;
+    }
 }
 
 export async function saveQuestion(question: Question): Promise<void> {
-    console.log(question);
+    axios.post(`${config.ApiURL}/question`, question)
+        .then((response) => {
+            console.log(response.data);
+        });
 }
 
 export async function updateQuestion(question: Question): Promise<void> {
@@ -28,6 +37,11 @@ export async function deleteQuestion(questionId: Item): Promise<void> {
 }
 
 export async function getAllQuestions(): Promise<Question[]> {
-
-    return TestQuestions as Question[];
+    try {
+        const response = await axios.get(`${config.ApiURL}/questions?user_id=23479lsdfkjPhilipp`);
+        return response.data as Question[];
+    } catch (error) {
+        console.error('Failed to fetch questions:', error);
+        return [];
+    }
 }

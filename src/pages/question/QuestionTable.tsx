@@ -6,7 +6,6 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 
-
 interface QuestionTableProps {
     questions: Question[];
 }

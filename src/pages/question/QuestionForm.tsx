@@ -139,7 +139,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
 
         const newQuestion: Question = {
             uuid: uuid,
-            public: true,
+            public: 'false',
             status: 'created',
             course: course,
             text: questionText,
