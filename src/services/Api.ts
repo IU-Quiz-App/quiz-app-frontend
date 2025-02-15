@@ -7,8 +7,6 @@ const apiClient = axios.create({
     withCredentials: true,
 });
 
-apiClient.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
 export async function getQuestion(uuid: string): Promise<Question> {
     try {
         const response = await apiClient.get(`/question/${uuid}`);
