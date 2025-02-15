@@ -1,26 +1,21 @@
-import Box from '@components/Box.tsx';
 import Table from '@components/table/Table';
-import { deleteQuestion } from "../../services/Api.ts";
 import { Question } from "@services/Types.ts";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {deleteQuestion} from "@services/Api.ts";
 
 interface QuestionTableProps {
-    questions: Question[];
+    fetchQuestions: (page: number) => Promise<Question[]>;
 }
 
-const QuestionTable: FC<QuestionTableProps> = ({ questions }) => {
+const QuestionTable: FC<QuestionTableProps> = ({ fetchQuestions }) => {
 
     const navigate = useNavigate();
     const handleDelete = (uuid: string | undefined) => {
         console.log('delete question with id', uuid);
 
         deleteQuestion({ uuid: uuid });
-    }
-
-    if (questions.length === 0) {
-        return <Box>Loading...</Box>
     }
 
     const renderActions = (question: Question) => {
@@ -40,11 +35,12 @@ const QuestionTable: FC<QuestionTableProps> = ({ questions }) => {
 
     return (
         <Table
-            data={questions}
-            tableColumns={[
-                { key: 'uuid', label: 'UUID' },
-                { key: 'text', label: 'Text' },
-                { key: 'actions', label: 'Aktion', render: renderActions }
+            queryKey={'questions'}
+            fetchData={fetchQuestions}
+            columns={[
+                { accessorKey: 'uuid', header: 'UUID' },
+                { accessorKey: 'text', header: 'Text' },
+                { header: 'Aktion', cell: ({ row }) => renderActions(row.original) },
             ]}
         />
     );

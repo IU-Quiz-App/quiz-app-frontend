@@ -1,34 +1,10 @@
-import { FC, useEffect, useState } from 'react';
-import { getAllQuestionsByUser } from "@services/Api.ts";
-import { Question } from "@services/Types.ts";
+import { FC } from 'react';
 import Box from "@components/Box.tsx";
-import QuestionTable from "@pages/question/QuestionTable.tsx";
 import Button from "@components/Button.tsx";
+import QuestionsTable from "@pages/question/QuestionTable.tsx";
+import {getAllQuestionsByUser} from "@services/Api.ts";
 
 export const FlyersTableWrapper: FC = () => {
-
-    const [questions, setQuestions] = useState<Question[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const questions = await getAllQuestionsByUser();
-                setQuestions(questions);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    if (loading) {
-        return <Box>Loading...</Box>;
-    }
-
 
     return (
         <Box className={'w-full flex-col gap-4'}>
@@ -41,7 +17,9 @@ export const FlyersTableWrapper: FC = () => {
                     Frage hinzufügen
                 </Button>
             </div>
-            <QuestionTable questions={questions} />
+            <QuestionsTable
+                fetchQuestions={(page) => getAllQuestionsByUser('23479lsdfkjPhilipp', page, 10)}
+            />
         </Box>
     );
 };
