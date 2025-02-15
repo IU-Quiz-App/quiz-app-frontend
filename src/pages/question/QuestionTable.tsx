@@ -12,10 +12,13 @@ interface QuestionTableProps {
 const QuestionTable: FC<QuestionTableProps> = ({ fetchQuestions }) => {
 
     const navigate = useNavigate();
-    const handleDelete = (uuid: string | undefined) => {
-        console.log('delete question with id', uuid);
+    const handleDelete = (question: Question) => {
+        const uuid = question.uuid;
 
-        deleteQuestion({ uuid: uuid });
+        deleteQuestion(uuid)
+            .then(() => {
+                console.log('Question deleted');
+            });
     }
 
     const renderActions = (question: Question) => {
@@ -27,7 +30,7 @@ const QuestionTable: FC<QuestionTableProps> = ({ fetchQuestions }) => {
                 />
                 <TrashIcon
                     className={'cursor-pointer text-red-500 w-5 h-5'}
-                    onClick={() => handleDelete(question.uuid)}
+                    onClick={() => handleDelete(question)}
                 />
             </div>
         )

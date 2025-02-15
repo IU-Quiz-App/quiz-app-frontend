@@ -177,9 +177,10 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
     }
 
     const handleDelete = () => {
-        console.log('delete question with id', uuid);
-
-        deleteQuestion({ uuid: uuid });
+        deleteQuestion(uuid)
+            .then(() => {
+                console.log('Question deleted');
+            });
     }
 
     return (
