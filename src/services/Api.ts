@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from './Config.ts';
-import { Item, Question } from "./Types.ts";
+import { Question } from "./Types.ts";
 
 const apiClient = axios.create({
     baseURL: config.ApiURL,
@@ -44,15 +44,28 @@ export async function updateQuestion(question: Question): Promise<boolean> {
     }
 }
 
-export async function deleteQuestion(questionId: Item): Promise<void> {
-    console.log(questionId);
+export async function deleteQuestion(uuid: string|null|undefined): Promise<void> {
+    console.log("Delete question with uuid", uuid);
+
+    if (!uuid) {
+        console.error('Cannot delete question without uuid');
+        return;
+    }
+
+    try {
+        const response = await apiClient.delete(`/question/${uuid}`);
+        console.log('Response data of one question:', response.data);
+    } catch (error) {
+        console.error('Failed to delete question:', error);
+        throw error;
+    }
 }
 
-export async function getAllQuestionsByUser(): Promise<Question[]> {
+export async function getAllQuestionsByUser(userId: string, page: number, pageSize: number): Promise<Question[]> {
     try {
-        const userId = '23479lsdfkjPhilipp';
-        const response = await apiClient.get(`/questions?user_id=${userId}`);
-        return response.data as Question[];
+        const response = await apiClient.get(`/questions?user_id=${userId}&page=${page}&page_size=${pageSize}`);
+        console.log('Response data of questions:', response.data);
+        return response.data.items as Question[];
     } catch (error) {
         console.error('Failed to fetch questions:', error);
         return [];
