@@ -1,33 +1,71 @@
 import axios from 'axios';
 import config from './Config.ts';
-import {Question} from "./Types.ts";
-import TestQuestions from "../__tests__/questions.json";
+import { Question } from "./Types.ts";
 
 const apiClient = axios.create({
     baseURL: config.ApiURL,
     withCredentials: true,
-    withXSRFToken: true,
 });
 
-apiClient.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
 export async function getQuestion(uuid: string): Promise<Question> {
-    return TestQuestions[0] as Question;
+    try {
+        const response = await apiClient.get(`/question/${uuid}`);
+        console.log('Response data of one question:', response.data);
+        return response.data as Question;
+    } catch (error) {
+        console.error('Failed to fetch question:', error);
+        throw error;
+    }
 }
 
-export async function saveQuestion(question: Question): Promise<void> {
-    console.log(question);
+export async function saveQuestion(question: Question): Promise<boolean> {
+    try {
+        question.created_by = '23479lsdfkjPhilipp';
+        const response = await apiClient.post(`/question`, question);
+        console.log('Response data of saved question:', response.data);
+        return true;
+    } catch (error) {
+        console.error('Failed to save question:', error);
+        return false;
+    }
 }
 
-export async function updateQuestion(question: Question): Promise<void> {
-    console.log(question);
+export async function updateQuestion(question: Question): Promise<boolean> {
+    try {
+        question.created_by = '23479lsdfkjPhilipp';
+        const response = await apiClient.put(`/question/${question.uuid}`, question);
+        console.log('Response data of updated question:', response.data);
+        return true;
+    } catch (error) {
+        console.error('Failed to update question:', error);
+        return false;
+    }
 }
 
-export async function deleteQuestion(question: Question): Promise<void> {
-    console.log(question);
+export async function deleteQuestion(uuid: string|null|undefined): Promise<void> {
+    console.log("Delete question with uuid", uuid);
+
+    if (!uuid) {
+        console.error('Cannot delete question without uuid');
+        return;
+    }
+
+    try {
+        const response = await apiClient.delete(`/question/${uuid}`);
+        console.log('Response data of one question:', response.data);
+    } catch (error) {
+        console.error('Failed to delete question:', error);
+        throw error;
+    }
 }
 
-export async function getAllQuestions(): Promise<Question[]> {
-
-    return TestQuestions as Question[];
+export async function getAllQuestionsByUser(userId: string, page: number, pageSize: number): Promise<Question[]> {
+    try {
+        const response = await apiClient.get(`/questions?user_id=${userId}&page=${page}&page_size=${pageSize}`);
+        console.log('Response data of questions:', response.data);
+        return response.data.items as Question[];
+    } catch (error) {
+        console.error('Failed to fetch questions:', error);
+        return [];
+    }
 }

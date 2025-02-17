@@ -6,26 +6,19 @@ import {
 import { FC } from 'react';
 
 interface PaginationProps {
-    itemsPerPage: number;
-    totalItems: number;
-    paginate: (pageNumber: number) => void;
-    previousPage: () => void;
-    nextPage: () => void;
+    setPage: (pageNumber: number) => void;
     currentPage: number;
+    totalPages: number;
 }
 
 const Pagination: FC<PaginationProps> = ({
-                                             itemsPerPage,
-                                             totalItems,
-                                             paginate,
-                                             previousPage,
-                                             nextPage,
                                              currentPage,
+                                                setPage,
+                                                totalPages,
                                          }) => {
-    const pageNumbers = [];
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
     const maxPagesToShow = 5;
     let startPage, endPage;
+    const pageNumbers = [];
     if (totalPages <= maxPagesToShow) {
         startPage = 1;
         endPage = totalPages;
@@ -51,7 +44,7 @@ const Pagination: FC<PaginationProps> = ({
         <Link
             to="#"
             key={number}
-            onClick={() => paginate(number)}
+            onClick={() => setPage(number)}
             className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium hover:border-gray-300 hover:text-gray-700 ${
                 currentPage === number
                     ? 'text-gray-500 border-gray-300' 
@@ -62,17 +55,13 @@ const Pagination: FC<PaginationProps> = ({
         </Link>
     );
 
-    if (totalItems <= itemsPerPage) {
-        return null;
-    }
-
     return (
         <nav className="flex items-center justify-between border-t border-gray-200 px-4 pb-4">
             <div className="-mt-px flex w-0 flex-1">
                 {currentPage > 1 ? (
                     <Link
                         to="#"
-                        onClick={previousPage}
+                        onClick={() => setPage(currentPage - 1)}
                         className="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
                     >
                         <ChevronLeftIcon
@@ -103,7 +92,7 @@ const Pagination: FC<PaginationProps> = ({
                 {currentPage < totalPages ? (
                     <Link
                         to="#"
-                        onClick={nextPage}
+                        onClick={() => setPage(currentPage + 1)}
                         className="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
                     >
                         Vorwärts
