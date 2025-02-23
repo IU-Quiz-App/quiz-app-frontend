@@ -9,7 +9,7 @@ const AppLayout: React.FC<AppLayoutProps> = () => {
 
     return (
         <main
-            className="h-full flex flex-row overflow-hidden overflow-x-clip fixed w-full font-semibold font-sans"
+            className="h-full flex-1 flex flex-row overflow-hidden overflow-x-clip fixed w-full font-semibold font-sans"
 
         >
             <div className={'flex flex-col w-full backdrop-blur-sm'}>

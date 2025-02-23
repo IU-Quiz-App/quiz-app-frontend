@@ -222,33 +222,32 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                 Frage erstellen
             </div>
 
-            <div className={'w-full flex flex-row gap-4'}>
-                <TextAreaInput
-                    id={'question'}
-                    name={'question'}
-                    label={'Frage'}
-                    className={'h-28'}
-                    value={questionText}
-                    onChange={handleQuestionTextChange}
-                    errorMessage={errors['question'] as string}
-                    required
-                />
-                <div className={'w-full'}>
-                    <Select
-                        id={'course'}
-                        name={'course'}
-                        label={'Kurs'}
-                        className={'w-32'}
-                        value={course}
-                        required
-                        options={courses}
-                        onChange={handleCourseChange}
-                        errorMessage={errors['course'] as string}
-                    />
-                </div>
-            </div>
-
             <div className={'flex flex-col gap-4'}>
+                <div className={"flex flex-row w-full gap-4"}>
+                    <TextAreaInput
+                        id={'question'}
+                        name={'question'}
+                        label={'Frage'}
+                        className={'grow h-28'}
+                        value={questionText}
+                        onChange={handleQuestionTextChange}
+                        errorMessage={errors['question'] as string}
+                        required
+                    />
+                    <div className={'flex flex-col grow'}>
+                            <Select
+                                id={'course'}
+                                name={'course'}
+                                label={'Kurs'}
+                                className={'w-32 grow'}
+                                value={course}
+                                required
+                                options={courses}
+                                onChange={handleCourseChange}
+                                errorMessage={errors['course'] as string}
+                            />
+                    </div>
+                </div>
                 <div className={"flex flex-row w-full gap-4"}>
                     <TextAreaInput
                         id={'correctAnswer'}

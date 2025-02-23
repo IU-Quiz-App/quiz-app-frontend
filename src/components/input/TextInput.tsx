@@ -17,11 +17,9 @@ interface TextInputProps {
 const TextInput: React.FC<TextInputProps> = ({ id, name, className, onChange, label, placeholder, value, errorMessage, required }) => {
 
     return (
-        <div className={'flex flex-col w-full'}>
-            <InputError id={id} message={errorMessage}/>
-            <div className={'flex flex-col w-full gap-2'}>
-                {label && <InputLabel id={id} label={label} htmlFor={id} required={required}/>}
-
+            <div className={'flex flex-col'}>
+                {label && <InputLabel id={id} label={label} htmlFor={id} required={required} className={'mb-2'}/>}
+                <InputError id={id} message={errorMessage}/>
                 <input
                     id={id}
                     name={name}
@@ -31,7 +29,6 @@ const TextInput: React.FC<TextInputProps> = ({ id, name, className, onChange, la
                     value={value}
                 />
             </div>
-        </div>
     )
 
 }

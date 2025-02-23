@@ -83,11 +83,6 @@ export const InputError: FC<InputErrorProps> = ({ id, message }) => {
             >
                 <div>{message}</div>
             </div>
-
-
-
-
-
         </div>
     );
 };
