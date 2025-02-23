@@ -18,10 +18,10 @@ interface TextInputProps {
 const TextInput: React.FC<TextInputProps> = ({ id, name, options, className, onChange, label, placeholder, value, errorMessage, required }) => {
 
     return (
-        <div className={'flex flex-col w-full gap-2'}>
-            {label && <InputLabel id={id} label={label} htmlFor={id} required={required}/>}
-
+        <div className={'flex flex-col w-full'}>
             <InputError id={id} message={errorMessage}/>
+            <div className={'flex flex-col w-full gap-2'}>
+                {label && <InputLabel id={id} label={label} htmlFor={id} required={required}/>}
                 <select
                     id={id}
                     name={name}
@@ -29,9 +29,9 @@ const TextInput: React.FC<TextInputProps> = ({ id, name, options, className, onC
                     onChange={onChange}
                     value={value}
                 >
-                        <option value={''} className={'bg-yellow-200'}>
-                            {placeholder ?? 'Bitte auswählen'}
-                        </option>
+                    <option value={''} className={'bg-yellow-200'}>
+                        {placeholder ?? 'Bitte auswählen'}
+                    </option>
 
                     {options.map(option => (
                         <option key={option.value} value={option.value}>
@@ -39,6 +39,7 @@ const TextInput: React.FC<TextInputProps> = ({ id, name, options, className, onC
                         </option>
                     ))}
                 </select>
+            </div>
         </div>
     )
 

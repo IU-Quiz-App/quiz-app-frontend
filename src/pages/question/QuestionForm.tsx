@@ -217,7 +217,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
     }
 
     return (
-        <Box className={'w-full flex flex-col gap-6'}>
+        <Box className={'w-full flex flex-col gap-6 text-white'}>
             <div className={'text-2xl mb-6'}>
                 Frage erstellen
             </div>
@@ -240,6 +240,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                         label={'Kurs'}
                         className={'w-32'}
                         value={course}
+                        required
                         options={courses}
                         onChange={handleCourseChange}
                         errorMessage={errors['course'] as string}
