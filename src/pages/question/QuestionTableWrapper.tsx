@@ -7,7 +7,7 @@ import {getAllQuestionsByUser} from "@services/Api.ts";
 export const FlyersTableWrapper: FC = () => {
 
     return (
-        <Box className={'w-full flex-col gap-4'}>
+        <Box className={'w-full flex-col gap-4 min-h-full'}>
             <div className={'flex flex-row justify-between w-full'}>
                 <Button variant={'primary'} className={'w-fit h-fit'} route={'/dashboard'}>
                     Zurück
