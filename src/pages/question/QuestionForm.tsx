@@ -2,9 +2,10 @@ import TextInput from "../../components/input/TextInput.tsx";
 import TextAreaInput from "../../components/input/TextAreaInput.tsx";
 import Button from "../../components/Button.tsx";
 import { Answer, Question } from "../../services/Types.ts";
-import { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {getQuestion, saveQuestion, deleteQuestion, updateQuestion} from "../../services/Api.ts";
 import {useNavigate, useParams} from "react-router-dom";
+import Loader from "@components/Loader.tsx";
 
 interface QuestionFormProps {
     uuid?: string | undefined;
@@ -26,6 +27,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
     const [correctAnswer, setCorrectAnswer] = useState<Answer>({ text: '', explanation: '', isTrue: true });
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -47,6 +49,9 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
         }
 
         fetchData()
+            .then(() => {
+                setLoading(false);
+            })
             .catch((error) => {
                 console.error(error);
             });
@@ -181,6 +186,12 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
             .then(() => {
                 console.log('Question deleted');
             });
+    }
+
+    if (loading) {
+        return (
+            <Loader/>
+        )
     }
 
     return (

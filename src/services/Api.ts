@@ -69,3 +69,7 @@ export async function getAllQuestionsByUser(userId: string, page: number, pageSi
         return [];
     }
 }
+
+export async function getAllCourses(): Promise<string[]> {
+    return ['Mathematik', 'Informatik', 'Physik', 'Chemie', 'Biologie', 'Geschichte', 'Geographie', 'Sport', 'Kunst', 'Musik'];
+}

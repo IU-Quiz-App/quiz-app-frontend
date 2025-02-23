@@ -19,7 +19,7 @@ const TextAreaInput: React.FC<TextAreaInputProps> = ({ id, name, className, onCh
     return (
         <div className={'flex flex-col w-full gap-2'}>
             {label && <InputLabel id={id} label={label} htmlFor={id} required={required}/>}
-            <InputError id={id} message={errorMessage}>
+            <InputError id={id} message={errorMessage}/>
                 <textarea
                     id={id}
                     name={name}
@@ -28,7 +28,6 @@ const TextAreaInput: React.FC<TextAreaInputProps> = ({ id, name, className, onCh
                     placeholder={placeholder}
                     value={value}
                 />
-            </InputError>
         </div>
     )
 

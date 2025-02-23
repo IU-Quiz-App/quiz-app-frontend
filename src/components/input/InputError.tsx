@@ -1,16 +1,19 @@
-import { FC, ReactNode, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/animations/shift-away-subtle.css';
 import 'tippy.js/themes/light.css';
 
+
 interface InputErrorProps {
     id: string;
-    children: ReactNode;
+
     message: string | null | undefined;
 }
 
-export const InputError: FC<InputErrorProps> = ({ id, children, message }) => {
+
+export const InputError: FC<InputErrorProps> = ({ id, message }) => {
+
 
     const removeTooltip = () => {
         const idSelector = '#' + id;
@@ -20,10 +23,13 @@ export const InputError: FC<InputErrorProps> = ({ id, children, message }) => {
         }
     };
 
+
     const showTooltip = () => {
-        const idSelector = `#${id}-input-error-anchor`;
+        const idSelector = `#${id}`;
+
 
         removeTooltip();
+
 
         const content = document
             .getElementById(`${id}-input-error`)
@@ -33,9 +39,12 @@ export const InputError: FC<InputErrorProps> = ({ id, children, message }) => {
             return;
         }
 
-        content.setAttribute('id', `${id}-input-error-tooltip`);
+
+        content.setAttribute('id', `${id}`);
+
 
         content?.classList.remove(`hidden`);
+
 
         tippy(idSelector, {
             showOnCreate: true,
@@ -74,11 +83,11 @@ export const InputError: FC<InputErrorProps> = ({ id, children, message }) => {
             >
                 <div>{message}</div>
             </div>
-            <div
-                id={`${id}-input-error-anchor`}
-            >
-                {children}
-            </div>
+
+
+
+
+
         </div>
     );
 };

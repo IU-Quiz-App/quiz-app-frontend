@@ -1,6 +1,7 @@
 import Button from "../components/Button.tsx";
 import useWebSocket from "react-use-websocket";
 import {useEffect} from "react";
+import {useNavigate} from "react-router-dom";
 
 const Dashboard: React.FC = () => {
 
@@ -16,6 +17,17 @@ const Dashboard: React.FC = () => {
         sendMessage('Hello from the IU-Quiz-App!', true);
     }, [lastMessage]);
 
+
+    const navigate = useNavigate();
+
+    function startGame() {
+        console.log('Start game');
+
+        const session = "sessionUUID";
+
+        navigate('/game/' + session);
+    }
+
     return (
         <div className="w-full h-full flex flex-col items-center justify-center gap-6">
             {/* Welcome */}
@@ -25,7 +37,7 @@ const Dashboard: React.FC = () => {
 
             {/* Buttons */}
             <div className="flex items-center justify-center gap-6">
-                <Button variant={'secondary'} className={'w-fit h-fit'} route={'/quiz/question'}>
+                <Button variant={'secondary'} className={'w-fit h-fit'}  onClick={startGame}>
                     Spiel starten
                 </Button>
 

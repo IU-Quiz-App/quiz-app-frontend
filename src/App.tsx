@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard.tsx";
 import QuestionForm from "./pages/question/QuestionForm.tsx";
 import QuestionTableWrapper from "@pages/question/QuestionTableWrapper.tsx";
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import Game from "@pages/quiz/Game.tsx";
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
                 <Route path="/question/form" element={<QuestionForm/>} />
                 <Route path="/question/form/:uuid" element={<QuestionForm/>} />
                 <Route path="/questions" element={<QuestionTableWrapper/>} />
+                <Route path="/game/:uuid" element={<Game/>} />
 
                 <Route path="/" element={<Navigate to={'/dashboard'} />} />
                 <Route path="*" element={<Navigate to={'/dashboard'} />} />

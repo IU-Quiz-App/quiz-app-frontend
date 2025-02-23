@@ -33,7 +33,7 @@ const Headerbar: FC = () => {
     };
 
     return (
-        <header className="flex items-center justify-between bg-blue-700 text-gray-200 px-6 py-3 shadow-lg">
+        <header className="flex items-center justify-between bg-gradient-to-b from-blue-700 to-blue-900 text-gray-200 px-6 py-3 shadow-lg">
 
             {/* Left - Logo & Menu */}
             <div className="flex items-center gap-4">
