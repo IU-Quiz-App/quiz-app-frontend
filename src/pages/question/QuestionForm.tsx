@@ -1,11 +1,12 @@
-import TextInput from "../../components/input/TextInput.tsx";
 import TextAreaInput from "../../components/input/TextAreaInput.tsx";
 import Button from "../../components/Button.tsx";
 import { Answer, Question } from "../../services/Types.ts";
 import React, { ChangeEvent, useEffect, useState } from "react";
-import {getQuestion, saveQuestion, deleteQuestion, updateQuestion} from "../../services/Api.ts";
+import {getQuestion, saveQuestion, deleteQuestion, updateQuestion, getAllCourses} from "../../services/Api.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import Loader from "@components/Loader.tsx";
+import Box from "@components/Box.tsx";
+import Select from "@components/input/Select.tsx";
 
 interface QuestionFormProps {
     uuid?: string | undefined;
@@ -28,6 +29,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [loading, setLoading] = useState<boolean>(true);
+    const [courses, setCourses] = useState<{ value: string, label: string }[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -48,6 +50,19 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
             setCorrectAnswer(question.answers[0]);
         }
 
+        async function fetchCourses() {
+            const courses = await getAllCourses();
+
+            const courseOptions = courses.map(course => {
+                return {
+                    value: course,
+                    label: course
+                }
+            });
+
+            setCourses(courseOptions);
+        }
+
         fetchData()
             .then(() => {
                 setLoading(false);
@@ -55,6 +70,10 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
             .catch((error) => {
                 console.error(error);
             });
+
+        fetchCourses()
+            .then(() => console.log('Courses fetched'))
+            .catch((error) => console.error('Error fetching courses', error));
     }, [uuid]);
 
     const setDefaultValues = () => {
@@ -72,8 +91,11 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
         setQuestionText(event.target.value);
     }
 
-    const handleCourseTextChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setCourse(event.target.value);
+    const handleCourseChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        const course = event.target.value;
+        console.log('Course:', course);
+
+        setCourse(course);
     }
 
     const handleWrongAnswerTextChange = (index: 0 | 1 | 2) => (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -195,31 +217,35 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
     }
 
     return (
-        <div className={'w-full flex flex-col gap-6'}>
+        <Box className={'w-full flex flex-col gap-6'}>
             <div className={'text-2xl mb-6'}>
                 Frage erstellen
             </div>
 
-            <TextInput
-                id={'course'}
-                name={'course'}
-                label={'Kurs'}
-                className={'w-32'}
-                value={course}
-                onChange={handleCourseTextChange}
-                errorMessage={errors['course'] as string}
-            />
-
-            <TextAreaInput
-                id={'question'}
-                name={'question'}
-                label={'Frage'}
-                className={'h-28'}
-                value={questionText}
-                onChange={handleQuestionTextChange}
-                errorMessage={errors['question'] as string}
-                required
-            />
+            <div className={'w-full flex flex-row gap-4'}>
+                <TextAreaInput
+                    id={'question'}
+                    name={'question'}
+                    label={'Frage'}
+                    className={'h-28'}
+                    value={questionText}
+                    onChange={handleQuestionTextChange}
+                    errorMessage={errors['question'] as string}
+                    required
+                />
+                <div className={'w-full'}>
+                    <Select
+                        id={'course'}
+                        name={'course'}
+                        label={'Kurs'}
+                        className={'w-32'}
+                        value={course}
+                        options={courses}
+                        onChange={handleCourseChange}
+                        errorMessage={errors['course'] as string}
+                    />
+                </div>
+            </div>
 
             <div className={'flex flex-col gap-4'}>
                 <div className={"flex flex-row w-full gap-4"}>
@@ -280,7 +306,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                     </Button>
                 )}
             </div>
-        </div>
+        </Box>
     )
 
 }

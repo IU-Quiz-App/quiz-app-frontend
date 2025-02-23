@@ -7,7 +7,7 @@ interface TextInputProps {
     name: string
     options: { value: string, label: string }[]
     label?: string
-    onSelect?: (event: ChangeEvent<HTMLSelectElement>) => void
+    onChange?: (event: ChangeEvent<HTMLSelectElement>) => void
     className?: string
     placeholder?: string
     value?: string
@@ -15,7 +15,7 @@ interface TextInputProps {
     required?: boolean
 }
 
-const TextInput: React.FC<TextInputProps> = ({ id, name, options, className, onSelect, label, placeholder, value, errorMessage, required }) => {
+const TextInput: React.FC<TextInputProps> = ({ id, name, options, className, onChange, label, placeholder, value, errorMessage, required }) => {
 
     return (
         <div className={'flex flex-col w-full gap-2'}>
@@ -26,14 +26,12 @@ const TextInput: React.FC<TextInputProps> = ({ id, name, options, className, onS
                     id={id}
                     name={name}
                     className={`border-2 border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent ${className}`}
-                    onSelect={onSelect}
+                    onChange={onChange}
                     value={value}
                 >
-                    {placeholder &&
                         <option value={''} className={'bg-yellow-200'}>
-                            {placeholder}
+                            {placeholder ?? 'Bitte auswählen'}
                         </option>
-                    }
 
                     {options.map(option => (
                         <option key={option.value} value={option.value}>
