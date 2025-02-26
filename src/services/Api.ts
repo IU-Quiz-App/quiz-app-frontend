@@ -1,11 +1,17 @@
 import axios from 'axios';
 import config from './Config.ts';
-import { Question } from "./Types.ts";
+import {GameSession, Question, User} from "./Types.ts";
 
 const apiClient = axios.create({
     baseURL: config.ApiURL,
     withCredentials: true,
 });
+
+export async function getUser(): Promise<User> {
+    return {
+        'name': 'Philipp'
+    } as User;
+}
 
 export async function getQuestion(uuid: string): Promise<Question> {
     try {
@@ -20,7 +26,8 @@ export async function getQuestion(uuid: string): Promise<Question> {
 
 export async function saveQuestion(question: Question): Promise<boolean> {
     try {
-        question.created_by = '23479lsdfkjPhilipp';
+        const user = await getUser();
+        question.created_by = user.name;
         const response = await apiClient.post(`/question`, question);
         console.log('Response data of saved question:', response.data);
         return true;
@@ -71,5 +78,63 @@ export async function getAllQuestionsByUser(userId: string, page: number, pageSi
 }
 
 export async function getAllCourses(): Promise<string[]> {
-    return ['Mathematik', 'Informatik', 'Physik', 'Chemie', 'Biologie', 'Geschichte', 'Geographie', 'Sport', 'Kunst', 'Musik'];
+    return ['TestKurs', 'Mathematik', 'Informatik', 'Physik', 'Chemie', 'Biologie', 'Geschichte', 'Geographie', 'Sport', 'Kunst', 'Musik'];
 }
+
+export async function createSession(): Promise<GameSession|null> {
+    try {
+        const user = await getUser();
+        const created_by = user.name;
+        const response = await apiClient.post(`/game/create-game-session`, {created_by});
+
+        const session = response.data.session;
+        return session as GameSession;
+    } catch (error) {
+        console.error('Failed to create game session:', error);
+        return null;
+    }
+}
+
+export async function getGameSession(uuid: string): Promise<GameSession> {
+    return {
+        uuid: uuid,
+        created_by: 'Philipp',
+        created_at: '2021-09-01T12:00:00Z',
+        users: [
+            {
+                name: 'Philipp'
+            },
+            {
+                name: 'Janna'
+            },
+            {
+                name: 'Jannis'
+            },
+        ]
+    }
+}
+
+export async function startGameSession(gameSession: GameSession, quizLength: number, course: string): Promise<boolean> {
+
+    const uuid = gameSession.uuid;
+
+    try {
+        const response = await apiClient.post(`/game/start-game-session`, {
+            uuid: uuid,
+            quiz_length: quizLength,
+            course_name: course
+        });
+
+        if (response.status === 200) {
+            console.log('Game session started');
+            return true;
+        } else {
+            console.error('Failed to start game session:', response);
+            return false;
+        }
+    } catch (error) {
+        console.error('Failed to start game session:', error);
+        return false;
+    }
+}
+

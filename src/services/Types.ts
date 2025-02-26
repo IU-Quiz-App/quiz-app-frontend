@@ -18,3 +18,15 @@ export interface Answer extends Item {
 export interface Item {
     uuid?: string;
 }
+
+export interface GameSession {
+    uuid: string;
+    created_by: string;
+    created_at: string;
+    users: User[];
+
+}
+
+export interface User {
+    name: string;
+}
