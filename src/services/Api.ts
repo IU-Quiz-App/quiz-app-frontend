@@ -114,7 +114,7 @@ export async function getGameSession(uuid: string): Promise<GameSession> {
     }
 }
 
-export async function startGameSession(gameSession: GameSession, quizLength: number, course: string): Promise<boolean> {
+export async function startGameSession(gameSession: GameSession, quizLength: number, course: string): Promise<string> {
 
     const uuid = gameSession.uuid;
 
@@ -126,15 +126,21 @@ export async function startGameSession(gameSession: GameSession, quizLength: num
         });
 
         if (response.status === 200) {
-            console.log('Game session started');
-            return true;
-        } else {
-            console.error('Failed to start game session:', response);
-            return false;
+            return 'success';
         }
+
+            console.error('Failed to start game session:', response);
+            return 'failed';
     } catch (error) {
+        const response = JSON.parse(error.request.response);
+        const errorType = response.error;
+
+        if (errorType == 'Not enough questions for quiz') {
+            return 'not_enough_questions';
+        }
+
         console.error('Failed to start game session:', error);
-        return false;
+        return 'failed';
     }
 }
 

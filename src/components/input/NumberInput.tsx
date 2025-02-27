@@ -50,7 +50,7 @@ export const NumberInput: FC<NumberInputProps> = ({
 
     return (
         <div className={'flex flex-col w-full'}>
-            <InputError id={id} message={errorMessage}/>
+            <InputError id={`${id}-quantity-input-field`} message={errorMessage}/>
             {label && (
                 <InputLabel id={id} label={label} htmlFor={name} required={false}/>
             )}

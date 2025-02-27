@@ -10,7 +10,7 @@ import Button from "@components/Button.tsx";
 
 interface GameFormProps {
     gameSession: GameSession;
-    startGame: (quantity: number, course: string) => void;
+    startGame: (quantity: number, course: string) => Promise<string>;
 }
 
 const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
@@ -18,6 +18,8 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
     const [courses, setCourses] = useState<{ value: string, label: string }[]>([]);
     const [quantity, setQuantity] = useState<number>(10);
     const [course, setCourse] = useState<string>('');
+
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     useEffect(() => {
         async function fetchCourses() {
@@ -47,6 +49,37 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
         return <div>Loading...</div>
     }
 
+    function handleStartGame() {
+
+
+        setErrors({});
+
+        if (!course) {
+            setTimeout(() => {
+                setErrors({
+                    ...errors,
+                    course: 'Bitte wähle einen Kurs aus'
+                });
+            });
+            return;
+        }
+
+
+        startGame(quantity, course)
+            .then((message) => {
+                if (message == 'success') {
+                    console.log('Game started');
+                }
+
+                if (message == 'not_enough_questions') {
+                    setErrors({
+                        ...errors,
+                        'question-quantity': 'Nicht genügend Fragen für das Quiz'
+                    });
+                }
+            });
+    }
+
     return (
         <div className={'flex flex-row gap-6 h-full max-w-2xl mx-auto'}>
             <Box className={'min-w-40 h-full flex flex-col items-start justify-start gap-4'}>
@@ -66,21 +99,23 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
                         <InputLabel id={"course"} htmlFor={"course"} label={"Kurs"} required={true}/>
                         <Select id={"course"} name={"course"} className={'w-48'} placeholder={'Kurs auswählen'}
                                 options={courses}
+                                errorMessage={errors['course']}
                                 onChange={(event) => setCourse(event.target.value)}
                         />
                     </div>
                     <div className={'flex justify-between w-full'}>
-                        <InputLabel id={"question-quatity"} htmlFor={"question-quatity"} label={"Fragenanzahl"} required={true}/>
+                        <InputLabel id={"question-quantity"} htmlFor={"question-quantity"} label={"Fragenanzahl"} required={true}/>
                         <NumberInput
-                            id={"question-quatity"}
-                            name={'question-quatity'}
+                            errorMessage={errors['question-quantity']}
+                            id={"question-quantity"}
+                            name={'question-quantity'}
                             value={10}
                             onChange={onQuantityChange}
                         />
                     </div>
                 </div>
                 <div className={'w-full h-20 flex items-end justify-end'}>
-                    <Button variant={'primary'} className={''} onClick={() => startGame(quantity, course)}>
+                    <Button variant={'primary'} className={''} onClick={handleStartGame}>
                         Spiel starten
                     </Button>
                 </div>

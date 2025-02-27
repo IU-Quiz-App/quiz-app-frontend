@@ -89,25 +89,32 @@ const Game: React.FC = () => {
             });
     }
 
-    function startGame(quantity: number, course: string) {
+    async function startGame(quantity: number, course: string): Promise<string> {
         console.log('Start game');
 
         if (!gameSession) {
             console.error('Cannot start game without game session');
-            return;
+            return 'failed';
         }
 
-        startGameSession(gameSession, quantity, course)
-            .then((success) => {
-                if (success) {
-                    console.log('Game started');
-
+        return await startGameSession(gameSession, quantity, course)
+            .then((message) => {
+                if (message == 'success') {
                     setStep('question');
-
                     nextQuestion();
-                } else {
-                    console.error('Failed to start game');
+                    return message;
                 }
+
+                if (message == 'not_enough_questions') {
+                    return 'not_enough_questions'
+                }
+
+                console.error('Failed to start game');
+                return 'failed';
+            })
+            .catch((error) => {
+                console.error('Error starting game', error);
+                return 'failed';
             });
     }
 
