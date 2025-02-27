@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from './Config.ts';
-import {GameSession, Question, User} from "./Types.ts";
+import {Answer, GameSession, Question, User} from "./Types.ts";
 
 const apiClient = axios.create({
     baseURL: config.ApiURL,
@@ -135,6 +135,46 @@ export async function startGameSession(gameSession: GameSession, quizLength: num
     } catch (error) {
         console.error('Failed to start game session:', error);
         return false;
+    }
+}
+
+export async function getNextQuestion(gameSession: GameSession): Promise<Question|'End of game'|null> {
+    try {
+        const response = await apiClient.get(`/game/next-question/${gameSession.uuid}`);
+        console.log('Response data of next question:', response.data);
+
+        if (response?.data?.info == 'End of game') {
+            return 'End of game';
+        }
+
+        return response.data as Question;
+    } catch (error) {
+        console.error('Failed to fetch next question:', error);
+        return null;
+    }
+}
+export async function answerQuestion(gameSession: GameSession, question: Question, answer: Answer): Promise<Answer|null> {
+    try {
+        const user = await getUser();
+        console.log('Answer question', answer);
+
+        const response = await apiClient.post(`/game/answer-question`, {
+            session_uuid: gameSession.uuid,
+            question_uuid: question.uuid,
+            user_uuid: user.name,
+            answer: answer.uuid
+        });
+
+        if (response.status === 200) {
+            console.log('Answered question');
+            return question.answers.find((a) => a.isTrue) as Answer;
+        } else {
+            console.error('Failed to answer question:', response);
+            return null;
+        }
+    } catch (error) {
+        console.error('Failed to answer question:', error);
+        return null;
     }
 }
 

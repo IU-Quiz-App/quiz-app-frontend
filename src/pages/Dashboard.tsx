@@ -2,7 +2,6 @@ import Button from "../components/Button.tsx";
 import useWebSocket from "react-use-websocket";
 import {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
-import {createSession} from "@services/Api.ts";
 
 const Dashboard: React.FC = () => {
 
@@ -24,15 +23,7 @@ const Dashboard: React.FC = () => {
     function startGame() {
         console.log('Start game');
 
-        createSession()
-            .then((session) => {
-                if (!session) {
-                    return;
-                }
-
-                navigate('/game/' + session.uuid);
-                return session;
-            });
+        navigate('/game');
 
     }
 

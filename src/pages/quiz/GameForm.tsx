@@ -1,18 +1,19 @@
 import Box from "../../components/Box.tsx";
 import Select from "@components/input/Select.tsx";
 import {ChangeEvent, useEffect, useState} from "react";
-import {getAllCourses, startGameSession} from "@services/Api.ts";
+import {getAllCourses} from "@services/Api.ts";
 import NumberInput from "@components/input/NumberInput.tsx";
 import InputLabel from "@components/input/InputLabel.tsx";
 import {GameSession} from "@services/Types.ts";
 import { Crown } from "lucide-react";
 import Button from "@components/Button.tsx";
 
-interface StartGameProps {
+interface GameFormProps {
     gameSession: GameSession;
+    startGame: (quantity: number, course: string) => void;
 }
 
-const StartGame: React.FC<StartGameProps> = ({ gameSession }) => {
+const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
 
     const [courses, setCourses] = useState<{ value: string, label: string }[]>([]);
     const [quantity, setQuantity] = useState<number>(10);
@@ -42,25 +43,12 @@ const StartGame: React.FC<StartGameProps> = ({ gameSession }) => {
         setQuantity(value);
     }
 
-    function startGame() {
-        console.log('Start game');
-
-        startGameSession(gameSession, quantity, course)
-            .then((success) => {
-                if (success) {
-                    console.log('Game started');
-                } else {
-                    console.error('Failed to start game');
-                }
-            });
-    }
-
     if (!gameSession) {
         return <div>Loading...</div>
     }
 
     return (
-        <div className={'flex flex-row gap-6 h-full w-1/2 mx-auto'}>
+        <div className={'flex flex-row gap-6 h-full max-w-2xl mx-auto'}>
             <Box className={'min-w-40 h-full flex flex-col items-start justify-start gap-4'}>
                 <span className={'text-sm'}>Spieler</span>
                 <div className={'flex flex-col gap-2 pl-2 w-full'}>
@@ -92,7 +80,7 @@ const StartGame: React.FC<StartGameProps> = ({ gameSession }) => {
                     </div>
                 </div>
                 <div className={'w-full h-20 flex items-end justify-end'}>
-                    <Button variant={'primary'} className={''} onClick={startGame}>
+                    <Button variant={'primary'} className={''} onClick={() => startGame(quantity, course)}>
                         Spiel starten
                     </Button>
                 </div>
@@ -102,4 +90,4 @@ const StartGame: React.FC<StartGameProps> = ({ gameSession }) => {
 
 }
 
-export default StartGame;
+export default GameForm;
