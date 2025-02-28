@@ -4,6 +4,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {GameSession, Question} from "@services/Types.ts";
 import {createSession, getGameSession, getNextQuestion, startGameSession} from "@services/Api.ts";
 import GameQuestion from "@pages/quiz/GameQuestion.tsx";
+import Loader from "@components/Loader.tsx";
 
 
 const Game: React.FC = () => {
@@ -119,7 +120,11 @@ const Game: React.FC = () => {
     }
 
     if (!gameSession) {
-        return <div>Loading...</div>
+        return (
+            <div className={'w-full h-full flex items-center justify-center'}>
+                <Loader className={'w-28'}/>
+            </div>
+        )
     }
 
     if (step === 'start') {
@@ -133,6 +138,12 @@ const Game: React.FC = () => {
             <GameQuestion question={currentQuestion} gameSession={gameSession} nextQuestion={nextQuestion}/>
         )
     }
+
+    return (
+        <div className={'w-full h-full flex items-center justify-center'}>
+            <Loader className={'w-28'}/>
+        </div>
+    )
 }
 
 export default Game;
