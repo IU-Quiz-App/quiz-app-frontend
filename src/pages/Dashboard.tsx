@@ -2,12 +2,11 @@ import Button from "../components/Button.tsx";
 import useWebSocket from "react-use-websocket";
 import {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
+import Config from "@services/Config.ts";
 
 const Dashboard: React.FC = () => {
 
-    const WEBSOCKET_URL = "ws.dev.iu-quiz.de";
-
-    const { sendMessage, lastMessage } = useWebSocket(WEBSOCKET_URL, {
+    const { sendMessage, lastMessage } = useWebSocket(Config.WebsocketURL, {
         shouldReconnect: () => true,
         reconnectAttempts: 10,
         reconnectInterval: 3000,
