@@ -1,23 +1,35 @@
 import GameForm from "@pages/quiz/GameForm.tsx";
-import React, {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
-import {GameSession, Question} from "@services/Types.ts";
-import {createSession, getGameSession, getNextQuestion, startGameSession} from "@services/Api.ts";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { GameSession, Question } from "@services/Types.ts";
+import { createSession, getGameSession, getNextQuestion, startGameSession } from "@services/Api.ts";
 import GameQuestion from "@pages/quiz/GameQuestion.tsx";
 import Loader from "@components/Loader.tsx";
 
+import useWebSocket from "react-use-websocket";
+import Config from "@services/Config.ts";
 
 const Game: React.FC = () => {
     const { uuid: uuid } = useParams();
     const [gameSession, setGameSession] = useState<GameSession | null>(
         JSON.parse(localStorage.getItem('game-session') as string) as GameSession || null
     );
-    const [step, setStep] = useState<'start'|'question'|'end'>(
+    const [step, setStep] = useState<'start' | 'question' | 'end'>(
         JSON.parse(localStorage.getItem('step') as string) || 'start'
     );
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(
         JSON.parse(localStorage.getItem('current-question') as string) as Question || null
     );
+
+    const { sendMessage, lastMessage } = useWebSocket(Config.WebsocketURL, {
+        shouldReconnect: () => true,
+        reconnectAttempts: 10,
+        reconnectInterval: 3000,
+    });
+
+    useEffect(() => {
+        sendMessage('Hello from the IU-Quiz-App!', true);
+    }, [lastMessage]);
 
     useEffect(() => {
         localStorage.setItem('game-session', JSON.stringify(gameSession) as string || '');
@@ -98,6 +110,14 @@ const Game: React.FC = () => {
             return 'failed';
         }
 
+        const message = JSON.stringify({
+            type: "start-game",
+            content: "Hello from the IU-Quiz-App!",
+            gameSessionId: gameSession.uuid
+        });
+
+        sendMessage(message);
+
         return await startGameSession(gameSession, quantity, course)
             .then((message) => {
                 if (message == 'success') {
@@ -122,26 +142,26 @@ const Game: React.FC = () => {
     if (!gameSession) {
         return (
             <div className={'w-full h-full flex items-center justify-center'}>
-                <Loader className={'w-28'}/>
+                <Loader className={'w-28'} />
             </div>
         )
     }
 
     if (step === 'start') {
-        return  (
-            <GameForm gameSession={gameSession} startGame={startGame}/>
+        return (
+            <GameForm gameSession={gameSession} startGame={startGame} />
         )
     }
 
     if (step === 'question' && currentQuestion) {
         return (
-            <GameQuestion question={currentQuestion} gameSession={gameSession} nextQuestion={nextQuestion}/>
+            <GameQuestion question={currentQuestion} gameSession={gameSession} nextQuestion={nextQuestion} />
         )
     }
 
     return (
         <div className={'w-full h-full flex items-center justify-center'}>
-            <Loader className={'w-28'}/>
+            <Loader className={'w-28'} />
         </div>
     )
 }
