@@ -65,6 +65,8 @@ const Game: React.FC = () => {
             return
         }
 
+        setSocketUrl(Config.WebsocketURL);
+
         async function fetchGameSession() {
             if (!uuid) {
                 console.error('Cannot start game without uuid');
@@ -113,18 +115,6 @@ const Game: React.FC = () => {
             console.error('Cannot start game without game session');
             return 'failed';
         }
-
-        setSocketUrl(Config.WebsocketURL);
-
-        const websocketMessage = JSON.stringify({
-            type: "start-game",
-            content: "Hello from the IU-Quiz-App!",
-            gameSessionId: gameSession.uuid
-        });
-
-        console.log("Sending WebSocket message:", websocketMessage);
-
-        sendMessage(websocketMessage);
 
         return await startGameSession(gameSession, quantity, course)
             .then((message) => {
