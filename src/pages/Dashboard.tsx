@@ -1,20 +1,20 @@
 import Button from "../components/Button.tsx";
-import useWebSocket from "react-use-websocket";
-import {useEffect} from "react";
-import {useNavigate} from "react-router-dom";
-import Config from "@services/Config.ts";
+//import useWebSocket from "react-use-websocket";
+//import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+//import Config from "@services/Config.ts";
 
 const Dashboard: React.FC = () => {
 
-    const { sendMessage, lastMessage } = useWebSocket(Config.WebsocketURL, {
-        shouldReconnect: () => true,
-        reconnectAttempts: 10,
-        reconnectInterval: 3000,
-    });
-
-    useEffect(() => {
-        sendMessage('Hello from the IU-Quiz-App!', true);
-    }, [lastMessage]);
+    //    const { sendMessage, lastMessage } = useWebSocket(Config.WebsocketURL, {
+    //        shouldReconnect: () => true,
+    //        reconnectAttempts: 10,
+    //        reconnectInterval: 3000,
+    //    });
+    //
+    //    useEffect(() => {
+    //        sendMessage('Hello from the IU-Quiz-App!', true);
+    //    }, [lastMessage]);
 
 
     const navigate = useNavigate();
@@ -35,7 +35,7 @@ const Dashboard: React.FC = () => {
 
             {/* Buttons */}
             <div className="flex items-center justify-center gap-6">
-                <Button variant={'secondary'} className={'w-fit h-fit'}  onClick={startGame}>
+                <Button variant={'secondary'} className={'w-fit h-fit'} onClick={startGame}>
                     Spiel starten
                 </Button>
 
@@ -47,9 +47,9 @@ const Dashboard: React.FC = () => {
                     Alle Fragen anzeigen
                 </Button>
 
-                <Button variant={'tertiary'} className={'w-fit h-fit'} onClick={() => sendMessage('Hello from the IU-Quiz-App!', true)}>
+                {/* <Button variant={'tertiary'} className={'w-fit h-fit'} onClick={() => sendMessage('Hello from the IU-Quiz-App!', true)}>
                     WebSocket Test
-                </Button>
+                </Button> */}
             </div>
         </div>
     );

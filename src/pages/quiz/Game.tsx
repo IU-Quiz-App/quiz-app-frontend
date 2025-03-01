@@ -21,10 +21,13 @@ const Game: React.FC = () => {
         JSON.parse(localStorage.getItem('current-question') as string) as Question || null
     );
 
-    const { sendMessage, lastMessage } = useWebSocket(Config.WebsocketURL, {
+    const [socketUrl, setSocketUrl] = useState<string | null>(null);
+    const { sendMessage, lastMessage } = useWebSocket(socketUrl ?? null, {
         shouldReconnect: () => true,
         reconnectAttempts: 10,
         reconnectInterval: 3000,
+        onOpen: () => console.log("WebSocket connected"),
+        onClose: () => console.log("WebSocket disconnected"),
     });
 
     useEffect(() => {
@@ -110,11 +113,15 @@ const Game: React.FC = () => {
             return 'failed';
         }
 
+        setSocketUrl(Config.WebsocketURL);
+
         const message = JSON.stringify({
             type: "start-game",
             content: "Hello from the IU-Quiz-App!",
             gameSessionId: gameSession.uuid
         });
+
+        console.log("Sending WebSocket message:", message);
 
         sendMessage(message);
 
