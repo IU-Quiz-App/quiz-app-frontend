@@ -21,8 +21,8 @@ const Game: React.FC = () => {
         JSON.parse(localStorage.getItem('current-question') as string) as Question || null
     );
 
-    const [socketUrl, setSocketUrl] = useState<string | null>(null);
-    const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
+    const [socket, setSocketUrl] = useState<WebSocket | null>(null);
+    const { sendMessage, lastMessage } = useWebSocket(socket ? socket.url : '', {
         shouldReconnect: () => true,
         reconnectAttempts: 10,
         reconnectInterval: 3000,
@@ -30,17 +30,18 @@ const Game: React.FC = () => {
         onClose: () => console.log("WebSocket disconnected"),
     });
 
-    useEffect(() => {
-        if (readyState === 1 && socketUrl) {
-            const message = JSON.stringify({
-                type: "connection",
-                content: "Connected to WebSocket",
-            });
-            sendMessage(message);
-            console.log("WebSocket message sent:", message);
-        }
-    }, [readyState, socketUrl]);
-
+    //    useEffect(() => {
+    //        if (readyState === 1 && socketUrl && gameSession) {
+    //            const message = JSON.stringify({
+    //                type: "connection",
+    //                content: "Connected to WebSocket",
+    //                gameSessionId: gameSession.uuid
+    //            });
+    //            sendMessage(message);
+    //            console.log("WebSocket message sent:", message);
+    //        }
+    //    }, [readyState, socketUrl]);
+    //
     useEffect(() => {
         if (lastMessage !== null) {
             console.log("Received:", lastMessage.data);
