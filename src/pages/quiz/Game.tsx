@@ -67,6 +67,14 @@ const Game: React.FC = () => {
 
         setSocketUrl(Config.WebsocketURL);
 
+        sendMessage(
+            JSON.stringify({
+                action: "update-websocket-information",
+                session_uuid: uuid,
+                user_uuid: "Philipp"
+            })
+        );
+
         async function fetchGameSession() {
             if (!uuid) {
                 console.error('Cannot start game without uuid');
