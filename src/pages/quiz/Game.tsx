@@ -21,8 +21,8 @@ const Game: React.FC = () => {
         JSON.parse(localStorage.getItem('current-question') as string) as Question || null
     );
 
-    const [socket, setSocketUrl] = useState<WebSocket | null>(null);
-    const { sendMessage, lastMessage } = useWebSocket(socket ? socket.url : '', {
+    const [socketUrl, setSocketUrl] = useState<string | null>(null);
+    const { sendMessage, lastMessage } = useWebSocket(socketUrl || '', {
         shouldReconnect: () => true,
         reconnectAttempts: 10,
         reconnectInterval: 3000,
