@@ -22,7 +22,7 @@ const Game: React.FC = () => {
     );
 
     const [socketUrl, setSocketUrl] = useState<string | null>(null);
-    const { sendMessage, lastMessage } = useWebSocket(socketUrl ?? null, {
+    const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
         shouldReconnect: () => true,
         reconnectAttempts: 10,
         reconnectInterval: 3000,
@@ -31,7 +31,20 @@ const Game: React.FC = () => {
     });
 
     useEffect(() => {
-        sendMessage('Hello from the IU-Quiz-App!', true);
+        if (readyState === 1 && socketUrl) {
+            const message = JSON.stringify({
+                type: "connection",
+                content: "Connected to WebSocket",
+            });
+            sendMessage(message);
+            console.log("WebSocket message sent:", message);
+        }
+    }, [readyState, socketUrl]);
+
+    useEffect(() => {
+        if (lastMessage !== null) {
+            console.log("Received:", lastMessage.data);
+        }
     }, [lastMessage]);
 
     useEffect(() => {
