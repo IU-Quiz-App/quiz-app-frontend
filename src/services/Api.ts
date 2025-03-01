@@ -9,7 +9,15 @@ const apiClient = axios.create({
 
 export async function getUser(): Promise<User> {
     return {
-        'name': 'Philipp'
+        'name': 'Philipp',
+        'uuid': '23479lsdfkjPhilipp'
+    } as User;
+}
+
+export async function getUserByUUID(uuid: string): Promise<User> {
+    return {
+        'name': uuid,
+        'uuid': uuid
     } as User;
 }
 
@@ -96,21 +104,13 @@ export async function createSession(): Promise<GameSession|null> {
 }
 
 export async function getGameSession(uuid: string): Promise<GameSession> {
-    return {
-        uuid: uuid,
-        created_by: 'Philipp',
-        created_at: '2021-09-01T12:00:00Z',
-        users: [
-            {
-                name: 'Philipp'
-            },
-            {
-                name: 'Janna'
-            },
-            {
-                name: 'Jannis'
-            },
-        ]
+    try {
+        const response = await apiClient.get(`/game/game-session/${uuid}`);
+
+        return response.data as GameSession;
+    } catch (error) {
+        console.error('Failed to fetch session:', error);
+        throw error;
     }
 }
 

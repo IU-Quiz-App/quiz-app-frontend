@@ -1,12 +1,13 @@
 import Box from "../../components/Box.tsx";
 import Select from "@components/input/Select.tsx";
-import {ChangeEvent, useEffect, useState} from "react";
-import {getAllCourses} from "@services/Api.ts";
+import React, {ChangeEvent, useEffect, useState} from "react";
+import {getAllCourses, getUserByUUID} from "@services/Api.ts";
 import NumberInput from "@components/input/NumberInput.tsx";
 import InputLabel from "@components/input/InputLabel.tsx";
-import {GameSession} from "@services/Types.ts";
+import {GameSession, User} from "@services/Types.ts";
 import { Crown } from "lucide-react";
 import Button from "@components/Button.tsx";
+import Loader from "@components/Loader.tsx";
 
 interface GameFormProps {
     gameSession: GameSession;
@@ -18,6 +19,9 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
     const [courses, setCourses] = useState<{ value: string, label: string }[]>([]);
     const [quantity, setQuantity] = useState<number>(10);
     const [course, setCourse] = useState<string>('');
+    const [users, setUsers] = useState<User[]>([]);
+
+    const [loading, setLoading] = useState<boolean>(true);
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -35,9 +39,27 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
             setCourses(courseOptions);
         }
 
+        async function fetchUsers() {
+            const users = gameSession.users.map(async (uuid) => {
+                return await getUserByUUID(uuid);
+            });
+
+            setUsers(await Promise.all(users));
+        }
+
             fetchCourses()
-                .then(() => console.log('Courses fetched'))
+                .then(() => {
+                    console.log('Courses fetched')
+                    setLoading(false);
+                })
                 .catch((error) => console.error('Error fetching courses', error));
+
+        fetchUsers()
+            .then(() => {
+                console.log('Users fetched')
+                setLoading(false);
+            })
+            .catch((error) => console.error('Error fetching users', error));
     }, []);
 
     function onQuantityChange(event: ChangeEvent<HTMLInputElement>) {
@@ -80,13 +102,21 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
             });
     }
 
+    if (loading) {
+        return (
+            <div className={'w-full h-full flex items-center justify-center'}>
+                <Loader className={'w-28'}/>
+            </div>
+        )
+    }
+
     return (
         <div className={'flex flex-row gap-6 h-full max-w-2xl mx-auto'}>
             <Box className={'min-w-40 h-full flex flex-col items-start justify-start gap-4'}>
                 <span className={'text-sm'}>Spieler</span>
                 <div className={'flex flex-col gap-2 pl-2 w-full'}>
-                {gameSession.users.map((user) => (
-                        <Box className={'w-full !px-1 !py-2 flex flex-row justify-between'} key={user.name}>
+                {users && users.map((user, index) => (
+                        <Box className={'w-full !px-1 !py-2 flex flex-row justify-between'} key={`user-${index}`}>
                             <span>{user.name}</span>
                             {user.name === gameSession.created_by && <Crown className={'w-6 h-6'}/>}
                         </Box>

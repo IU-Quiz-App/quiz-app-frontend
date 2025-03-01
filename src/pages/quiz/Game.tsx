@@ -72,6 +72,7 @@ const Game: React.FC = () => {
                 return;
             }
             const gameSession = await getGameSession(uuid);
+
             setGameSession(gameSession);
         }
 

@@ -23,10 +23,10 @@ export interface GameSession {
     uuid: string;
     created_by: string;
     created_at: string;
-    users: User[];
-
+    users: string[];
 }
 
 export interface User {
     name: string;
+    uuid: string;
 }
