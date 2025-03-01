@@ -173,7 +173,11 @@ export async function answerQuestion(gameSession: GameSession, question: Questio
 
         if (response.status === 200) {
             console.log('Answered question');
-            return question.answers.find((a) => a.isTrue) as Answer;
+            const correctAnswerUUID = response.data.correct_answer;
+
+            if (correctAnswerUUID) {
+                return question.answers.find((a) => a.uuid === correctAnswerUUID) as Answer;
+            }
         } else {
             console.error('Failed to answer question:', response);
             return null;
