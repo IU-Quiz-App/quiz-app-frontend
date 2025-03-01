@@ -115,15 +115,15 @@ const Game: React.FC = () => {
 
         setSocketUrl(Config.WebsocketURL);
 
-        const message = JSON.stringify({
+        const websocketMessage = JSON.stringify({
             type: "start-game",
             content: "Hello from the IU-Quiz-App!",
             gameSessionId: gameSession.uuid
         });
 
-        console.log("Sending WebSocket message:", message);
+        console.log("Sending WebSocket message:", websocketMessage);
 
-        sendMessage(message);
+        sendMessage(websocketMessage);
 
         return await startGameSession(gameSession, quantity, course)
             .then((message) => {
