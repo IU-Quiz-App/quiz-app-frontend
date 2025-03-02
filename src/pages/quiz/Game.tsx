@@ -31,6 +31,12 @@ const Game: React.FC = () => {
     });
 
     useEffect(() => {
+        if (lastMessage) {
+            console.log("Message received:", lastMessage.data);
+        }
+    }, [lastMessage]);
+
+    useEffect(() => {
         sendMessage('Hello from the IU-Quiz-App!', true);
     }, [lastMessage]);
 
