@@ -10,7 +10,7 @@ const apiClient = axios.create({
 export async function getUser(): Promise<User> {
     return {
         'name': 'Philipp',
-        'uuid': '23479lsdfkjPhilipp'
+        'uuid': 'Philipp'
     } as User;
 }
 

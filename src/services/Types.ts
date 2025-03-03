@@ -24,6 +24,19 @@ export interface GameSession {
     created_by: string;
     created_at: string;
     users: string[];
+    questions?: Question[];
+    users_answers?: UserAnswer[];
+}
+
+export interface UserAnswer {
+    timed_out?: string;
+    game_session_uuid: string;
+    question_uuid: string;
+    user_uuid: string;
+    uuid: string;
+    answered_at: string;
+    answer: string;
+    correct_answer: string;
 }
 
 export interface User {

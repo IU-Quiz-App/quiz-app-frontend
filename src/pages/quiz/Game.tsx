@@ -8,6 +8,7 @@ import Loader from "@components/Loader.tsx";
 
 import useWebSocket from "react-use-websocket";
 import Config from "@services/Config.ts";
+import GameResult from "@pages/quiz/GameResult.tsx";
 
 const Game: React.FC = () => {
     const { uuid: uuid } = useParams();
@@ -103,7 +104,14 @@ const Game: React.FC = () => {
                 if (question) {
                     if (question === 'End of game') {
                         console.log('End of game');
-                        setStep('end');
+
+
+                        getGameSession(uuid)
+                            .then((newSession) => {
+                                setGameSession(newSession);
+                                setStep('end');
+                            });
+
                         setCurrentQuestion(null);
                         return;
                     }
@@ -162,6 +170,12 @@ const Game: React.FC = () => {
     if (step === 'question' && currentQuestion) {
         return (
             <GameQuestion question={currentQuestion} gameSession={gameSession} nextQuestion={nextQuestion} />
+        )
+    }
+
+    if (step === 'end') {
+        return (
+            <GameResult gameSession={gameSession}/>
         )
     }
 
