@@ -54,12 +54,12 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
             })
             .catch((error) => console.error('Error fetching courses', error));
 
-        // fetchUsers()
-        //     .then(() => {
-        //         console.log('Users fetched')
-        //         setLoading(false);
-        //     })
-        //     .catch((error) => console.error('Error fetching users', error));
+        fetchUsers()
+            .then(() => {
+                console.log('Users fetched')
+                setLoading(false);
+            })
+            .catch((error) => console.error('Error fetching users', error));
     }, [gameSession]);
 
     function onQuantityChange(event: ChangeEvent<HTMLInputElement>) {
