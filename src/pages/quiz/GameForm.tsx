@@ -23,8 +23,8 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
 
     const [loading, setLoading] = useState<boolean>(true);
 
-    // const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    //
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
     // useEffect(() => {
     //     async function fetchCourses() {
     //         const courses = await getAllCourses();
@@ -61,48 +61,48 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
     //         })
     //         .catch((error) => console.error('Error fetching users', error));
     // }, [gameSession]);
-    //
-    // function onQuantityChange(event: ChangeEvent<HTMLInputElement>) {
-    //     const value = parseInt(event.target.value);
-    //     setQuantity(value);
-    // }
-    //
-    // if (!gameSession) {
-    //     return <div>Loading...</div>
-    // }
-    //
-    // function handleStartGame() {
-    //
-    //
-    //     setErrors({});
-    //
-    //     if (!course) {
-    //         setTimeout(() => {
-    //             setErrors({
-    //                 ...errors,
-    //                 course: 'Bitte wähle einen Kurs aus'
-    //             });
-    //         });
-    //         return;
-    //     }
-    //
-    //     setLoading(true);
-    //
-    //     startGame(quantity, course)
-    //         .then((message) => {
-    //             if (message == 'success') {
-    //                 console.log('Game started');
-    //             }
-    //
-    //             if (message == 'not_enough_questions') {
-    //                 setLoading(false);
-    //                 setErrors({
-    //                     ...errors,
-    //                     'question-quantity': 'Nicht genügend Fragen für das Quiz'
-    //                 });
-    //             }
-    //         });
-    // }
+
+    function onQuantityChange(event: ChangeEvent<HTMLInputElement>) {
+        const value = parseInt(event.target.value);
+        setQuantity(value);
+    }
+
+    if (!gameSession) {
+        return <div>Loading...</div>
+    }
+
+    function handleStartGame() {
+
+
+        setErrors({});
+
+        if (!course) {
+            setTimeout(() => {
+                setErrors({
+                    ...errors,
+                    course: 'Bitte wähle einen Kurs aus'
+                });
+            });
+            return;
+        }
+
+        setLoading(true);
+
+        startGame(quantity, course)
+            .then((message) => {
+                if (message == 'success') {
+                    console.log('Game started');
+                }
+
+                if (message == 'not_enough_questions') {
+                    setLoading(false);
+                    setErrors({
+                        ...errors,
+                        'question-quantity': 'Nicht genügend Fragen für das Quiz'
+                    });
+                }
+            });
+    }
 
     if (loading) {
         return (
@@ -112,48 +112,48 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
         )
     }
 
-    // return (
-    //     <div className={'flex flex-row gap-6 h-full max-w-2xl mx-auto'}>
-    //         <Box className={'min-w-40 h-full flex flex-col items-start justify-start gap-4'}>
-    //             <span className={'text-sm'}>Spieler</span>
-    //             <div className={'flex flex-col gap-2 pl-2 w-full'}>
-    //             {users && users.map((user, index) => (
-    //                     <Box className={'w-full !px-1 !py-2 flex flex-row justify-between'} key={`user-${index}`}>
-    //                         <span>{user.name}</span>
-    //                         {user.name === gameSession.created_by && <Crown className={'w-6 h-6'}/>}
-    //                     </Box>
-    //             ))}
-    //             </div>
-    //         </Box>
-    //         <Box className={'grow h-full flex flex-col justify-between'}>
-    //             <div className={'w-full grow flex flex-col gap-4'}>
-    //                 <div className={'flex justify-between w-full'}>
-    //                     <InputLabel id={"course"} htmlFor={"course"} label={"Kurs"} required={true}/>
-    //                     <Select id={"course"} name={"course"} className={'w-48'} placeholder={'Kurs auswählen'}
-    //                             options={courses}
-    //                             errorMessage={errors['course']}
-    //                             onChange={(event) => setCourse(event.target.value)}
-    //                     />
-    //                 </div>
-    //                 <div className={'flex justify-between w-full'}>
-    //                     <InputLabel id={"question-quantity"} htmlFor={"question-quantity"} label={"Fragenanzahl"} required={true}/>
-    //                     <NumberInput
-    //                         errorMessage={errors['question-quantity']}
-    //                         id={"question-quantity"}
-    //                         name={'question-quantity'}
-    //                         value={10}
-    //                         onChange={onQuantityChange}
-    //                     />
-    //                 </div>
-    //             </div>
-    //             <div className={'w-full h-20 flex items-end justify-end'}>
-    //                 <Button variant={'primary'} className={''} onClick={handleStartGame}>
-    //                     Spiel starten
-    //                 </Button>
-    //             </div>
-    //         </Box>
-    //     </div>
-    // )
+    return (
+        <div className={'flex flex-row gap-6 h-full max-w-2xl mx-auto'}>
+            <Box className={'min-w-40 h-full flex flex-col items-start justify-start gap-4'}>
+                <span className={'text-sm'}>Spieler</span>
+                <div className={'flex flex-col gap-2 pl-2 w-full'}>
+                {users && users.map((user, index) => (
+                        <Box className={'w-full !px-1 !py-2 flex flex-row justify-between'} key={`user-${index}`}>
+                            <span>{user.name}</span>
+                            {user.name === gameSession.created_by && <Crown className={'w-6 h-6'}/>}
+                        </Box>
+                ))}
+                </div>
+            </Box>
+            <Box className={'grow h-full flex flex-col justify-between'}>
+                <div className={'w-full grow flex flex-col gap-4'}>
+                    <div className={'flex justify-between w-full'}>
+                        <InputLabel id={"course"} htmlFor={"course"} label={"Kurs"} required={true}/>
+                        <Select id={"course"} name={"course"} className={'w-48'} placeholder={'Kurs auswählen'}
+                                options={courses}
+                                errorMessage={errors['course']}
+                                onChange={(event) => setCourse(event.target.value)}
+                        />
+                    </div>
+                    <div className={'flex justify-between w-full'}>
+                        <InputLabel id={"question-quantity"} htmlFor={"question-quantity"} label={"Fragenanzahl"} required={true}/>
+                        <NumberInput
+                            errorMessage={errors['question-quantity']}
+                            id={"question-quantity"}
+                            name={'question-quantity'}
+                            value={10}
+                            onChange={onQuantityChange}
+                        />
+                    </div>
+                </div>
+                <div className={'w-full h-20 flex items-end justify-end'}>
+                    <Button variant={'primary'} className={''} onClick={handleStartGame}>
+                        Spiel starten
+                    </Button>
+                </div>
+            </Box>
+        </div>
+    )
 
 }
 
