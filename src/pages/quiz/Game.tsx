@@ -2,7 +2,7 @@ import GameForm from "@pages/quiz/GameForm.tsx";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { GameSession, Question } from "@services/Types.ts";
-import { createSession, getGameSession, getNextQuestion, startGameSession } from "@services/Api.ts";
+import { getGameSession, getNextQuestion, startGameSession } from "@services/Api.ts";
 import GameQuestion from "@pages/quiz/GameQuestion.tsx";
 import Loader from "@components/Loader.tsx";
 
@@ -15,12 +15,8 @@ const Game: React.FC = () => {
     const [gameSession, setGameSession] = useState<GameSession | null>(
         JSON.parse(localStorage.getItem('game-session') as string) as GameSession || null
     );
-    const [step, setStep] = useState<'start' | 'question' | 'end'>(
-        JSON.parse(localStorage.getItem('step') as string) || 'start'
-    );
-    const [currentQuestion, setCurrentQuestion] = useState<Question | null>(
-        JSON.parse(localStorage.getItem('current-question') as string) as Question || null
-    );
+    const [step, setStep] = useState<'start' | 'question' | 'end'>('start');
+    const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
 
     const [socketUrl, setSocketUrl] = useState<string | null>(null);
     const { sendMessage, lastMessage } = useWebSocket(socketUrl ?? null, {
@@ -37,40 +33,40 @@ const Game: React.FC = () => {
         }
     }, [lastMessage]);
 
-    //    useEffect(() => {
-    //        sendMessage('Hello from the IU-Quiz-App!', true);
-    //    }, [lastMessage]);
-
     useEffect(() => {
         localStorage.setItem('game-session', JSON.stringify(gameSession) as string || '');
     }, [gameSession]);
 
-    useEffect(() => {
-        localStorage.setItem('step', JSON.stringify(step) || 'start');
-    }, [step]);
-
-    useEffect(() => {
-        localStorage.setItem('current-question', JSON.stringify(currentQuestion) || '');
-    }, [currentQuestion]);
-
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log('Game started with uuid:', uuid);
-
         if (!uuid) {
-            createSession()
-                .then((session) => {
-                    setStep('start');
-                    if (!session) {
-                        return;
-                    }
+            navigate("/dashboard");
 
-                    navigate('/game/' + session.uuid);
-                    return session;
-                });
-            return
+            if (gameSession?.ended_at) {
+                setStep('end');
+            }
+
+            if (gameSession?.started_at) {
+                setStep('question');
+
+                getNextQuestion(gameSession)
+                    .then((question) => {
+                        if (question) {
+                            if (question === 'End of game') {
+                                console.log('End of game');
+                                setStep('end');
+                                return;
+                            }
+
+                            setCurrentQuestion(question);
+                        }
+                    });
+            }
         }
+    }, [uuid]);
+
+    useEffect(() => {
 
         setSocketUrl(Config.WebsocketURL);
 

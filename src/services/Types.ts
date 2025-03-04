@@ -26,6 +26,8 @@ export interface GameSession {
     users: string[];
     questions?: Question[];
     users_answers?: UserAnswer[];
+    started_at?: string;
+    ended_at?: string;
 }
 
 export interface UserAnswer {

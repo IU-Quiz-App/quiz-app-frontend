@@ -86,6 +86,7 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
             return;
         }
 
+        setLoading(true);
 
         startGame(quantity, course)
             .then((message) => {
@@ -94,6 +95,7 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
                 }
 
                 if (message == 'not_enough_questions') {
+                    setLoading(false);
                     setErrors({
                         ...errors,
                         'question-quantity': 'Nicht genügend Fragen für das Quiz'

@@ -2,9 +2,13 @@ import Button from "../components/Button.tsx";
 //import useWebSocket from "react-use-websocket";
 //import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {createSession} from "@services/Api.ts";
+import React, {useState} from "react";
+import Loader from "@components/Loader.tsx";
 //import Config from "@services/Config.ts";
 
 const Dashboard: React.FC = () => {
+    const [loading, setLoading] = useState<boolean>(false);
 
     //    const { sendMessage, lastMessage } = useWebSocket(Config.WebsocketURL, {
     //        shouldReconnect: () => true,
@@ -21,9 +25,23 @@ const Dashboard: React.FC = () => {
 
     function startGame() {
         console.log('Start game');
+        setLoading(true);
+        createSession()
+            .then((session) => {
+                if (!session) {
+                    return;
+                }
 
-        navigate('/game');
+                navigate(`/game/${session?.uuid}`);
+            });
+    }
 
+    if (loading) {
+        return (
+            <div className={'w-full h-full flex items-center justify-center'}>
+                <Loader className={'w-28'} />
+            </div>
+        )
     }
 
     return (
@@ -46,10 +64,6 @@ const Dashboard: React.FC = () => {
                 <Button variant={'primary'} className={'w-fit h-fit'} route={'/questions'}>
                     Alle Fragen anzeigen
                 </Button>
-
-                {/* <Button variant={'tertiary'} className={'w-fit h-fit'} onClick={() => sendMessage('Hello from the IU-Quiz-App!', true)}>
-                    WebSocket Test
-                </Button> */}
             </div>
         </div>
     );
