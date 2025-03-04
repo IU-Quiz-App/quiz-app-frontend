@@ -23,7 +23,7 @@ const TextAreaInput: React.FC<TextAreaInputProps> = ({ id, name, className, onCh
             <textarea
                 id={id}
                 name={name}
-                className={`resize-none border-2 border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent w-full ${className}`}
+                className={`resize-none border-2 border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent w-full ${className} text-gray-500`}
                 onChange={onChange}
                 placeholder={placeholder}
                 value={value}

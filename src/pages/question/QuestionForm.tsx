@@ -222,8 +222,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                 Frage erstellen
             </div>
 
-            <div className={'flex flex-col gap-4'}>
-                <div className={"flex flex-row w-full gap-4"}>
+            <div className={'grid grid-cols-2 gap-4'}>
                     <TextAreaInput
                         id={'question'}
                         name={'question'}
@@ -239,7 +238,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                                 id={'course'}
                                 name={'course'}
                                 label={'Kurs'}
-                                className={'w-32 grow'}
+                                className={'w-32'}
                                 value={course}
                                 required
                                 options={courses}
@@ -247,8 +246,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                                 errorMessage={errors['course'] as string}
                             />
                     </div>
-                </div>
-                <div className={"flex flex-row w-full gap-4"}>
+
                     <TextAreaInput
                         id={'correctAnswer'}
                         name={'correctAnswer'}
@@ -270,9 +268,6 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                         errorMessage={errors['wrongAnswer1'] as string}
                         required
                     />
-                </div>
-
-                <div className={"flex flex-row w-full gap-4"}>
                     <TextAreaInput
                         id={'wrongAnswer2'}
                         name={'wrongAnswer2'}
@@ -293,7 +288,6 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                         errorMessage={errors['wrongAnswer3'] as string}
                         required
                     />
-                </div>
             </div>
 
             <div className={'w-full flex items-end mt-8 justify-end gap-4'}>

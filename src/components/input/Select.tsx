@@ -24,7 +24,7 @@ const TextInput: React.FC<TextInputProps> = ({ id, name, options, className, onC
                 <select
                     id={id}
                     name={name}
-                    className={`border-2 border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent ${className}`}
+                    className={`border-2 border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent text-gray-500 ${className}`}
                     onChange={onChange}
                     value={value}
                 >
