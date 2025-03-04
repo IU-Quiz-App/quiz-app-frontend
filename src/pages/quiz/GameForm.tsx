@@ -25,42 +25,42 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-    // useEffect(() => {
-    //     async function fetchCourses() {
-    //         const courses = await getAllCourses();
-    //
-    //         const courseOptions = courses.map(course => {
-    //             return {
-    //                 value: course,
-    //                 label: course
-    //             }
-    //         });
-    //
-    //         setCourses(courseOptions);
-    //     }
-    //
-    //     async function fetchUsers() {
-    //         const users = gameSession.users.map(async (uuid) => {
-    //             return await getUserByUUID(uuid);
-    //         });
-    //
-    //         setUsers(await Promise.all(users));
-    //     }
-    //
-    //         fetchCourses()
-    //             .then(() => {
-    //                 console.log('Courses fetched')
-    //                 setLoading(false);
-    //             })
-    //             .catch((error) => console.error('Error fetching courses', error));
-    //
-    //     fetchUsers()
-    //         .then(() => {
-    //             console.log('Users fetched')
-    //             setLoading(false);
-    //         })
-    //         .catch((error) => console.error('Error fetching users', error));
-    // }, [gameSession]);
+    useEffect(() => {
+        async function fetchCourses() {
+            const courses = await getAllCourses();
+
+            const courseOptions = courses.map(course => {
+                return {
+                    value: course,
+                    label: course
+                }
+            });
+
+            setCourses(courseOptions);
+        }
+
+        async function fetchUsers() {
+            const users = gameSession.users.map(async (uuid) => {
+                return await getUserByUUID(uuid);
+            });
+
+            setUsers(await Promise.all(users));
+        }
+
+        fetchCourses()
+            .then(() => {
+                console.log('Courses fetched')
+                setLoading(false);
+            })
+            .catch((error) => console.error('Error fetching courses', error));
+
+        // fetchUsers()
+        //     .then(() => {
+        //         console.log('Users fetched')
+        //         setLoading(false);
+        //     })
+        //     .catch((error) => console.error('Error fetching users', error));
+    }, [gameSession]);
 
     function onQuantityChange(event: ChangeEvent<HTMLInputElement>) {
         const value = parseInt(event.target.value);
