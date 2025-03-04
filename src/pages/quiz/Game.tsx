@@ -155,31 +155,31 @@ const Game: React.FC = () => {
             });
     }
 
-    // if (!gameSession) {
-    //     return (
-    //         <div className={'w-full h-full flex items-center justify-center'}>
-    //             <Loader className={'w-28'} />
-    //         </div>
-    //     )
-    // }
-    //
-    // if (step === 'start') {
-    //     return (
-    //         <GameForm gameSession={gameSession} startGame={startGame} />
-    //     )
-    // }
-    //
-    // if (step === 'question' && currentQuestion) {
-    //     return (
-    //         <GameQuestion question={currentQuestion} gameSession={gameSession} nextQuestion={nextQuestion} />
-    //     )
-    // }
-    //
-    // if (step === 'end') {
-    //     return (
-    //         <GameResult gameSession={gameSession}/>
-    //     )
-    // }
+    if (!gameSession) {
+        return (
+            <div className={'w-full h-full flex items-center justify-center'}>
+                <Loader className={'w-28'} />
+            </div>
+        )
+    }
+
+    if (step === 'start') {
+        return (
+            <GameForm gameSession={gameSession} startGame={startGame} />
+        )
+    }
+
+    if (step === 'question' && currentQuestion) {
+        return (
+            <GameQuestion question={currentQuestion} gameSession={gameSession} nextQuestion={nextQuestion} />
+        )
+    }
+
+    if (step === 'end') {
+        return (
+            <GameResult gameSession={gameSession}/>
+        )
+    }
 
     return (
         <div className={'w-full h-full flex items-center justify-center'}>
