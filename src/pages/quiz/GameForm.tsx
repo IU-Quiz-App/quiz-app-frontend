@@ -153,7 +153,7 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
     //             </div>
     //         </Box>
     //     </div>
-)
+    // )
 
 }
 
