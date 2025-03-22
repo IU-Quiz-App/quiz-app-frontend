@@ -2,7 +2,7 @@ import GameForm from "@pages/quiz/GameForm.tsx";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { GameSession, Question } from "@services/Types.ts";
-import { getGameSession, getNextQuestion, startGameSession } from "@services/Api.ts";
+import { getGameSession, getNextQuestion } from "@services/Api.ts";
 import GameQuestion from "@pages/quiz/GameQuestion.tsx";
 import Loader from "@components/Loader.tsx";
 
@@ -42,41 +42,8 @@ const Game: React.FC = () => {
     useEffect(() => {
         if (!uuid) {
             navigate("/dashboard");
-
-            if (gameSession?.ended_at) {
-                setStep('end');
-            }
-
-            if (gameSession?.started_at) {
-                setStep('question');
-
-                getNextQuestion(gameSession)
-                    .then((question) => {
-                        if (question) {
-                            if (question === 'End of game') {
-                                console.log('End of game');
-                                setStep('end');
-                                return;
-                            }
-
-                            setCurrentQuestion(question);
-                        }
-                    });
-            }
+            return;
         }
-    }, [uuid]);
-
-    useEffect(() => {
-
-        setSocketUrl(Config.WebsocketURL);
-
-        sendMessage(
-            JSON.stringify({
-                action: "update-websocket-information",
-                session_uuid: uuid,
-                user_uuid: "Philipp"
-            })
-        );
 
         async function fetchGameSession() {
             if (!uuid) {
@@ -86,74 +53,35 @@ const Game: React.FC = () => {
             }
             const gameSession = await getGameSession(uuid);
 
-            setGameSession(gameSession);
+            return gameSession;
         }
 
         fetchGameSession()
-            .catch((error) => console.error('Error fetching game session', error));
-    }, [uuid]);
-
-    function nextQuestion() {
-        console.log('Next question');
-
-        if (!gameSession) {
-            console.error('Cannot fetch next question without game session');
-            return;
-        }
-
-        getNextQuestion(gameSession)
-            .then((question) => {
-                if (question) {
-                    if (question === 'End of game') {
-                        console.log('End of game');
-
-
-                        getGameSession(uuid)
-                            .then((newSession) => {
-                                setGameSession(newSession);
-                                setStep('end');
-                            });
-
-                        setCurrentQuestion(null);
-                        return;
-                    }
-
-                    console.log('Next question fetched:', question);
-                    setCurrentQuestion(question);
-                } else {
-                    console.error('Failed to fetch next question');
-                }
-            });
-    }
-
-    async function startGame(quantity: number, course: string): Promise<string> {
-        console.log('Start game');
-
-        if (!gameSession) {
-            console.error('Cannot start game without game session');
-            return 'failed';
-        }
-
-        return await startGameSession(gameSession, quantity, course)
-            .then((message) => {
-                if (message == 'success') {
-                    setStep('question');
-                    nextQuestion();
-                    return message;
+            .then(gameSession => {
+                if (!gameSession) {
+                    console.error('Game session not found');
+                    navigate('/dashboard');
+                    return;
                 }
 
-                if (message == 'not_enough_questions') {
-                    return 'not_enough_questions'
-                }
-
-                console.error('Failed to start game');
-                return 'failed';
+                setGameSession(gameSession);
             })
             .catch((error) => {
-                console.error('Error starting game', error);
-                return 'failed';
+                console.error('Error fetching game session', error)
+                navigate('/dashboard');
             });
-    }
+
+        console.log('Game session uuid:', uuid);
+        setSocketUrl(Config.WebsocketURL);
+
+        sendMessage(
+            JSON.stringify({
+                action: "update-websocket-information",
+                session_uuid: uuid,
+                user_uuid: "Philipp"
+            })
+        );
+    }, [uuid]);
 
     if (!gameSession) {
         return (
@@ -165,7 +93,7 @@ const Game: React.FC = () => {
 
     if (step === 'start') {
         return (
-            <GameForm gameSession={gameSession} startGame={startGame} />
+            <GameForm gameSession={gameSession}/>
         )
     }
 

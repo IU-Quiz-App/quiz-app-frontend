@@ -1,7 +1,7 @@
 import Box from "../../components/Box.tsx";
 import Select from "@components/input/Select.tsx";
 import React, {ChangeEvent, useEffect, useState} from "react";
-import {getAllCourses, getUserByUUID} from "@services/Api.ts";
+import {getAllCourses, getUserByUUID, startGameSession} from "@services/Api.ts";
 import NumberInput from "@components/input/NumberInput.tsx";
 import InputLabel from "@components/input/InputLabel.tsx";
 import {GameSession, User} from "@services/Types.ts";
@@ -11,10 +11,9 @@ import Loader from "@components/Loader.tsx";
 
 interface GameFormProps {
     gameSession: GameSession;
-    startGame: (quantity: number, course: string) => Promise<string>;
 }
 
-const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
+const GameForm: React.FC<GameFormProps> = ({ gameSession }) => {
 
     const [courses, setCourses] = useState<{ value: string, label: string }[]>([]);
     const [quantity, setQuantity] = useState<number>(10);
@@ -61,6 +60,30 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame }) => {
             })
             .catch((error) => console.error('Error fetching users', error));
     }, [gameSession]);
+
+    async function startGame(quantity: number, course: string): Promise<string> {
+        if (!gameSession) {
+            console.error('Cannot start game without game session');
+            return 'failed';
+        }
+
+        return await startGameSession(gameSession, quantity, course)
+            .then((message) => {
+                if (message == 'success') {
+                    return 'success';
+                }
+
+                if (message == 'not_enough_questions') {
+                    return 'not_enough_questions'
+                }
+
+                return 'failed';
+            })
+            .catch((error) => {
+                console.error('Error starting game', error);
+                return 'failed';
+            });
+    }
 
     function onQuantityChange(event: ChangeEvent<HTMLInputElement>) {
         const value = parseInt(event.target.value);
