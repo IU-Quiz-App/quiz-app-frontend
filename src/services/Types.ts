@@ -28,6 +28,7 @@ export interface GameSession {
     users_answers?: UserAnswer[];
     started_at?: string;
     ended_at?: string;
+    quiz_length?: number;
 }
 
 export interface UserAnswer {

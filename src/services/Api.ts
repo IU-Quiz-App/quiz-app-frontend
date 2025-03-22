@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from './Config.ts';
-import {Answer, GameSession, Question, User} from "./Types.ts";
+import {GameSession, Question, User} from "./Types.ts";
 
 const apiClient = axios.create({
     baseURL: config.ApiURL,
@@ -111,82 +111,6 @@ export async function getGameSession(uuid: string): Promise<GameSession> {
     } catch (error) {
         console.error('Failed to fetch session:', error);
         throw error;
-    }
-}
-
-export async function startGameSession(gameSession: GameSession, quizLength: number, course: string): Promise<string> {
-
-    const uuid = gameSession.uuid;
-
-    try {
-        const response = await apiClient.post(`/game/start-game-session`, {
-            uuid: uuid,
-            quiz_length: quizLength,
-            course_name: course
-        });
-
-        if (response.status === 200) {
-            return 'success';
-        }
-
-            console.error('Failed to start game session:', response);
-            return 'failed';
-    } catch (error) {
-        const response = JSON.parse(error.request.response);
-        const errorType = response.error;
-
-        if (errorType == 'Not enough questions for quiz') {
-            return 'not_enough_questions';
-        }
-
-        console.error('Failed to start game session:', error);
-        return 'failed';
-    }
-}
-
-export async function getNextQuestion(gameSession: GameSession): Promise<Question|'End of game'|null> {
-    try {
-        const response = await apiClient.get(`/game/next-question/${gameSession.uuid}`);
-        console.log('Response data of next question:', response.data);
-
-        if (response?.data?.info == 'End of game') {
-            return 'End of game';
-        }
-
-        return response.data as Question;
-    } catch (error) {
-        console.error('Failed to fetch next question:', error);
-        return null;
-    }
-}
-export async function answerQuestion(gameSession: GameSession, question: Question, answer: Answer): Promise<Answer|null> {
-    try {
-        const user = await getUser();
-        console.log('Answer question', answer);
-
-        const response = await apiClient.post(`/game/answer-question`, {
-            session_uuid: gameSession.uuid,
-            question_uuid: question.uuid,
-            user_uuid: user.name,
-            answer: answer.uuid
-        });
-
-        if (response.status === 200) {
-            console.log('Answered question');
-            const correctAnswerUUID = response.data.correct_answer;
-
-            if (correctAnswerUUID) {
-                return question.answers.find((a) => a.uuid === correctAnswerUUID) as Answer;
-            }
-
-            return null;
-        } else {
-            console.error('Failed to answer question:', response);
-            return null;
-        }
-    } catch (error) {
-        console.error('Failed to answer question:', error);
-        return null;
     }
 }
 

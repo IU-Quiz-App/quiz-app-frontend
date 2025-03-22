@@ -1,8 +1,8 @@
 import GameForm from "@pages/quiz/GameForm.tsx";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { GameSession, Question } from "@services/Types.ts";
-import { getGameSession, getNextQuestion } from "@services/Api.ts";
+import {Answer, GameSession, Question} from "@services/Types.ts";
+import { getGameSession } from "@services/Api.ts";
 import GameQuestion from "@pages/quiz/GameQuestion.tsx";
 import Loader from "@components/Loader.tsx";
 
@@ -17,6 +17,8 @@ const Game: React.FC = () => {
     );
     const [step, setStep] = useState<'start' | 'question' | 'end'>('start');
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+    const [correctAnswer, setCorrectAnswer] = useState<Answer | null>(null);
+    const [notEnoughQuestions, setNotEnoughQuestions] = useState<boolean>(false);
 
     const [socketUrl, setSocketUrl] = useState<string | null>(null);
     const { sendMessage, lastMessage } = useWebSocket(socketUrl ?? null, {
@@ -27,17 +29,54 @@ const Game: React.FC = () => {
         onClose: () => console.log("WebSocket disconnected"),
     });
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         if (lastMessage) {
-            console.log("Message received:", lastMessage.data);
+            const data = JSON.parse(lastMessage.data);
+
+            if (data.action === 'next-question') {
+                setCurrentQuestion(data.question);
+                setStep('question');
+            }
+
+            if (data.action === 'update-game-session') {
+                setGameSession(data.game_session);
+            }
+
+            if (data.action === 'correct-answer') {
+                setCorrectAnswer(data.answer);
+            }
+
+            if (data.action === 'not-enough-questions') {
+                setNotEnoughQuestions(true);
+            }
         }
     }, [lastMessage]);
 
     useEffect(() => {
-        localStorage.setItem('game-session', JSON.stringify(gameSession) as string || '');
-    }, [gameSession]);
+        if (!gameSession) {
+            return;
+        }
 
-    const navigate = useNavigate();
+        if (gameSession.ended_at) {
+            setStep('end');
+            return;
+        }
+
+        if (!socketUrl) {
+            setSocketUrl(Config.WebsocketURL);
+
+            sendMessage(
+                JSON.stringify({
+                    action: "update-websocket-information",
+                    session_uuid: uuid,
+                    user_uuid: "Philipp"
+                })
+            );
+        }
+
+    }, [gameSession]);
 
     useEffect(() => {
         if (!uuid) {
@@ -72,16 +111,29 @@ const Game: React.FC = () => {
             });
 
         console.log('Game session uuid:', uuid);
-        setSocketUrl(Config.WebsocketURL);
+    }, [uuid]);
 
+    function startGame(quiz_length: number, course: string) {
         sendMessage(
             JSON.stringify({
-                action: "update-websocket-information",
-                session_uuid: uuid,
-                user_uuid: "Philipp"
+                action: "start-game",
+                uuid: uuid,
+                quiz_length: quiz_length,
+                course_name: course
             })
         );
-    }, [uuid]);
+    }
+
+    function answerQuestion(answer: Answer) {
+        sendMessage(
+            JSON.stringify({
+                action: "answer-question",
+                session_uuid: uuid,
+                user_uuid: "Philipp",
+                answer_uuid: answer.uuid
+            })
+        );
+    }
 
     if (!gameSession) {
         return (
@@ -93,13 +145,13 @@ const Game: React.FC = () => {
 
     if (step === 'start') {
         return (
-            <GameForm gameSession={gameSession}/>
+            <GameForm gameSession={gameSession} startGame={startGame} notEnoughQuestions={notEnoughQuestions}/>
         )
     }
 
     if (step === 'question' && currentQuestion) {
         return (
-            <GameQuestion question={currentQuestion} gameSession={gameSession} nextQuestion={nextQuestion} />
+            <GameQuestion question={currentQuestion} answerQuestion={answerQuestion} correctAnswer={correctAnswer} />
         )
     }
 

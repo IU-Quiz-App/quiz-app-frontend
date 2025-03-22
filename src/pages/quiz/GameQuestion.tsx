@@ -1,19 +1,21 @@
 import Box from "../../components/Box.tsx";
 import Button from "../../components/Button.tsx";
-import {useState} from "react";
-import {Answer, GameSession, Question} from "@services/Types.ts";
-import {answerQuestion} from "@services/Api.ts";
+import {useEffect, useState} from "react";
+import {Answer, Question} from "@services/Types.ts";
 
 interface QuestionProps {
-    gameSession: GameSession,
     question: Question,
-    nextQuestion: () => void
+    correctAnswer: Answer|null,
+    answerQuestion: (answer: Answer) => void,
 }
 
-const GameQuestion: React.FC<QuestionProps> = ({ gameSession, question, nextQuestion }) => {
+const GameQuestion: React.FC<QuestionProps> = ({ question, correctAnswer, answerQuestion }) => {
 
     const[answer, setAnswer] = useState<Answer|null>(null);
-    const[correctAnswer, setCorrectAnswer] = useState<Answer|null>(null);
+
+    useEffect(() => {
+        setAnswer(null);
+    }, [question]);
 
     async function handleOnClick(newAnswer: Answer) {
         if (correctAnswer) {
@@ -23,17 +25,7 @@ const GameQuestion: React.FC<QuestionProps> = ({ gameSession, question, nextQues
         console.log('Answer question', newAnswer);
 
         setAnswer(newAnswer);
-
-            answerQuestion(gameSession, question, newAnswer)
-                .then((correctAnswer) => {
-                    setCorrectAnswer(correctAnswer)
-                });
-    }
-
-    function handleNextQuestion() {
-        setAnswer(null);
-        setCorrectAnswer(null);
-        nextQuestion();
+        answerQuestion(newAnswer);
     }
 
     const AnswerButton = (answerItem: Answer, index: number) => {
@@ -68,9 +60,6 @@ const GameQuestion: React.FC<QuestionProps> = ({ gameSession, question, nextQues
                             AnswerButton(answerItem, index)
                         ))}
                     </div>
-                </div>
-                <div>
-                    {correctAnswer && <Button onClick={handleNextQuestion} variant={'primary'}>Weiter</Button>}
                 </div>
             </div>
         </div>
