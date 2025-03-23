@@ -35,20 +35,28 @@ const Game: React.FC = () => {
         if (lastMessage) {
             const data = JSON.parse(lastMessage.data);
 
-            if (data.action === 'next-question') {
+            const action = data.action;
+
+            if (!action) {
+                return;
+            }
+
+            console.log('Last message:', lastMessage);
+
+            if (action === 'next-question') {
                 setCurrentQuestion(data.question);
                 setStep('question');
             }
 
-            if (data.action === 'update-game-session') {
+            if (action === 'update-game-session') {
                 setGameSession(data.game_session);
             }
 
-            if (data.action === 'correct-answer') {
+            if (action === 'correct-answer') {
                 setCorrectAnswer(data.answer);
             }
 
-            if (data.action === 'not-enough-questions') {
+            if (action === 'not-enough-questions') {
                 setNotEnoughQuestions(true);
             }
         }
