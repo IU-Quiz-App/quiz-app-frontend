@@ -122,6 +122,7 @@ const Game: React.FC = () => {
     }, [uuid]);
 
     function startGame(quiz_length: number, course: string) {
+        console.log('Start game session');
         sendMessage(
             JSON.stringify({
                 action: "start-game-session",
