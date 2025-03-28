@@ -1,7 +1,7 @@
 import GameForm from "@pages/quiz/GameForm.tsx";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {Answer, GameSession, Question} from "@services/Types.ts";
+import { Answer, GameSession, Question } from "@services/Types.ts";
 import { getGameSession } from "@services/Api.ts";
 import GameQuestion from "@pages/quiz/GameQuestion.tsx";
 import Loader from "@components/Loader.tsx";
@@ -124,8 +124,8 @@ const Game: React.FC = () => {
     function startGame(quiz_length: number, course: string) {
         sendMessage(
             JSON.stringify({
-                action: "start-game",
-                uuid: uuid,
+                action: "start-game-session",
+                game_session_uuid: uuid,
                 quiz_length: quiz_length,
                 course_name: course
             })
@@ -153,7 +153,7 @@ const Game: React.FC = () => {
 
     if (step === 'start') {
         return (
-            <GameForm gameSession={gameSession} startGame={startGame} notEnoughQuestions={notEnoughQuestions}/>
+            <GameForm gameSession={gameSession} startGame={startGame} notEnoughQuestions={notEnoughQuestions} />
         )
     }
 
@@ -165,7 +165,7 @@ const Game: React.FC = () => {
 
     if (step === 'end') {
         return (
-            <GameResult gameSession={gameSession}/>
+            <GameResult gameSession={gameSession} />
         )
     }
 
