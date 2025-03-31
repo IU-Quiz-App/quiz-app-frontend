@@ -5,3 +5,11 @@
 .tippy-box[data-theme~='transparent'] {
     background-color: transparent;
 }
+
+.tippy-box[data-theme~='transparent'] > .tippy-content {
+    padding: 0px !important;
+}
+
+.tippy-box[data-theme~='transparent'] > .tippy-arrow {
+    color: transparent;
+}

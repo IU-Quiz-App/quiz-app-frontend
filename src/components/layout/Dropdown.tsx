@@ -19,6 +19,7 @@ const Dropdown: React.FC<DropdownProps> = ({ children, options, className }) => 
             interactive={true}
             animation="shift-away"
             theme="transparent"
+            placement="bottom-start"
             content={
                 <div className="bg-blue-600 border rounded-md shadow-md p-2 w-48">
                     {options.map((option, index) => (
