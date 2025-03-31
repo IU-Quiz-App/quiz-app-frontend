@@ -167,8 +167,9 @@ const Game: React.FC = () => {
     function answerQuestion(answer: Answer) {
         sendMessage(
             JSON.stringify({
-                action: "answer-question",
-                session_uuid: uuid,
+                action: "save-player-answer",
+                game_session_uuid: uuid,
+                question_uuid: currentQuestion?.uuid,
                 user_uuid: "Philipp",
                 answer_uuid: answer.uuid
             })
