@@ -18,6 +18,7 @@ const Dropdown: React.FC<DropdownProps> = ({ children, options, className }) => 
             onClickOutside={() => setVisible(false)}
             interactive={true}
             animation="shift-away"
+            theme="transparent"
             content={
                 <div className="bg-blue-600 border rounded-md shadow-md p-2 w-48">
                     {options.map((option, index) => (
