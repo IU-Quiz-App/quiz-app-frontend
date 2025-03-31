@@ -1,73 +1,28 @@
-import { FC, useState, useEffect, useRef } from "react";
-import { Menu, Search, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { FC } from "react";
+import { Search, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import Dropdown from "./Dropdown.tsx";
 
 const Headerbar: FC = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const menuButtonRef = useRef<HTMLButtonElement>(null);
-    const dropdownRef = useRef<HTMLDivElement>(null);
-
-    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
-    {/* Event listener, for closing the dropdown menu */}
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (
-                menuButtonRef.current &&
-                !menuButtonRef.current.contains(event.target as Node) &&
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target as Node)
-            ) {
-                setIsMenuOpen(false);
-            }
-        };
-        document.addEventListener("click", handleClickOutside);
-
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-    }, []);
-
-    const handleLinkClick = () => {
-        setIsMenuOpen(false);
-    };
+    const navigate = useNavigate();
 
     return (
         <header className="flex items-center justify-between bg-gradient-to-b from-blue-700 to-blue-900 text-gray-200 px-6 py-3 shadow-lg">
 
             {/* Left - Logo & Menu */}
             <div className="flex items-center gap-4">
-                <button ref={menuButtonRef} className="relative p-2 rounded-lg hover:bg-blue-300" onClick={toggleMenu}>
-                    <Menu className="h-6 w-6"/>
-                </button>
-
                 {/* Dropdown menu */}
-                {isMenuOpen && (
-                    <div ref={dropdownRef} className="absolute left-2 top-20 mt-1 bg-blue-700 text-white rounded-lg w-48 shadow-lg">
-                        <ul className="flex flex-col">
-                            <li>
-                                <Link to="/dashboard" className="block px-4 py-2 hover:bg-blue-300" onClick={handleLinkClick}>
-                                    Startseite
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/quiz/question" className="block px-4 py-2 hover:bg-blue-300" onClick={handleLinkClick}>
-                                    Spiel starten
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/question/form" className="block px-4 py-2 hover:bg-blue-300" onClick={handleLinkClick}>
-                                    Frage erstellen
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/questions" className="block px-4 py-2 hover:bg-blue-300" onClick={handleLinkClick}>
-                                    Alle Fragen anzeigen
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-                )}
+                <Dropdown
+                    options={[
+                        { label: "Startseite", onClick: () => navigate("/dashboard") },
+                        { label: "Spiel starten", onClick: () => navigate("/quiz/question") },
+                        { label: "Frage erstellen", onClick: () => navigate("/question/form") },
+                        { label: "Alle Fragen anzeigen", onClick: () => navigate("/questions") },
+                    ]}
+                    className="px-4 py-2 rounded-md border-2 bg-gradient-to-bl from-blue-400 to-blue-600 border-blue-600 shadow-blue-900 text-$blue-100"
+                >
+                    Menü
+                </Dropdown>
 
                 {/* Logo */}
                 <Link to="/" className="flex items-center">
