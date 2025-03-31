@@ -1,24 +1,20 @@
 import Box from "../../components/Box.tsx";
 import Button from "../../components/Button.tsx";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {Answer, Question} from "@services/Types.ts";
 
 interface QuestionProps {
     question: Question,
-    correctAnswer: Answer|null,
     answerQuestion: (answer: Answer) => void,
+    isResult?: boolean,
 }
 
-const GameQuestion: React.FC<QuestionProps> = ({ question, correctAnswer, answerQuestion }) => {
+const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, isResult = false }) => {
 
     const[answer, setAnswer] = useState<Answer|null>(null);
 
-    useEffect(() => {
-        setAnswer(null);
-    }, [question]);
-
     async function handleOnClick(newAnswer: Answer) {
-        if (correctAnswer) {
+        if (isResult) {
             return;
         }
 
@@ -33,8 +29,14 @@ const GameQuestion: React.FC<QuestionProps> = ({ question, correctAnswer, answer
             variant: answer?.uuid === answerItem.uuid ? 'primary' : 'tertiary',
         } as any;
 
-        if (answer && correctAnswer && answerItem.uuid === answer.uuid) {
-            attributes.color = correctAnswer.uuid === answerItem.uuid ? 'green' : 'red';
+        if (isResult) {
+            if (answerItem.isTrue) {
+                attributes.color = 'green';
+            }
+
+            if (answer?.uuid === answerItem.uuid && !answerItem.isTrue) {
+                attributes.color = 'red';
+            }
         }
 
         return(
