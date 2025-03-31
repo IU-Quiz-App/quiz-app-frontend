@@ -10,16 +10,6 @@ import Loader from "@components/Loader.tsx";
 const Dashboard: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
 
-    //    const { sendMessage, lastMessage } = useWebSocket(Config.WebsocketURL, {
-    //        shouldReconnect: () => true,
-    //        reconnectAttempts: 10,
-    //        reconnectInterval: 3000,
-    //    });
-    //
-    //    useEffect(() => {
-    //        sendMessage('Hello from the IU-Quiz-App!', true);
-    //    }, [lastMessage]);
-
 
     const navigate = useNavigate();
 
