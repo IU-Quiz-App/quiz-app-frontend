@@ -2,19 +2,21 @@ import Box from "../../components/Box.tsx";
 import Button from "../../components/Button.tsx";
 import {useState} from "react";
 import {Answer, Question} from "@services/Types.ts";
+import GameTimer from "@pages/quiz/GameTimer.tsx";
 
 interface QuestionProps {
     question: Question,
     answerQuestion: (answer: Answer) => void,
     isResult?: boolean,
+    timeOver?: boolean
 }
 
-const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, isResult = false }) => {
+const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, isResult = false, timeOver = false }) => {
 
     const[answer, setAnswer] = useState<Answer|null>(null);
 
     async function handleOnClick(newAnswer: Answer) {
-        if (isResult) {
+        if (isResult || timeOver || answer) {
             return;
         }
 
@@ -30,6 +32,8 @@ const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, isRes
         } as any;
 
         if (isResult) {
+            attributes.disabled = true;
+
             if (answerItem.isTrue) {
                 attributes.color = 'green';
             }
@@ -37,6 +41,10 @@ const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, isRes
             if (answer?.uuid === answerItem.uuid && !answerItem.isTrue) {
                 attributes.color = 'red';
             }
+        }
+
+        if (timeOver) {
+            attributes.disabled = true;
         }
 
         return(
@@ -51,7 +59,7 @@ const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, isRes
     };
 
     return (
-        <div className={'flex flex-col gap-4 w-full justify-center items-center'}>
+        <div className={'flex flex-row gap-4 w-full justify-center pl-64'}>
             <div className={'w-2/3 flex flex-col gap-4'}>
                 <Box className={'w-full h-24'}>
                     <span>{question.text}</span>
@@ -63,6 +71,9 @@ const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, isRes
                         ))}
                     </div>
                 </div>
+            </div>
+            <div className={'w-64'}>
+                <GameTimer start={!isResult} seconds={5}/>
             </div>
         </div>
     )

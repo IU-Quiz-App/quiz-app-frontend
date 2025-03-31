@@ -15,9 +15,10 @@ const Game: React.FC = () => {
     const [gameSession, setGameSession] = useState<GameSession | null>(
         JSON.parse(localStorage.getItem('game-session') as string) as GameSession || null
     );
-    const [step, setStep] = useState<'quiz-form' | 'quiz-started' | 'next-question' | 'correct-answer' | 'next-question-incoming' | 'quiz-ended' | 'quiz-result'>('quiz-form');
+    const [step, setStep] = useState<'quiz-form' | 'quiz-started' | 'first-question-incoming' | 'next-question' | 'correct-answer' | 'next-question-incoming' | 'quiz-ended' | 'quiz-result'>('quiz-form');
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [notEnoughQuestions, setNotEnoughQuestions] = useState<boolean>(false);
+    const [timeOver, setTimeOver] = useState<boolean>(false);
 
     const [socketUrl, setSocketUrl] = useState<string | null>(null);
     const { sendMessage, lastMessage } = useWebSocket(socketUrl ?? null, {
@@ -43,10 +44,11 @@ const Game: React.FC = () => {
             console.log('Last message:', lastMessage);
 
             if (action === 'quiz-started') {
-                setStep('quiz-started');
+                setStep('first-question-incoming');
             }
 
             if (action === 'next-question') {
+                setTimeOver(false);
                 setCurrentQuestion(data.question);
                 setStep('next-question');
             }
@@ -57,7 +59,13 @@ const Game: React.FC = () => {
             }
 
             if (action === 'update-game-session') {
-                setGameSession(data.game_session);
+                const gameSession = data.game_session;
+                console.log('Update game session', gameSession);
+                setGameSession(gameSession);
+            }
+
+            if (action === 'question-answered') {
+                setTimeOver(true);
             }
 
             if (action === 'correct-answer') {
@@ -87,6 +95,11 @@ const Game: React.FC = () => {
 
         if (gameSession.ended_at) {
             setStep('quiz-result');
+            return;
+        }
+
+        if (gameSession.started_at) {
+            setStep('quiz-started');
             return;
         }
 
@@ -179,8 +192,17 @@ const Game: React.FC = () => {
     if (step === 'quiz-started') {
         return (
             <div className={'w-full h-full flex items-center justify-center'}>
-                <span>Quiz gestartet...</span>
+                <span>Das Quiz wird vorbereitet...</span>
                 <Loader className={'w-28'}/>
+            </div>
+        )
+    }
+
+    if (step === 'first-question-incoming') {
+        return (
+            <div className={'w-full h-full flex items-center justify-center'}>
+                <span>Die erste Frage kommt gleich...</span>
+                <Loader className={'w-28'} />
             </div>
         )
     }
@@ -196,7 +218,7 @@ const Game: React.FC = () => {
 
     if (step === 'next-question' && currentQuestion) {
         return (
-            <GameQuestion question={currentQuestion} answerQuestion={answerQuestion} />
+            <GameQuestion question={currentQuestion} answerQuestion={answerQuestion} timeOver={timeOver} />
         )
     }
 
