@@ -15,7 +15,7 @@ const Headerbar: FC = () => {
                 <Dropdown
                     options={[
                         { label: "Startseite", onClick: () => navigate("/dashboard") },
-                        { label: "Spiel starten", onClick: () => navigate("/quiz/question") },
+                        { label: "Spiel starten", onClick: () => navigate("/game") },
                         { label: "Frage erstellen", onClick: () => navigate("/question/form") },
                         { label: "Alle Fragen anzeigen", onClick: () => navigate("/questions") },
                     ]}

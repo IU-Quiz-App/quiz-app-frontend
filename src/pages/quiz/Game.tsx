@@ -2,7 +2,7 @@ import GameForm from "@pages/quiz/GameForm.tsx";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Answer, GameSession, Question } from "@services/Types.ts";
-import { getGameSession } from "@services/Api.ts";
+import {createSession, getGameSession} from "@services/Api.ts";
 import GameQuestion from "@pages/quiz/GameQuestion.tsx";
 import Loader from "@components/Loader.tsx";
 
@@ -119,7 +119,15 @@ const Game: React.FC = () => {
 
     useEffect(() => {
         if (!uuid) {
-            navigate("/dashboard");
+            createSession()
+                .then((session) => {
+                    if (!session) {
+                        return;
+                    }
+
+                    navigate(`/game/${session?.uuid}`);
+                });
+
             return;
         }
 
@@ -184,7 +192,7 @@ const Game: React.FC = () => {
         )
     }
 
-    if (step === 'quiz-form') {
+    if (step === 'quiz-form' && gameSession) {
         return (
             <GameForm gameSession={gameSession} startGame={startGame} notEnoughQuestions={notEnoughQuestions} />
         )
