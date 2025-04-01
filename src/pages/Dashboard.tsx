@@ -1,10 +1,19 @@
 import Button from "../components/Button.tsx";
 import { useNavigate } from "react-router-dom";
+import {useMsal} from "@azure/msal-react";
 
 const Dashboard: React.FC = () => {
 
 
     const navigate = useNavigate();
+    const { instance } = useMsal();
+
+    const handleLogoutRedirect = () => {
+        instance.logoutPopup({
+            postLogoutRedirectUri: '/',
+        })
+        window.location.reload();
+    }
 
     function startGame() {
         navigate("/game");
@@ -19,6 +28,10 @@ const Dashboard: React.FC = () => {
 
             {/* Buttons */}
             <div className="flex items-center justify-center gap-6">
+                <Button variant={'secondary'} className={'w-fit h-fit'} onClick={handleLogoutRedirect}>
+                    Logout
+                </Button>
+
                 <Button variant={'secondary'} className={'w-fit h-fit'} onClick={startGame}>
                     Spiel starten
                 </Button>

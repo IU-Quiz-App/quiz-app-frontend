@@ -15,7 +15,7 @@ interface TextInputProps {
     required?: boolean
 }
 
-const TextInput: React.FC<TextInputProps> = ({ id, name, options, className, onChange, label, placeholder, value, errorMessage, required }) => {
+const Select: React.FC<TextInputProps> = ({ id, name, options, className, onChange, label, placeholder, value, errorMessage, required }) => {
 
     return (
             <div className={'flex flex-col grow'}>
@@ -43,4 +43,4 @@ const TextInput: React.FC<TextInputProps> = ({ id, name, options, className, onC
 
 }
 
-export default TextInput;
+export default Select;

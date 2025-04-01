@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@azure/msal-browser": "^4.8.0",
+    "@azure/msal-react": "^3.0.7",
     "@heroicons/react": "^2.2.0",
     "@shadcn/ui": "^0.0.4",
     "@tanstack/react-query": "^5.66.0",

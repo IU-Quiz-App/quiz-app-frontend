@@ -9,7 +9,7 @@ export default defineConfig(() => {
     resolve: {
       alias: {
         '@assets': '/src/assets',
-        '@layouts': '/src/layouts',
+        '@layout': '/src/layout',
         '@components': '/src/components',
         '@pages': '/src/pages',
         '@services': '/src/services',
