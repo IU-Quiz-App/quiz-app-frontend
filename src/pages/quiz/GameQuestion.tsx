@@ -1,6 +1,6 @@
 import Box from "../../components/Box.tsx";
 import Button from "../../components/Button.tsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Answer, Question} from "@services/Types.ts";
 import GameTimer from "@pages/quiz/GameTimer.tsx";
 
@@ -14,6 +14,14 @@ interface QuestionProps {
 const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, isResult = false, timeOver = false }) => {
 
     const[answer, setAnswer] = useState<Answer|null>(null);
+    const[questionUUID, setQuestionUUID] = useState<string|undefined>(undefined);
+
+    useEffect(() => {
+        if (questionUUID !== question.uuid) {
+            setAnswer(null);
+            setQuestionUUID(question.uuid);
+        }
+    }, [question]);
 
     async function handleOnClick(newAnswer: Answer) {
         if (isResult || timeOver || answer) {

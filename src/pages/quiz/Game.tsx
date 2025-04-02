@@ -33,6 +33,7 @@ const Game: React.FC = () => {
 
     useEffect(() => {
         if (lastMessage) {
+            console.log('Last message:', lastMessage);
             const data = JSON.parse(lastMessage.data);
 
             const action = data.action;
@@ -40,8 +41,6 @@ const Game: React.FC = () => {
             if (!action) {
                 return;
             }
-
-            console.log('Last message:', lastMessage);
 
             if (action === 'quiz-started') {
                 setStep('first-question-incoming');

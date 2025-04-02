@@ -18,7 +18,7 @@ interface GameFormProps {
 const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQuestions }) => {
 
     const [courses, setCourses] = useState<{ value: string, label: string }[]>([]);
-    const [quantity, setQuantity] = useState<number>(10);
+    const [quantity, setQuantity] = useState<number>(3);
     const [course, setCourse] = useState<string>('');
     const [users, setUsers] = useState<User[]>([]);
 
@@ -136,7 +136,7 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
                             errorMessage={errors['question-quantity']}
                             id={"question-quantity"}
                             name={'question-quantity'}
-                            value={10}
+                            value={quantity}
                             onChange={onQuantityChange}
                         />
                     </div>
