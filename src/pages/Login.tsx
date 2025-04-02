@@ -1,6 +1,6 @@
 import Button from "@components/Button.tsx";
 import {useMsal} from "@azure/msal-react";
-import {loginRequest} from "../auth/AuthConfig.ts";
+import {loginRequest, msalConfig} from "../auth/AuthConfig.ts";
 
 const Login: React.FC = () => {
 
@@ -8,8 +8,10 @@ const Login: React.FC = () => {
     const { instance } = useMsal();
 
     const handleLoginRedirect = () => {
-        instance
-            .loginRedirect({
+        const config = msalConfig;
+        console.log(config);
+
+        instance.loginRedirect({
                 ...loginRequest,
                 prompt: 'create',
             })

@@ -14,7 +14,6 @@ export const AuthProvider = ({ children } : AuthProviderProps)  => {
         msalInstance.setActiveAccount(msalInstance.getAllAccounts()[0]);
     }
 
-// Listen for sign-in event and set active account
     msalInstance.addEventCallback((event) => {
         const authenticationResult = event.payload as AuthenticationResult;
         const account = authenticationResult?.account;

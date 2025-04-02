@@ -1,6 +1,7 @@
 import Button from "../components/Button.tsx";
 import { useNavigate } from "react-router-dom";
 import {useMsal} from "@azure/msal-react";
+// import {useMsal} from "@azure/msal-react";
 
 const Dashboard: React.FC = () => {
 
@@ -9,7 +10,7 @@ const Dashboard: React.FC = () => {
     const { instance } = useMsal();
 
     const handleLogoutRedirect = () => {
-        instance.logoutPopup({
+        instance.logoutRedirect({
             postLogoutRedirectUri: '/',
         })
         window.location.reload();

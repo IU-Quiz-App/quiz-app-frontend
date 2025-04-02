@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - develop
-      - master
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,6 +20,12 @@ jobs:
         run: npm install
 
       - name: Build
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL_DEV }}
+          VITE_WS_URL: ${{ vars.VITE_WS_URL_DEV }}
+          VITE_MSAL_CLIENT_ID: ${{ vars.VITE_MSAL_CLIENT_ID_DEV }}
+          VITE_MSAL_TENANT_ID: ${{ vars.VITE_MSAL_TENANT_ID_DEV }}
+          VITE_MSAL_REDIRECT_URI: ${{ vars.VITE_MSAL_REDIRECT_URI_DEV }}
         run: npm run build
 
       - name: Configure AWS credentials

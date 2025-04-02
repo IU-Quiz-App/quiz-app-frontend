@@ -7,6 +7,7 @@ import Game from "@pages/quiz/Game.tsx";
 import GuestLayout from "@layout/GuestLayout.tsx";
 import Login from "@pages/Login.tsx";
 import {AuthenticatedTemplate, UnauthenticatedTemplate, useMsal} from "@azure/msal-react";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 const App = () => {
     /**
@@ -16,24 +17,27 @@ const App = () => {
      */
     const { instance } = useMsal();
     const activeAccount = instance.getActiveAccount();
+    const queryClient = new QueryClient();
 
     return (
-        <div>
+        <>
             <AuthenticatedTemplate>
                 {activeAccount ? (
-                    <Routes>
-                        <Route element={<AppLayout />}>
-                            <Route path="/dashboard" element={<Dashboard/>} />
-                            <Route path="/question/form" element={<QuestionForm/>} />
-                            <Route path="/question/form/:uuid" element={<QuestionForm/>} />
-                            <Route path="/questions" element={<QuestionTableWrapper/>} />
-                            <Route path="/game/:uuid" element={<Game/>} />
-                            <Route path="/game" element={<Game/>} />
+                    <QueryClientProvider client={queryClient}>
+                        <Routes>
+                            <Route element={<AppLayout />}>
+                                <Route path="/dashboard" element={<Dashboard/>} />
+                                <Route path="/question/form" element={<QuestionForm/>} />
+                                <Route path="/question/form/:uuid" element={<QuestionForm/>} />
+                                <Route path="/questions" element={<QuestionTableWrapper/>} />
+                                <Route path="/game/:uuid" element={<Game/>} />
+                                <Route path="/game" element={<Game/>} />
 
-                            <Route path="/" element={<Navigate to={'/dashboard'} />} />
-                            <Route path="*" element={<Navigate to={'/dashboard'} />} />
-                        </Route>
-                    </Routes>
+                                <Route path="/" element={<Navigate to={'/dashboard'} />} />
+                                <Route path="*" element={<Navigate to={'/dashboard'} />} />
+                            </Route>
+                        </Routes>
+                    </QueryClientProvider>
                 ) : null}
             </AuthenticatedTemplate>
             <UnauthenticatedTemplate>
@@ -45,7 +49,7 @@ const App = () => {
                     </Route>
                 </Routes>
             </UnauthenticatedTemplate>
-        </div>
+        </>
     );
 };
 
