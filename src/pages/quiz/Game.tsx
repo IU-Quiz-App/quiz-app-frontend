@@ -1,5 +1,5 @@
 import GameForm from "@pages/quiz/GameForm.tsx";
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Answer, GameSession, Question } from "@services/Types.ts";
 import {createSession, getGameSession} from "@services/Api.ts";
@@ -12,9 +12,7 @@ import GameResult from "@pages/quiz/GameResult.tsx";
 
 const Game: React.FC = () => {
     const { uuid: uuid } = useParams();
-    const [gameSession, setGameSession] = useState<GameSession | null>(
-        JSON.parse(localStorage.getItem('game-session') as string) as GameSession || null
-    );
+    const [gameSession, setGameSession] = useState<GameSession | null>(null);
     const [step, setStep] = useState<'quiz-form' | 'quiz-started' | 'first-question-incoming' | 'next-question' | 'correct-answer' | 'next-question-incoming' | 'quiz-ended' | 'quiz-result'>('quiz-form');
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [notEnoughQuestions, setNotEnoughQuestions] = useState<boolean>(false);
@@ -30,6 +28,7 @@ const Game: React.FC = () => {
     });
 
     const navigate = useNavigate();
+    const createdSession = useRef(false);
 
     useEffect(() => {
         if (lastMessage) {
@@ -104,7 +103,9 @@ const Game: React.FC = () => {
 
         if (!socketUrl) {
             setSocketUrl(Config.WebsocketURL);
+            console.log(Config.WebsocketURL);
 
+            console.log("Game session 123", gameSession);
             sendMessage(
                 JSON.stringify({
                     action: "update-websocket-information",
@@ -118,15 +119,6 @@ const Game: React.FC = () => {
 
     useEffect(() => {
         if (!uuid) {
-            createSession()
-                .then((session) => {
-                    if (!session) {
-                        return;
-                    }
-
-                    navigate(`/game/${session?.uuid}`);
-                });
-
             return;
         }
 
@@ -158,6 +150,21 @@ const Game: React.FC = () => {
 
         console.log('Game session uuid:', uuid);
     }, [uuid]);
+
+    useEffect(() => {
+        if (createdSession.current) return;
+        createdSession.current = true;
+
+        if (!uuid) {
+            createSession().then((session) => {
+                if (!session) {
+                    return;
+                }
+                console.log("Created game session", session);
+                navigate(`/game/${session?.uuid}`);
+            });
+        }
+    }, []);
 
     function startGame(quiz_length: number, course: string) {
         console.log('Start game session');
