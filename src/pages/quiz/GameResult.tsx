@@ -17,7 +17,7 @@ const GameResult: React.FC<GameResultProps> = ({ gameSession }) => {
 
     useEffect(() => {
         async function fetchUsers() {
-            const users = gameSession.users.map(async (uuid) => {
+            const users = gameSession.players.map(async (uuid) => {
                 return await getUserByUUID(uuid);
             });
 

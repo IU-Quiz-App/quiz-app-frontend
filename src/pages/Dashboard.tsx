@@ -1,7 +1,7 @@
 import Button from "../components/Button.tsx";
 import { useNavigate } from "react-router-dom";
 import {useMsal} from "@azure/msal-react";
-// import {useMsal} from "@azure/msal-react";
+import GameCountdown from "@pages/quiz/GameCountdown.tsx";
 
 const Dashboard: React.FC = () => {
 

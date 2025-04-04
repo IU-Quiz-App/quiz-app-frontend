@@ -9,14 +9,16 @@ import Loader from "@components/Loader.tsx";
 import useWebSocket from "react-use-websocket";
 import Config from "@services/Config.ts";
 import GameResult from "@pages/quiz/GameResult.tsx";
+import GameCountdown from "@pages/quiz/GameCountdown.tsx";
 
 const Game: React.FC = () => {
     const { uuid: uuid } = useParams();
     const [gameSession, setGameSession] = useState<GameSession | null>(null);
-    const [step, setStep] = useState<'quiz-form' | 'quiz-started' | 'first-question-incoming' | 'next-question' | 'correct-answer' | 'next-question-incoming' | 'quiz-ended' | 'quiz-result'>('quiz-form');
+    const [step, setStep] = useState<'quiz-form' | 'quiz-started' | 'first-question-incoming' | 'next-question' | 'waiting-for-result' | 'question-result' | 'next-question-incoming' | 'quiz-ended' | 'quiz-result'>('quiz-form');
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [notEnoughQuestions, setNotEnoughQuestions] = useState<boolean>(false);
-    const [timeOver, setTimeOver] = useState<boolean>(false);
+
+    const [seconds, setSeconds] = useState<number>(-1);
 
     const [socketUrl, setSocketUrl] = useState<string | null>(null);
     const { sendMessage, lastMessage } = useWebSocket(socketUrl ?? null, {
@@ -37,21 +39,31 @@ const Game: React.FC = () => {
 
             const action = data.action;
 
+            console.log(action);
+            console.log(data);
+
             if (!action) {
                 return;
             }
 
             if (action === 'quiz-started') {
+                const seconds = data.wait_seconds;
+                setSeconds(seconds);
                 setStep('first-question-incoming');
             }
 
             if (action === 'next-question') {
-                setTimeOver(false);
-                setCurrentQuestion(data.question);
+                console.log("data", data);
+                const question = data.question;
+                const seconds = data.wait_seconds;
+                setCurrentQuestion(question);
+                setSeconds(seconds);
                 setStep('next-question');
+
             }
 
             if (action === 'next-question-incoming') {
+                setSeconds(data.wait_seconds);
                 setCurrentQuestion(null);
                 setStep('next-question-incoming');
             }
@@ -63,16 +75,22 @@ const Game: React.FC = () => {
             }
 
             if (action === 'question-answered') {
-                setTimeOver(true);
+                const seconds = data.wait_seconds;
+                console.log('Answered', seconds);
+                setSeconds(seconds);
+                setStep('waiting-for-result');
             }
 
             if (action === 'correct-answer') {
-                setStep('correct-answer');
+                const seconds = data.wait_seconds;
+                setSeconds(seconds);
+                setStep('question-result');
                 setCurrentQuestion(data.question);
             }
 
             if (action === 'quiz-ended') {
                 setCurrentQuestion(null);
+                setSeconds(data.wait_seconds);
                 setStep('quiz-ended');
             }
 
@@ -103,9 +121,7 @@ const Game: React.FC = () => {
 
         if (!socketUrl) {
             setSocketUrl(Config.WebsocketURL);
-            console.log(Config.WebsocketURL);
 
-            console.log("Game session 123", gameSession);
             sendMessage(
                 JSON.stringify({
                     action: "update-websocket-information",
@@ -215,39 +231,42 @@ const Game: React.FC = () => {
 
     if (step === 'first-question-incoming') {
         return (
-            <div className={'w-full h-full flex items-center justify-center'}>
+            <div className={'w-full h-full flex flex-col items-center justify-center'}>
                 <span>Die erste Frage kommt gleich...</span>
-                <Loader className={'w-28'} />
+
+                <div className="flex flex-col w-full h-10">
+                    <GameCountdown start={true} seconds={seconds} />
+                </div>
             </div>
         )
     }
 
     if (step === 'next-question-incoming') {
         return (
-            <div className={'w-full h-full flex items-center justify-center'}>
+            <div className={'w-full h-full flex flex-col items-center justify-center'}>
                 <span>Nächste Frage kommt gleich...</span>
-                <Loader className={'w-28'} />
+
+                <div className="flex flex-col w-full h-10">
+                    <GameCountdown start={true} seconds={seconds} />
+                </div>
             </div>
         )
     }
 
-    if (step === 'next-question' && currentQuestion) {
+    if (currentQuestion && (step === 'next-question' || step === 'waiting-for-result' || step === 'question-result')) {
         return (
-            <GameQuestion question={currentQuestion} answerQuestion={answerQuestion} timeOver={timeOver} />
-        )
-    }
-
-    if (step === 'correct-answer' && currentQuestion) {
-        return (
-            <GameQuestion question={currentQuestion} answerQuestion={answerQuestion} isResult={true} />
+            <GameQuestion question={currentQuestion} answerQuestion={answerQuestion} seconds={seconds} step={step} />
         )
     }
 
     if (step === 'quiz-ended') {
         return (
-            <div className={'w-full h-full flex items-center justify-center'}>
-                <span>Quiz beendet</span>
-                <Loader className={'w-28'} />
+            <div className={'w-full h-full flex flex-col items-center justify-center'}>
+                <span>Quiz beendet...</span>
+
+                <div className="flex flex-col w-full h-10">
+                    <GameCountdown start={true} seconds={seconds} />
+                </div>
             </div>
         )
     }
