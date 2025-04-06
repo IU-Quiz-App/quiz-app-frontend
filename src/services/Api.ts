@@ -3,6 +3,7 @@ import config from './Config.ts';
 import {GameSession, Question, User} from "./Types.ts";
 import {InteractionRequiredAuthError, PublicClientApplication} from "@azure/msal-browser";
 import {msalConfig} from "../auth/AuthConfig.ts";
+import {jwtDecode, JwtPayload} from "jwt-decode";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
@@ -28,6 +29,21 @@ msalInstance.initialize().then(() => {
     );
 });
 
+export async function getDecodedToken(): Promise<any> {
+    try {
+        const token = await getToken();
+        if (!token) {
+            throw new Error("No token found");
+        }
+
+        const decodedToken = jwtDecode<JwtPayload>(token);
+        return decodedToken;
+    } catch (error) {
+        console.error('Failed to decode token:', error);
+        throw error;
+    }
+}
+
 export async function getToken(): Promise<string> {
     try {
         const account = msalInstance.getActiveAccount();
@@ -36,7 +52,7 @@ export async function getToken(): Promise<string> {
             try {
                 const accessToken = await msalInstance.acquireTokenSilent({
                     account: account,
-                    scopes: ["api://iu-quiz-be-dev/access_as_user"],
+                    scopes: ["api://iu-quiz-be-dev/access_as_user", "User.Read", "GroupMember.Read.All"],
                 });
 
                 if (accessToken) {
@@ -69,9 +85,11 @@ export async function getToken(): Promise<string> {
 
 
 export async function getUser(): Promise<User> {
+    const token = await getDecodedToken();
+
     return {
-        'name': 'Philipp',
-        'uuid': 'Philipp'
+        'name': token.name,
+        'uuid': token.oid,
     } as User;
 }
 
