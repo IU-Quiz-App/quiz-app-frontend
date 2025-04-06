@@ -13,7 +13,8 @@ const Login: React.FC = () => {
 
         instance.loginRedirect({
                 ...loginRequest,
-                prompt: 'create',
+                prompt: "consent",
+                scopes: ["api://iu-quiz-be-dev/access_as_user"],
             })
             .catch((error) => console.log(error));
     };

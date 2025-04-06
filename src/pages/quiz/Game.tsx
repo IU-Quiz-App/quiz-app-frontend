@@ -2,7 +2,7 @@ import GameForm from "@pages/quiz/GameForm.tsx";
 import React, {useEffect, useRef, useState} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Answer, GameSession, Question } from "@services/Types.ts";
-import {createSession, getGameSession} from "@services/Api.ts";
+import {createSession, getGameSession, getToken} from "@services/Api.ts";
 import GameQuestion from "@pages/quiz/GameQuestion.tsx";
 import Loader from "@components/Loader.tsx";
 
@@ -120,18 +120,25 @@ const Game: React.FC = () => {
         }
 
         if (!socketUrl) {
-            setSocketUrl(Config.WebsocketURL);
-
-            sendMessage(
-                JSON.stringify({
-                    action: "update-websocket-information",
-                    session_uuid: uuid,
-                    user_uuid: "Philipp"
-                })
-            );
+            setWebsocketUrl()
+                .then(() => {
+                    sendMessage(
+                        JSON.stringify({
+                            action: "update-websocket-information",
+                            session_uuid: uuid,
+                            user_uuid: "Philipp"
+                        })
+                    );
+                });
         }
 
     }, [gameSession]);
+
+    async function setWebsocketUrl() {
+        const token = await getToken();
+        const url = `${Config.WebsocketURL}?access_token=${token}`;
+        setSocketUrl(url);
+    }
 
     useEffect(() => {
         if (!uuid) {

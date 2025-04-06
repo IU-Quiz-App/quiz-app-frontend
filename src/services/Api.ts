@@ -1,11 +1,72 @@
 import axios from 'axios';
 import config from './Config.ts';
 import {GameSession, Question, User} from "./Types.ts";
+import {InteractionRequiredAuthError, PublicClientApplication} from "@azure/msal-browser";
+import {msalConfig} from "../auth/AuthConfig.ts";
+
+const msalInstance = new PublicClientApplication(msalConfig);
 
 const apiClient = axios.create({
     baseURL: config.ApiURL,
     withCredentials: true,
 });
+
+
+msalInstance.initialize().then(() => {
+    apiClient.interceptors.request.use(
+        async (config) => {
+            const token = await getToken();
+            if (token) {
+                config.headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            return config;
+        },
+        (error) => {
+            return Promise.reject(error);
+        }
+    );
+});
+
+export async function getToken(): Promise<string> {
+    try {
+        const account = msalInstance.getActiveAccount();
+
+        if (account) {
+            try {
+                const accessToken = await msalInstance.acquireTokenSilent({
+                    account: account,
+                    scopes: ["api://iu-quiz-be-dev/access_as_user"],
+                });
+
+                if (accessToken) {
+                    return accessToken.accessToken;
+                }
+            } catch (error) {
+                if (error instanceof InteractionRequiredAuthError) {
+                    try {
+                        await msalInstance.acquireTokenRedirect({
+                            account: account,
+                            scopes: ["api://iu-quiz-be-dev/access_as_user"],
+                        });
+                    } catch (redirectError) {
+                        console.error('Failed to acquire token via redirect:', redirectError);
+                        throw redirectError;
+                    }
+                } else {
+                    console.error('Failed to acquire token silently:', error);
+                    throw error;
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Failed to acquire token:', error);
+        throw error;
+    }
+
+    return '';
+}
+
 
 export async function getUser(): Promise<User> {
     return {
