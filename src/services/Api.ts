@@ -52,7 +52,7 @@ export async function getToken(): Promise<string> {
             try {
                 const accessToken = await msalInstance.acquireTokenSilent({
                     account: account,
-                    scopes: ["api://iu-quiz-be-dev/access_as_user", "User.Read", "GroupMember.Read.All"],
+                    scopes: ["api://iu-quiz-be-dev/access_as_user"],
                 });
 
                 if (accessToken) {
