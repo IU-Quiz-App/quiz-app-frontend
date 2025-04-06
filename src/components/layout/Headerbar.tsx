@@ -1,10 +1,20 @@
 import { FC } from "react";
-import { Search, User } from "lucide-react";
+import { Search } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown.tsx";
+import {UserIcon} from "@heroicons/react/24/outline";
+import {useMsal} from "@azure/msal-react";
 
 const Headerbar: FC = () => {
     const navigate = useNavigate();
+    const { instance } = useMsal();
+
+    const handleLogoutRedirect = () => {
+        instance.logoutRedirect({
+            postLogoutRedirectUri: '/',
+        })
+        window.location.reload();
+    }
 
     return (
         <header className="flex items-center justify-between bg-gradient-to-b from-blue-700 to-blue-900 text-gray-200 px-6 py-3 shadow-lg">
@@ -43,9 +53,14 @@ const Headerbar: FC = () => {
 
             {/* Right - User Profile */}
             <div className="flex items-center gap-4">
-                <button className="p-2 rounded-lg hover:bg-blue-300">
-                    <User className="h-6 w-6"/>
-                </button>
+                <Dropdown
+                    options={[
+                        { label: "Logout", onClick: () => handleLogoutRedirect() },
+                    ]}
+                    className="px-4 py-2 rounded-md border-2 bg-gradient-to-bl from-blue-400 to-blue-600 border-blue-600 shadow-blue-900 text-$blue-100"
+                >
+                    <UserIcon className={'w-6 h-6'}/>
+                </Dropdown>
             </div>
         </header>
     );

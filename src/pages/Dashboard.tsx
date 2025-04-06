@@ -1,19 +1,12 @@
-import Button from "../components/Button.tsx";
-import { useNavigate } from "react-router-dom";
+import GameTableWrapper from "@pages/quiz/GameTableWrapper.tsx";
+import Button from "@components/Button.tsx";
+import {useNavigate} from "react-router-dom";
 import {useMsal} from "@azure/msal-react";
 
 const Dashboard: React.FC = () => {
 
 
     const navigate = useNavigate();
-    const { instance } = useMsal();
-
-    const handleLogoutRedirect = () => {
-        instance.logoutRedirect({
-            postLogoutRedirectUri: '/',
-        })
-        window.location.reload();
-    }
 
     function startGame() {
         navigate("/game");
@@ -26,23 +19,11 @@ const Dashboard: React.FC = () => {
                 Willkommen bei der IU-Quiz-App!
             </h1>
 
-            {/* Buttons */}
-            <div className="flex items-center justify-center gap-6">
-                <Button variant={'secondary'} className={'w-fit h-fit'} onClick={handleLogoutRedirect}>
-                    Logout
-                </Button>
-
-                <Button variant={'secondary'} className={'w-fit h-fit'} onClick={startGame}>
-                    Spiel starten
-                </Button>
-
-                <Button variant={'primary'} className={'w-fit h-fit'} route={'/question/form'}>
-                    Frage erstellen
-                </Button>
-
-                <Button variant={'primary'} className={'w-fit h-fit'} route={'/questions'}>
-                    Alle Fragen anzeigen
-                </Button>
+            <Button variant={'secondary'} className={'w-fit h-fit'} onClick={startGame}>
+                Spiel starten
+            </Button>
+            <div className="flex items-center justify-center gap-6 w-1/2 grow">
+                <GameTableWrapper/>
             </div>
         </div>
     );

@@ -8,15 +8,6 @@ export const GameTableWrapper: FC = () => {
 
     return (
         <Box className={'w-full flex-col gap-4 min-h-full'}>
-            <div className={'flex flex-row justify-between w-full'}>
-                <Button variant={'primary'} className={'w-fit h-fit'} route={'/dashboard'}>
-                    Zurück
-                </Button>
-
-                <Button variant={'primary'} className={'w-fit h-fit whitespace-nowrap'} route={'/question/form'}>
-                    Frage hinzufügen
-                </Button>
-            </div>
             <GameTable
                 fetchGameSessions={async (page) => {
                     const user = await getUser();

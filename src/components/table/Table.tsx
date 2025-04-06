@@ -38,7 +38,7 @@ const Table = <T,>({
                 {table.getHeaderGroups().map((headerGroup) => (
                     <tr
                         key={headerGroup.id}
-                        className={`*:uppercase border-b *:text-sm *:whitespace-nowrap *:px-3 *:py-3.5 *:text-left *:font-semibold`}
+                        className={`*:uppercase border-b *:text-sm *:whitespace-nowrap *:px-3 *:py-1.5 *:text-left *:font-semibold`}
                     >
                         {headerGroup.headers.map((header) => (
                             <th key={header.id}>
@@ -52,7 +52,7 @@ const Table = <T,>({
                 {table.getRowModel().rows.map((row) => (
                     <tr
                         key={row.id}
-                        className={`border-b border-gray-200 *:text-left *:text-sm *:whitespace-nowrap *:px-3 *:py-4`}
+                        className={`border-b border-gray-200 *:text-left *:text-sm *:whitespace-nowrap *:px-1.5 *:py-2`}
                     >
                         {row.getVisibleCells().map((cell) => (
                             <td key={cell.id}>
