@@ -8,6 +8,7 @@ import GuestLayout from "@layout/GuestLayout.tsx";
 import Login from "@pages/Login.tsx";
 import {AuthenticatedTemplate, UnauthenticatedTemplate, useMsal} from "@azure/msal-react";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import GameTableWrapper from "@pages/quiz/GameTableWrapper.tsx";
 
 const App = () => {
     /**
@@ -30,6 +31,7 @@ const App = () => {
                                 <Route path="/question/form" element={<QuestionForm/>} />
                                 <Route path="/question/form/:uuid" element={<QuestionForm/>} />
                                 <Route path="/questions" element={<QuestionTableWrapper/>} />
+                                <Route path="/games" element={<GameTableWrapper/>} />
                                 <Route path="/game/:uuid" element={<Game/>} />
                                 <Route path="/game" element={<Game/>} />
 

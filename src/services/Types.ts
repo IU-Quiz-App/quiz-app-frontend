@@ -23,7 +23,7 @@ export interface GameSession {
     uuid: string;
     created_by: string;
     created_at: string;
-    players: string[];
+    users: string[];
     questions?: Question[];
     users_answers?: UserAnswer[];
     started_at?: string;

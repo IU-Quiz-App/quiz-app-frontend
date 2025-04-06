@@ -109,6 +109,8 @@ const Game: React.FC = () => {
             return;
         }
 
+        console.log(gameSession);
+
         if (gameSession.ended_at) {
             setStep('quiz-result');
             return;

@@ -11,13 +11,17 @@ interface GameResultProps {
 
 const GameResult: React.FC<GameResultProps> = ({ gameSession }) => {
 
-    const [users, setUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<User[]|null>(null);
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         async function fetchUsers() {
-            const users = gameSession.players.map(async (uuid) => {
+            if (!gameSession.users) {
+                return;
+            }
+
+            const users = gameSession.users.map(async (uuid) => {
                 return await getUserByUUID(uuid);
             });
 
@@ -70,12 +74,18 @@ const GameResult: React.FC<GameResultProps> = ({ gameSession }) => {
     }
 
     return (
-        <div className={'flex flex-col gap-4'}>
-            {users.sort((a) => a.uuid === user?.uuid ? -1 : 1).map((userItem, index) => {
-                return (
-                    <GameResultUser open={userItem.uuid === user?.uuid} user={userItem} questions={gameSession.questions} usersAnswers={gameSession.users_answers.filter(userAnswer => userAnswer.user_uuid === userItem.uuid)} key={index}/>
-                )
-            })}
+        <div className={'flex flex-col gap-4'}>‚
+            {users ?
+                users.sort((a) => a.uuid === user?.uuid ? -1 : 1).map((userItem, index) => {
+                    return (
+                        <GameResultUser open={userItem.uuid === user?.uuid} user={userItem} questions={gameSession.questions} usersAnswers={gameSession.users_answers.filter(userAnswer => userAnswer.user_uuid === userItem.uuid)} key={index}/>
+                    )
+                })
+            :
+                <div>
+                    No users found
+                </div>
+            }
             <div className={'flex flex-row flex-end gap-4'}>
                 <Button variant={'primary'} route={'/dashboard'}>
                     zum Dashboard

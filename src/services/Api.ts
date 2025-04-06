@@ -153,13 +153,32 @@ export async function deleteQuestion(uuid: string|null|undefined): Promise<void>
     }
 }
 
-export async function getAllQuestionsByUser(userId: string, page: number, pageSize: number): Promise<Question[]> {
+export async function getAllQuestionsByUser(user: User, page: number, pageSize: number): Promise<Question[]> {
+    const userId = '23479lsdfkjPhilipp';
+
+    console.log(`Getting all questions by user:${userId}`);
+
     try {
         const response = await apiClient.get(`/questions?user_id=${userId}&page=${page}&page_size=${pageSize}`);
         console.log('Response data of questions:', response.data);
         return response.data.items as Question[];
     } catch (error) {
         console.error('Failed to fetch questions:', error);
+        return [];
+    }
+}
+
+export async function getAllGameSessionsByUser(user: User, page: number, pageSize: number): Promise<GameSession[]> {
+    const userId = 'Philipp';
+
+    console.log(`Getting all game sessions by user:${userId}`);
+
+    try {
+        const response = await apiClient.get(`/game/game-sessions?user_id=${userId}&page=${page}&page_size=${pageSize}`);
+        console.log('Response data of session:', response.data);
+        return response.data as GameSession[];
+    } catch (error) {
+        console.error('Failed to fetch session:', error);
         return [];
     }
 }
@@ -185,6 +204,8 @@ export async function createSession(): Promise<GameSession|null> {
 export async function getGameSession(uuid: string): Promise<GameSession> {
     try {
         const response = await apiClient.get(`/game/game-session/${uuid}`);
+
+        console.log('Response data of game session:', response.data);
 
         return response.data as GameSession;
     } catch (error) {
