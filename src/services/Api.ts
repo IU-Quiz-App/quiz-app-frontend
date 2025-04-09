@@ -1,9 +1,9 @@
 import axios from 'axios';
 import config from './Config.ts';
-import {GameSession, Question, User} from "./Types.ts";
-import {InteractionRequiredAuthError, PublicClientApplication} from "@azure/msal-browser";
-import {msalConfig} from "../auth/AuthConfig.ts";
-import {jwtDecode, JwtPayload} from "jwt-decode";
+import { GameSession, Question, User } from "./Types.ts";
+import { InteractionRequiredAuthError, PublicClientApplication } from "@azure/msal-browser";
+import { msalConfig } from "../auth/AuthConfig.ts";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
@@ -136,16 +136,20 @@ export async function updateQuestion(question: Question): Promise<boolean> {
     }
 }
 
-export async function deleteQuestion(uuid: string|null|undefined): Promise<void> {
-    console.log("Delete question with uuid", uuid);
+export async function deleteQuestion(uuid: string | null | undefined, course: string | null | undefined): Promise<void> {
+    console.log("Delete question with uuid", uuid, " and course", course);
 
     if (!uuid) {
         console.error('Cannot delete question without uuid');
         return;
     }
+    if (!course) {
+        console.error('Cannot delete question without course');
+        return;
+    }
 
     try {
-        const response = await apiClient.delete(`/question/${uuid}`);
+        const response = await apiClient.delete(`/question/${uuid}?course=${course}`);
         console.log('Response data of one question:', response.data);
     } catch (error) {
         console.error('Failed to delete question:', error);
@@ -187,11 +191,11 @@ export async function getAllCourses(): Promise<string[]> {
     return ['TestKurs', 'Mathematik', 'Informatik', 'Physik', 'Chemie', 'Biologie', 'Geschichte', 'Geographie', 'Sport', 'Kunst', 'Musik'];
 }
 
-export async function createSession(): Promise<GameSession|null> {
+export async function createSession(): Promise<GameSession | null> {
     try {
         const user = await getUser();
         const created_by = user.name;
-        const response = await apiClient.post(`/game/create-game-session`, {created_by});
+        const response = await apiClient.post(`/game/create-game-session`, { created_by });
 
         const session = response.data.session;
         return session as GameSession;

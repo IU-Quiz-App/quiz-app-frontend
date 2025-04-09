@@ -2,8 +2,8 @@ import TextAreaInput from "../../components/input/TextAreaInput.tsx";
 import Button from "../../components/Button.tsx";
 import { Answer, Question } from "../../services/Types.ts";
 import React, { ChangeEvent, useEffect, useState } from "react";
-import {getQuestion, saveQuestion, deleteQuestion, updateQuestion, getAllCourses} from "../../services/Api.ts";
-import {useNavigate, useParams} from "react-router-dom";
+import { getQuestion, saveQuestion, deleteQuestion, updateQuestion, getAllCourses } from "../../services/Api.ts";
+import { useNavigate, useParams } from "react-router-dom";
 import Loader from "@components/Loader.tsx";
 import Box from "@components/Box.tsx";
 import Select from "@components/input/Select.tsx";
@@ -204,7 +204,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
     }
 
     const handleDelete = () => {
-        deleteQuestion(uuid)
+        deleteQuestion(uuid, course)
             .then(() => {
                 console.log('Question deleted');
             });
@@ -212,7 +212,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
 
     if (loading) {
         return (
-            <Loader/>
+            <Loader />
         )
     }
 
@@ -223,71 +223,71 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
             </div>
 
             <div className={'grid grid-cols-2 gap-4'}>
-                    <TextAreaInput
-                        id={'question'}
-                        name={'question'}
-                        label={'Frage'}
-                        className={'grow h-28'}
-                        value={questionText}
-                        onChange={handleQuestionTextChange}
-                        errorMessage={errors['question'] as string}
+                <TextAreaInput
+                    id={'question'}
+                    name={'question'}
+                    label={'Frage'}
+                    className={'grow h-28'}
+                    value={questionText}
+                    onChange={handleQuestionTextChange}
+                    errorMessage={errors['question'] as string}
+                    required
+                />
+                <div className={'flex flex-col grow'}>
+                    <Select
+                        id={'course'}
+                        name={'course'}
+                        label={'Kurs'}
+                        className={'w-32'}
+                        value={course}
                         required
+                        options={courses}
+                        onChange={handleCourseChange}
+                        errorMessage={errors['course'] as string}
                     />
-                    <div className={'flex flex-col grow'}>
-                            <Select
-                                id={'course'}
-                                name={'course'}
-                                label={'Kurs'}
-                                className={'w-32'}
-                                value={course}
-                                required
-                                options={courses}
-                                onChange={handleCourseChange}
-                                errorMessage={errors['course'] as string}
-                            />
-                    </div>
+                </div>
 
-                    <TextAreaInput
-                        id={'correctAnswer'}
-                        name={'correctAnswer'}
-                        label={'Korrekte Antwort'}
-                        className={'grow h-28 bg-green-100'}
-                        value={correctAnswer.text}
-                        onChange={handleCorrectAnswerTextChange}
-                        errorMessage={errors['correctAnswer'] as string}
-                        required
-                    />
+                <TextAreaInput
+                    id={'correctAnswer'}
+                    name={'correctAnswer'}
+                    label={'Korrekte Antwort'}
+                    className={'grow h-28 bg-green-100'}
+                    value={correctAnswer.text}
+                    onChange={handleCorrectAnswerTextChange}
+                    errorMessage={errors['correctAnswer'] as string}
+                    required
+                />
 
-                    <TextAreaInput
-                        id={'wrongAnswer1'}
-                        name={'wrongAnswer1'}
-                        label={'Falsche Antwort 1'}
-                        className={'grow h-28'}
-                        value={wrongAnswers[0].text}
-                        onChange={handleWrongAnswerTextChange(0)}
-                        errorMessage={errors['wrongAnswer1'] as string}
-                        required
-                    />
-                    <TextAreaInput
-                        id={'wrongAnswer2'}
-                        name={'wrongAnswer2'}
-                        label={'Falsche Antwort 2'}
-                        className={'grow h-28'}
-                        value={wrongAnswers[1].text}
-                        onChange={handleWrongAnswerTextChange(1)}
-                        errorMessage={errors['wrongAnswer2'] as string}
-                        required
-                    />
-                    <TextAreaInput
-                        id={'wrongAnswer3'}
-                        name={'wrongAnswer3'}
-                        label={'Falsche Antwort 3'}
-                        className={'grow h-28'}
-                        value={wrongAnswers[2].text}
-                        onChange={handleWrongAnswerTextChange(2)}
-                        errorMessage={errors['wrongAnswer3'] as string}
-                        required
-                    />
+                <TextAreaInput
+                    id={'wrongAnswer1'}
+                    name={'wrongAnswer1'}
+                    label={'Falsche Antwort 1'}
+                    className={'grow h-28'}
+                    value={wrongAnswers[0].text}
+                    onChange={handleWrongAnswerTextChange(0)}
+                    errorMessage={errors['wrongAnswer1'] as string}
+                    required
+                />
+                <TextAreaInput
+                    id={'wrongAnswer2'}
+                    name={'wrongAnswer2'}
+                    label={'Falsche Antwort 2'}
+                    className={'grow h-28'}
+                    value={wrongAnswers[1].text}
+                    onChange={handleWrongAnswerTextChange(1)}
+                    errorMessage={errors['wrongAnswer2'] as string}
+                    required
+                />
+                <TextAreaInput
+                    id={'wrongAnswer3'}
+                    name={'wrongAnswer3'}
+                    label={'Falsche Antwort 3'}
+                    className={'grow h-28'}
+                    value={wrongAnswers[2].text}
+                    onChange={handleWrongAnswerTextChange(2)}
+                    errorMessage={errors['wrongAnswer3'] as string}
+                    required
+                />
             </div>
 
             <div className={'w-full flex items-end mt-8 justify-end gap-4'}>

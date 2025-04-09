@@ -3,7 +3,7 @@ import { Question } from "@services/Types.ts";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import {deleteQuestion} from "@services/Api.ts";
+import { deleteQuestion } from "@services/Api.ts";
 
 interface QuestionTableProps {
     fetchQuestions: (page: number) => Promise<Question[]>;
@@ -14,8 +14,9 @@ const QuestionTable: FC<QuestionTableProps> = ({ fetchQuestions }) => {
     const navigate = useNavigate();
     const handleDelete = (question: Question) => {
         const uuid = question.uuid;
+        const course = question.course;
 
-        deleteQuestion(uuid)
+        deleteQuestion(uuid, course)
             .then(() => {
                 console.log('Question deleted');
             });
