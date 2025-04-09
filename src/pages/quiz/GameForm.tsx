@@ -1,7 +1,7 @@
 import Box from "../../components/Box.tsx";
 import Select from "@components/input/Select.tsx";
 import React, {ChangeEvent, useEffect, useState} from "react";
-import {getAllCourses, getUserByUUID } from "@services/Api.ts";
+import { getAllCourses } from "@services/Api.ts";
 import NumberInput from "@components/input/NumberInput.tsx";
 import InputLabel from "@components/input/InputLabel.tsx";
 import {GameSession, User} from "@services/Types.ts";
@@ -118,8 +118,8 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
                 <div className={'flex flex-col gap-2 pl-2 w-full'}>
                 {users && users.map((user, index) => (
                         <Box className={'w-full !px-1 !py-2 flex flex-row justify-between'} key={`user-${index}`}>
-                            <span>{user.name}</span>
-                            {user.name === gameSession.created_by && <Crown className={'w-6 h-6'}/>}
+                            <span>{user.nickname}</span>
+                            {user.nickname === gameSession.created_by && <Crown className={'w-6 h-6'}/>}
                         </Box>
                 ))}
                 </div>

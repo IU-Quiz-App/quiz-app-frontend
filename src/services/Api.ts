@@ -87,16 +87,13 @@ export async function getToken(): Promise<string> {
 export async function getUser(): Promise<User> {
     const token = await getDecodedToken();
 
-    return {
-        'name': token.name,
-        'uuid': token.oid,
-    } as User;
-}
+    console.log(token);
 
-export async function getUserByUUID(uuid: string): Promise<User> {
+    const firstName = token.name.split(' ')[0];
+
     return {
-        'name': uuid,
-        'uuid': uuid
+        'nickname': firstName as string,
+        'user_uuid': token.oid as string,
     } as User;
 }
 
@@ -113,8 +110,6 @@ export async function getQuestion(uuid: string): Promise<Question> {
 
 export async function saveQuestion(question: Question): Promise<boolean> {
     try {
-        const user = await getUser();
-        question.created_by = user.name;
         const response = await apiClient.post(`/question`, question);
         console.log('Response data of saved question:', response.data);
         return true;
@@ -193,9 +188,7 @@ export async function getAllCourses(): Promise<string[]> {
 
 export async function createSession(): Promise<GameSession | null> {
     try {
-        const user = await getUser();
-        const created_by = user.name;
-        const response = await apiClient.post(`/game/create-game-session`, { created_by });
+        const response = await apiClient.post(`/game/create-game-session`);
 
         const session = response.data.session;
         return session as GameSession;

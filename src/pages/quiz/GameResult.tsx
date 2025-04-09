@@ -1,6 +1,6 @@
 import {GameSession, User} from "@services/Types.ts";
 import React, {useEffect, useState} from "react";
-import {getUser, getUserByUUID} from "@services/Api.ts";
+import {getUser} from "@services/Api.ts";
 import Loader from "@components/Loader.tsx";
 import GameResultUser from "@pages/quiz/GameResultUser.tsx";
 import Button from "@components/Button.tsx";
@@ -21,11 +21,9 @@ const GameResult: React.FC<GameResultProps> = ({ gameSession }) => {
                 return;
             }
 
-            const users = gameSession.users.map(async (uuid) => {
-                return await getUserByUUID(uuid);
-            });
 
-            setUsers(await Promise.all(users));
+
+            setUsers(gameSession.users);
         }
 
         async function fetchUser() {
@@ -76,9 +74,9 @@ const GameResult: React.FC<GameResultProps> = ({ gameSession }) => {
     return (
         <div className={'flex flex-col gap-4'}>‚
             {users ?
-                users.sort((a) => a.uuid === user?.uuid ? -1 : 1).map((userItem, index) => {
+                users.sort((a) => a.user_uuid === user?.user_uuid ? -1 : 1).map((userItem, index) => {
                     return (
-                        <GameResultUser open={userItem.uuid === user?.uuid} user={userItem} questions={gameSession.questions} usersAnswers={gameSession.users_answers.filter(userAnswer => userAnswer.user_uuid === userItem.uuid)} key={index}/>
+                        <GameResultUser open={userItem.user_uuid === user?.user_uuid} user={userItem} questions={gameSession.questions} usersAnswers={gameSession.users_answers.filter(userAnswer => userAnswer.user_uuid === userItem.user_uuid)} key={index}/>
                     )
                 })
             :

@@ -1,13 +1,29 @@
-import { FC } from "react";
+import {FC, useEffect, useState} from "react";
 import { Search } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown.tsx";
 import {UserIcon} from "@heroicons/react/24/outline";
 import {useMsal} from "@azure/msal-react";
+import {getUser} from "@services/Api.ts";
+import {User} from "@services/Types.ts";
 
 const Headerbar: FC = () => {
     const navigate = useNavigate();
     const { instance } = useMsal();
+
+    const [user, setUser] = useState<User|null>(null);
+
+    useEffect(() => {
+
+        async function fetchUser() {
+            const user = await getUser();
+
+            setUser(user);
+        }
+
+        fetchUser()
+            .catch((error) => console.error('Error fetching user', error));
+    }, []);
 
     const handleLogoutRedirect = () => {
         instance.logoutRedirect({
@@ -53,6 +69,11 @@ const Headerbar: FC = () => {
 
             {/* Right - User Profile */}
             <div className="flex items-center gap-4">
+                {user && (
+                    <div>
+                        {user.nickname}
+                    </div>
+                )}
                 <Dropdown
                     options={[
                         { label: "Logout", onClick: () => handleLogoutRedirect() },
