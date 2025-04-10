@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import {EyeIcon} from "@heroicons/react/24/outline";
 
 interface GameTableProps {
-    fetchGameSessions: (page: number) => Promise<GameSession[]>;
+    fetchGameSessions: (page: number, pageSize: number) => Promise<{items: GameSession[], total: number}>;
 }
 
 const GameTable: FC<GameTableProps> = ({ fetchGameSessions }) => {

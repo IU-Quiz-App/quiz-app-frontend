@@ -18,9 +18,9 @@ export const QuestionTableWrapper: FC = () => {
                 </Button>
             </div>
             <QuestionsTable
-                fetchQuestions={async (page) => {
+                fetchQuestions={async (page, pageSize) => {
                     const user = await getUser();
-                    return await getAllQuestionsByUser(user, page, 10)
+                    return await getAllQuestionsByUser(user, page, pageSize)
                 }}
             />
         </Box>

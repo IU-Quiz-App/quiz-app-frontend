@@ -1,23 +1,27 @@
 import Table from '@components/table/Table';
 import { Question } from "@services/Types.ts";
-import { FC } from "react";
+import { FC, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { deleteQuestion } from "@services/Api.ts";
 
 interface QuestionTableProps {
-    fetchQuestions: (page: number) => Promise<Question[]>;
+    fetchQuestions: (page: number, pageSize: number) => Promise<{items: Question[], total: number}>;
 }
 
 const QuestionTable: FC<QuestionTableProps> = ({ fetchQuestions }) => {
 
     const navigate = useNavigate();
+    const tableRef = useRef<{ refetch: () => void }>(null);
+
     const handleDelete = (question: Question) => {
         const uuid = question.uuid;
         const course = question.course;
 
         deleteQuestion(uuid, course)
             .then(() => {
+                        tableRef.current?.refetch();
+
                 console.log('Question deleted');
             });
     }
@@ -41,6 +45,7 @@ const QuestionTable: FC<QuestionTableProps> = ({ fetchQuestions }) => {
         <Table
             queryKey={'questions'}
             fetchData={fetchQuestions}
+            ref={tableRef}
             columns={[
                 { accessorKey: 'uuid', header: 'UUID' },
                 { accessorKey: 'text', header: 'Text' },
