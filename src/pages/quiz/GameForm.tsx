@@ -45,11 +45,7 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
                 return;
             }
 
-            const users = gameSession.users.map(async (uuid) => {
-                return await getUserByUUID(uuid);
-            });
-
-            setUsers(await Promise.all(users));
+            setUsers(await Promise.all(gameSession.users));
         }
 
         fetchCourses()
