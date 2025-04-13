@@ -47,3 +47,9 @@ export interface User {
     nickname: string;
     user_uuid: string;
 }
+
+export interface Course {
+    uuid: string;
+    name: string;
+    description: string;
+}

@@ -4,7 +4,7 @@ import React, {ChangeEvent, useEffect, useState} from "react";
 import { getAllCourses } from "@services/Api.ts";
 import NumberInput from "@components/input/NumberInput.tsx";
 import InputLabel from "@components/input/InputLabel.tsx";
-import { GameSession } from "@services/Types.ts";
+import {Course, GameSession} from "@services/Types.ts";
 import { Crown } from "lucide-react";
 import Button from "@components/Button.tsx";
 import Loader from "@components/Loader.tsx";
@@ -17,10 +17,10 @@ interface GameFormProps {
 
 const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQuestions }) => {
 
-    const [courses, setCourses] = useState<{ value: string, label: string }[]>([]);
+    const [courses, setCourses] = useState<Course[]>([]);
     const [questionQuantity, setQuestionQuantity] = useState<number>(3);
     const [questionAnswerTime, setQuestionAnswerTime] = useState<number>(5);
-    const [course, setCourse] = useState<string>('');
+    const [courseUUID, setCourseUUID] = useState<string|null>(null);
 
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -30,14 +30,7 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
         async function fetchCourses() {
             const courses = await getAllCourses();
 
-            const courseOptions = courses.map(course => {
-                return {
-                    value: course,
-                    label: course
-                }
-            });
-
-            setCourses(courseOptions);
+            setCourses(courses);
         }
 
         fetchCourses()
@@ -49,6 +42,7 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
     }, [gameSession]);
 
     useEffect(() => {
+        console.log('Not enough questions:', notEnoughQuestions);
         if (notEnoughQuestions) {
             setErrors({
                 ...errors,
@@ -76,7 +70,7 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
 
         setErrors({});
 
-        if (!course) {
+        if (!courseUUID) {
             setTimeout(() => {
                 setErrors({
                     ...errors,
@@ -106,7 +100,7 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
             return;
         }
 
-        startGame(questionQuantity, course, questionAnswerTime);
+        startGame(questionQuantity, courseUUID, questionAnswerTime);
     }
 
     if (loading) {
@@ -135,9 +129,14 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
                     <div className={'flex justify-between w-full'}>
                         <InputLabel id={"course"} htmlFor={"course"} label={"Kurs"} required={true}/>
                         <Select id={"course"} name={"course"} className={'w-48'} placeholder={'Kurs auswählen'}
-                                options={courses}
+                                options={courses.map((course) => ({
+                                    label: course.description && course.description.trim() !== ''
+                                        ? `${course.name} - ${course.description}`
+                                        : course.name,
+                                    value: course.uuid
+                                }))}
                                 errorMessage={errors['course']}
-                                onChange={(event) => setCourse(event.target.value)}
+                                onChange={(event) => setCourseUUID(event.target.value)}
                         />
                     </div>
                     <div className={'flex justify-between w-full'}>

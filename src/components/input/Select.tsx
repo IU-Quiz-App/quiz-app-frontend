@@ -5,7 +5,7 @@ import {InputError} from "./InputError.tsx";
 interface TextInputProps {
     id: string
     name: string
-    options: { value: string, label: string }[]
+    options: { value: string | number | readonly string[] | undefined, label: string }[]
     label?: string
     onChange?: (event: ChangeEvent<HTMLSelectElement>) => void
     className?: string
@@ -32,8 +32,8 @@ const Select: React.FC<TextInputProps> = ({ id, name, options, className, onChan
                         {placeholder ?? 'Bitte auswählen'}
                     </option>
 
-                    {options.map(option => (
-                        <option key={option.value} value={option.value}>
+                    {options.map((option, index) => (
+                        <option key={index} value={option.value}>
                             {option.label}
                         </option>
                     ))}

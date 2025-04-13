@@ -1,9 +1,13 @@
 import axios from 'axios';
 import config from './Config.ts';
-import { GameSession, Question, User } from "./Types.ts";
-import { InteractionRequiredAuthError, PublicClientApplication } from "@azure/msal-browser";
+import {Course, GameSession, Question, User} from "./Types.ts";
+import {InteractionRequiredAuthError, InteractionType, PublicClientApplication} from "@azure/msal-browser";
 import { msalConfig } from "../auth/AuthConfig.ts";
 import { jwtDecode, JwtPayload } from "jwt-decode";
+import {Client} from "@microsoft/microsoft-graph-client";
+import {
+    AuthCodeMSALBrowserAuthenticationProvider
+} from "@microsoft/microsoft-graph-client/lib/src/authentication/msal-browser";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
@@ -11,6 +15,21 @@ const apiClient = axios.create({
     baseURL: config.ApiURL,
     withCredentials: true,
 });
+
+const authProvider = new AuthCodeMSALBrowserAuthenticationProvider(msalInstance, {
+    account: msalInstance.getActiveAccount(),
+    interactionType: InteractionType.Popup,
+    scopes: [
+        "Group.Read.All",
+        'User.Read',
+        'openid',
+        'profile',
+        'User.ReadBasic.All',
+        "Group.Read.All",
+    ],
+});
+
+const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
 
 
 msalInstance.initialize().then(() => {
@@ -52,7 +71,15 @@ export async function getToken(): Promise<string> {
             try {
                 const accessToken = await msalInstance.acquireTokenSilent({
                     account: account,
-                    scopes: ["api://iu-quiz-be-dev/access_as_user"],
+                    scopes: [
+                        "api://iu-quiz-be-dev/access_as_user",
+                        "Group.Read.All",
+                        'User.Read',
+                        'openid',
+                        'profile',
+                        'User.ReadBasic.All',
+                        "Group.Read.All",
+                    ],
                 });
 
                 if (accessToken) {
@@ -63,7 +90,15 @@ export async function getToken(): Promise<string> {
                     try {
                         await msalInstance.acquireTokenRedirect({
                             account: account,
-                            scopes: ["api://iu-quiz-be-dev/access_as_user"],
+                            scopes: [
+                                "api://iu-quiz-be-dev/access_as_user",
+                                "Group.Read.All",
+                                'User.Read',
+                                'openid',
+                                'profile',
+                                'User.ReadBasic.All',
+                                "Group.Read.All",
+                            ],
                         });
                     } catch (redirectError) {
                         console.error('Failed to acquire token via redirect:', redirectError);
@@ -214,8 +249,37 @@ export async function getAllGameSessionsByUser(page: number, pageSize: number): 
     }
 }
 
-export async function getAllCourses(): Promise<string[]> {
-    return ['TestKurs', 'Mathematik', 'Informatik', 'Physik', 'Chemie', 'Biologie', 'Geschichte', 'Geographie', 'Sport', 'Kunst', 'Musik'];
+export async function getAllCourses(): Promise<Course[]> {
+    const decodedToken = await getDecodedToken();
+    console.log(decodedToken);
+
+    const string = {
+        securityEnabledOnly: true
+    };
+
+    const userGroupsResponse = await graphClient.api('/me/getMemberGroups')
+        .post(string);
+
+    const userGroupsIds = userGroupsResponse.value;
+    console.log('User groups IDs:', userGroupsIds);
+
+    const allGroupsResponse = await graphClient.api('/groups?$select=id,displayName,description').get();
+
+    const allGroups = allGroupsResponse.value;
+
+    console.log('all groups:', allGroups);
+
+    const userGroups = allGroups.filter((group: any) => userGroupsIds.includes(group.id));
+
+    console.log('user groups:', userGroups);
+
+    return userGroups.map((group: any) => {
+        return {
+            uuid: group.id,
+            name: group.displayName,
+            description: group.description,
+        } as Course;
+    });
 }
 
 export async function createSession(): Promise<GameSession | null> {
