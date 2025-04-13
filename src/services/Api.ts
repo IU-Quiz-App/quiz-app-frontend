@@ -83,6 +83,18 @@ export async function getToken(): Promise<string> {
     return '';
 }
 
+export async function getEphemeralToken(): Promise<string|undefined> {
+    try {
+        const response = await apiClient.get(`/authorization/token`);
+        const token = response.data.token;
+        console.log('Ephemeral token:', token);
+        return token;
+    } catch (error) {
+        console.error('Failed getting ephemeral token:', error);
+        throw error;
+    }
+}
+
 
 export async function getUser(): Promise<User> {
     const token = await getDecodedToken();
