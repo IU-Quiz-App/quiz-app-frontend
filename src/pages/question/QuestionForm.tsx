@@ -1,6 +1,6 @@
 import TextAreaInput from "../../components/input/TextAreaInput.tsx";
 import Button from "../../components/Button.tsx";
-import { Answer, Question } from "../../services/Types.ts";
+import {Answer, Course, Question} from "../../services/Types.ts";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { getQuestion, saveQuestion, deleteQuestion, updateQuestion, getAllCourses } from "../../services/Api.ts";
 import { useNavigate, useParams } from "react-router-dom";
@@ -29,7 +29,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [loading, setLoading] = useState<boolean>(true);
-    const [courses, setCourses] = useState<{ value: string, label: string }[]>([]);
+    const [courses, setCourses] = useState<Course[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -53,14 +53,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
         async function fetchCourses() {
             const courses = await getAllCourses();
 
-            const courseOptions = courses.map(course => {
-                return {
-                    value: course,
-                    label: course
-                }
-            });
-
-            setCourses(courseOptions);
+            setCourses(courses);
         }
 
         fetchData()
@@ -241,7 +234,12 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                         className={'w-32'}
                         value={course}
                         required
-                        options={courses}
+                        options={courses.map((course) => ({
+                            label: course.description && course.description.trim() !== ''
+                                ? `${course.name} - ${course.description}`
+                                : course.name,
+                            value: course.uuid
+                        }))}
                         onChange={handleCourseChange}
                         errorMessage={errors['course'] as string}
                     />
