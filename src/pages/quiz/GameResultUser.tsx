@@ -27,7 +27,7 @@ const GameResultUser: FC<GameResultUser> = ({ user, questions, usersAnswers, ope
     return (
         <Box className={'flex flex-col gap-4 !w-full'}>
             <div className={'flex flex-row justify-between'} onClick={toggleOpen} >
-                <span className={'font-bold text-xl'}>{user.name}'s Ergebnisse</span>
+                <span className={'font-bold text-xl'}>{user.nickname}'s Ergebnisse</span>
                 <ChevronDownIcon className={`w-6 h-6 ${ isOpen ? '' : 'transform -rotate-90' }`}/>
             </div>
             {isOpen ? (

@@ -13,7 +13,7 @@ const AppLayout: React.FC = () => {
                 <div className={'absolute w-full h-full -z-10 bg-cover bg-center bg-no-repeat blur-sm'}
                     style={{ backgroundImage: "url('/background.webp')" }}
                 />
-                <div className={'overflow-scroll grow py-24 px-32'}>
+                <div className={'overflow-scroll grow py-24 px-8'}>
                     <Outlet/>
                 </div>
             </div>

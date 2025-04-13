@@ -1,7 +1,6 @@
 import GameTableWrapper from "@pages/quiz/GameTableWrapper.tsx";
 import Button from "@components/Button.tsx";
 import {useNavigate} from "react-router-dom";
-import {useMsal} from "@azure/msal-react";
 
 const Dashboard: React.FC = () => {
 
@@ -22,7 +21,7 @@ const Dashboard: React.FC = () => {
             <Button variant={'secondary'} className={'w-fit h-fit'} onClick={startGame}>
                 Spiel starten
             </Button>
-            <div className="flex items-center justify-center gap-6 w-1/2 grow">
+            <div className="flex items-center justify-center gap-6 grow">
                 <GameTableWrapper/>
             </div>
         </div>

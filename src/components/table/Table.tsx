@@ -68,7 +68,7 @@ const Table = forwardRef(<T,>(
                         className={`border-b border-gray-200 *:text-left *:text-sm *:whitespace-nowrap *:px-1.5 *:py-2`}
                     >
                         {row.getVisibleCells().map((cell) => (
-                            <td key={cell.id}>
+                            <td key={cell.id} className={'whitespace-nowrap'}>
                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                             </td>
                         ))}
