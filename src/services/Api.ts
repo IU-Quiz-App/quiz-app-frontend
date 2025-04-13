@@ -134,8 +134,6 @@ export async function getEphemeralToken(): Promise<string|undefined> {
 export async function getUser(): Promise<User> {
     const token = await getDecodedToken();
 
-    console.log(token);
-
     const firstName = token.name.split(' ')[0];
 
     return {
