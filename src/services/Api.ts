@@ -155,7 +155,9 @@ export async function getQuestion(uuid: string): Promise<Question> {
 
 export async function saveQuestion(question: Question): Promise<boolean> {
     try {
-        const response = await apiClient.post(`/question`, question);
+        const response = await apiClient.post(`/question`, {
+            items: [question],
+        });
         console.log('Response data of saved question:', response.data);
         return true;
     } catch (error) {
