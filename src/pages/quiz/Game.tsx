@@ -31,6 +31,7 @@ const Game: React.FC = () => {
 
     const navigate = useNavigate();
     const createdSession = useRef(false);
+    const websocketUrlSet = useRef(false);
 
     useEffect(() => {
         if (lastMessage) {
@@ -121,7 +122,8 @@ const Game: React.FC = () => {
             return;
         }
 
-        if (!socketUrl) {
+        if (!socketUrl && !websocketUrlSet.current) {
+            websocketUrlSet.current = true;
             setWebsocketUrl()
                 .then(() => {
                     sendMessage(
@@ -191,14 +193,15 @@ const Game: React.FC = () => {
         }
     }, []);
 
-    function startGame(quiz_length: number, course: string) {
+    function startGame(quiz_length: number, course: string, questionAnswerTime: number) {
         console.log('Start game session');
         sendMessage(
             JSON.stringify({
                 action: "start-game-session",
                 game_session_uuid: uuid,
                 quiz_length: quiz_length,
-                course_name: course
+                course_name: course,
+                question_response_time: questionAnswerTime,
             })
         );
     }

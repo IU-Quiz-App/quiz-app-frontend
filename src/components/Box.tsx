@@ -17,7 +17,7 @@ const Box: React.FC<BoxProps> = ({ children, onClick, className, color = 'gray' 
     return (
         <div
             onClick={handleClick}
-            className={`bg-gradient-to-bl border-2 rounded-md h-fit w-fit p-4 shadow-md overflow-hidden bg-opacity-50 backdrop-blur-lg shadow-${color}-200 bg-${color}-100 border-${color}-200 shadow-${color}-300 text-${color}-500 ${className}`}
+            className={`bg-gradient-to-bl border-2 rounded-md h-fit w-fit p-4 shadow-md overflow-hidden bg-opacity-50 backdrop-blur-lg shadow-${color}-200 bg-${color}-100 border-${color}-200 shadow-${color}-300 text-${color}-800 ${className}`}
         >
             {children}
         </div>

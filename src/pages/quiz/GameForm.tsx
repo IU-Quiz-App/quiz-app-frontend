@@ -11,14 +11,15 @@ import Loader from "@components/Loader.tsx";
 
 interface GameFormProps {
     gameSession: GameSession;
-    startGame: (quantity: number, course: string) => void;
+    startGame: (questionQuantity: number, course: string, questionAnswerTime: number) => void;
     notEnoughQuestions: boolean;
 }
 
 const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQuestions }) => {
 
     const [courses, setCourses] = useState<{ value: string, label: string }[]>([]);
-    const [quantity, setQuantity] = useState<number>(3);
+    const [questionQuantity, setQuestionQuantity] = useState<number>(3);
+    const [questionAnswerTime, setQuestionAnswerTime] = useState<number>(5);
     const [course, setCourse] = useState<string>('');
 
     const [loading, setLoading] = useState<boolean>(true);
@@ -56,9 +57,14 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
         }
     }, [notEnoughQuestions]);
 
-    function onQuantityChange(event: ChangeEvent<HTMLInputElement>) {
+    function onQuestionQuantityChange(event: ChangeEvent<HTMLInputElement>) {
         const value = parseInt(event.target.value);
-        setQuantity(value);
+        setQuestionQuantity(value);
+    }
+
+    function onQuestionAnswerTimeChange(event: ChangeEvent<HTMLInputElement>) {
+        const value = parseInt(event.target.value);
+        setQuestionAnswerTime(value);
     }
 
     if (!gameSession) {
@@ -80,7 +86,27 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
             return;
         }
 
-        startGame(quantity, course);
+        if (questionQuantity < 1) {
+            setTimeout(() => {
+                setErrors({
+                    ...errors,
+                    'question-quantity': 'Bitte gib eine gültige Anzahl an Fragen an'
+                });
+            });
+            return;
+        }
+
+        if (questionAnswerTime < 1) {
+            setTimeout(() => {
+                setErrors({
+                    ...errors,
+                    'question-answer-time': 'Bitte gib eine gültige Zeit an'
+                });
+            });
+            return;
+        }
+
+        startGame(questionQuantity, course, questionAnswerTime);
     }
 
     if (loading) {
@@ -120,8 +146,18 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
                             errorMessage={errors['question-quantity']}
                             id={"question-quantity"}
                             name={'question-quantity'}
-                            value={quantity}
-                            onChange={onQuantityChange}
+                            value={questionQuantity}
+                            onChange={onQuestionQuantityChange}
+                        />
+                    </div>
+                    <div className={'flex justify-between w-full'}>
+                        <InputLabel id={"question-answer-time"} htmlFor={"question-answer-time"} label={"Antwortzeit"} required={true}/>
+                        <NumberInput
+                            errorMessage={errors['question-answer-time']}
+                            id={"question-answer-time"}
+                            name={'question-answer-time'}
+                            value={questionAnswerTime}
+                            onChange={onQuestionAnswerTimeChange}
                         />
                     </div>
                 </div>
