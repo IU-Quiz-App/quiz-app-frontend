@@ -1,14 +1,14 @@
 import Box from "../../components/Box.tsx";
-import Button from "../../components/Button.tsx";
 import {useEffect, useState} from "react";
 import {Answer, Question} from "@services/Types.ts";
-import GameTimer from "@pages/quiz/GameTimer.tsx";
-import GameProgressBar from "@pages/quiz/GameProgressBar.tsx";
-import GameCountdown from "@pages/quiz/GameCountdown.tsx";
+import GameTimer from "@pages/quiz/components/GameTimer.tsx";
+import GameProgressBar from "@pages/quiz/components/GameProgressBar.tsx";
+import GameCountdown from "@pages/quiz/components/GameCountdown.tsx";
+import GameQuestionAnswer from "@pages/quiz/components/GameQuestionAnswer.tsx";
 
 interface QuestionProps {
     question: Question,
-    answerQuestion: (answer: Answer) => void,
+    answerQuestion?: (answer: Answer) => void,
     seconds?: number
     step: 'next-question' | 'waiting-for-result' | 'question-result',
 }
@@ -33,40 +33,10 @@ const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, secon
         console.log('Answer question', newAnswer);
 
         setAnswer(newAnswer);
-        answerQuestion(newAnswer);
+        if (answerQuestion) {
+            answerQuestion(newAnswer);
+        }
     }
-
-    const AnswerButton = (answerItem: Answer, index: number) => {
-        const attributes = {
-            variant: answer?.uuid === answerItem.uuid ? 'primary' : 'tertiary',
-        } as any;
-
-        if (step === 'question-result') {
-            attributes.disabled = true;
-
-            if (answerItem.isTrue) {
-                attributes.color = 'green';
-            }
-
-            if (answer?.uuid === answerItem.uuid && !answerItem.isTrue) {
-                attributes.color = 'red';
-            }
-        }
-
-        if (step !== 'next-question') {
-            attributes.disabled = true;
-        }
-
-        return(
-            <Button
-                key={index}
-                onClick={() => handleOnClick(answerItem)}
-                {...attributes}
-            >
-                {answerItem.text}
-            </Button>
-        )
-    };
 
     return (
         <div className={`flex flex-col w-full h-full gap-6`}>
@@ -81,7 +51,13 @@ const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, secon
                     <div className={'flex flex-col w-full gap-4'}>
                         <div className={'grid grid-cols-2 gap-4 h-full *:w-full *:h-28'}>
                             {question.answers.map((answerItem, index) => (
-                                AnswerButton(answerItem, index)
+                                 <GameQuestionAnswer
+                                     answer={answerItem}
+                                     step={step}
+                                     onClick={handleOnClick}
+                                     key={index}
+                                     isGiven={answerItem.uuid === answer?.uuid}
+                                />
                             ))}
                         </div>
                     </div>

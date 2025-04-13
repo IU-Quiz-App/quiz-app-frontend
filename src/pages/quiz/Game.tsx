@@ -9,7 +9,7 @@ import Loader from "@components/Loader.tsx";
 import useWebSocket from "react-use-websocket";
 import Config from "@services/Config.ts";
 import GameResult from "@pages/quiz/GameResult.tsx";
-import GameCountdown from "@pages/quiz/GameCountdown.tsx";
+import GameCountdown from "@pages/quiz/components/GameCountdown.tsx";
 
 const Game: React.FC = () => {
     const { uuid: uuid } = useParams();

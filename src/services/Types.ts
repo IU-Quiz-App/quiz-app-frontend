@@ -7,12 +7,14 @@ export interface Question extends Item {
     created_at?: string;
     created_by?: string;
     answers: Answer[];
+    timed_out_answers?: UserAnswer[];
 }
 
 export interface Answer extends Item {
     isTrue: boolean;
     text: string;
     explanation: string;
+    user_answers?: UserAnswer[];
 }
 
 export interface Item {
@@ -25,7 +27,6 @@ export interface GameSession {
     created_at: string;
     users: User[];
     questions?: Question[];
-    users_answers?: UserAnswer[];
     started_at?: string;
     ended_at?: string;
     quiz_length?: number;

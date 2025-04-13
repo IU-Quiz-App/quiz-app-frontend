@@ -4,7 +4,7 @@ import React, {ChangeEvent, useEffect, useState} from "react";
 import { getAllCourses } from "@services/Api.ts";
 import NumberInput from "@components/input/NumberInput.tsx";
 import InputLabel from "@components/input/InputLabel.tsx";
-import {GameSession, User} from "@services/Types.ts";
+import { GameSession } from "@services/Types.ts";
 import { Crown } from "lucide-react";
 import Button from "@components/Button.tsx";
 import Loader from "@components/Loader.tsx";
@@ -20,7 +20,6 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
     const [courses, setCourses] = useState<{ value: string, label: string }[]>([]);
     const [quantity, setQuantity] = useState<number>(3);
     const [course, setCourse] = useState<string>('');
-    const [users, setUsers] = useState<User[]>([]);
 
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -40,27 +39,12 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
             setCourses(courseOptions);
         }
 
-        async function fetchUsers() {
-            if (!gameSession.users) {
-                return;
-            }
-
-            setUsers(await Promise.all(gameSession.users));
-        }
-
         fetchCourses()
             .then(() => {
                 console.log('Courses fetched')
                 setLoading(false);
             })
             .catch((error) => console.error('Error fetching courses', error));
-
-        fetchUsers()
-            .then(() => {
-                console.log('Users fetched')
-                setLoading(false);
-            })
-            .catch((error) => console.error('Error fetching users', error));
     }, [gameSession]);
 
     useEffect(() => {
@@ -112,7 +96,7 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
             <Box className={'min-w-40 h-full flex flex-col items-start justify-start gap-4'}>
                 <span className={'text-sm'}>Spieler</span>
                 <div className={'flex flex-col gap-2 pl-2 w-full'}>
-                {users && users.map((user, index) => (
+                {gameSession.users && gameSession.users.map((user, index) => (
                         <Box className={'w-full !px-1 !py-2 flex flex-row justify-between'} key={`user-${index}`}>
                             <span>{user.nickname}</span>
                             {user.nickname === gameSession.created_by && <Crown className={'w-6 h-6'}/>}
