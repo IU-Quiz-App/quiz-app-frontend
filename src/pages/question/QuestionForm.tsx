@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Loader from "@components/Loader.tsx";
 import Box from "@components/Box.tsx";
 import Select from "@components/input/Select.tsx";
+import QuestionFormAnswer from "@pages/question/QuestionFormAnswer.tsx";
 
 interface QuestionFormProps {
     uuid?: string | undefined;
@@ -34,6 +35,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
     useEffect(() => {
         const fetchData = async () => {
             if (!uuid) {
+                setDefaultValues();
                 return;
             }
             const question = await getQuestion(uuid);
@@ -103,9 +105,27 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
         });
     }
 
+    const handleWrongAnswerExplanationTextChange = (index: 0 | 1 | 2) => (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setWrongAnswers((prev) => {
+            const newAnswers = [...prev];
+            newAnswers[index] = {
+                text: prev[index].text,
+                explanation: event.target.value,
+                isTrue: false
+            }
+            return newAnswers;
+        });
+    }
+
     const handleCorrectAnswerTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setCorrectAnswer((prev) => {
             return { ...prev, text: event.target.value };
+        });
+    }
+
+    const handleCorrectAnswerExplanationTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setCorrectAnswer((prev) => {
+            return { ...prev, explanation: event.target.value };
         });
     }
 
@@ -245,47 +265,30 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                     />
                 </div>
 
-                <TextAreaInput
+                <QuestionFormAnswer
+                    textClassName={'bg-green-100'}
+                    explanationClassName={'h-28 bg-green-200'}
                     id={'correctAnswer'}
-                    name={'correctAnswer'}
-                    label={'Korrekte Antwort'}
-                    className={'grow h-28 bg-green-100'}
-                    value={correctAnswer.text}
-                    onChange={handleCorrectAnswerTextChange}
-                    errorMessage={errors['correctAnswer'] as string}
-                    required
+                    labelText={'Korrekte Antwort'}
+                    labelExplanation={'Korrekte Antwort Erklärung'}
+                    answer={correctAnswer}
+                    onTextChange={handleCorrectAnswerTextChange}
+                    onExplanationChange={handleCorrectAnswerExplanationTextChange}
                 />
 
-                <TextAreaInput
-                    id={'wrongAnswer1'}
-                    name={'wrongAnswer1'}
-                    label={'Falsche Antwort 1'}
-                    className={'grow h-28'}
-                    value={wrongAnswers[0].text}
-                    onChange={handleWrongAnswerTextChange(0)}
-                    errorMessage={errors['wrongAnswer1'] as string}
-                    required
-                />
-                <TextAreaInput
-                    id={'wrongAnswer2'}
-                    name={'wrongAnswer2'}
-                    label={'Falsche Antwort 2'}
-                    className={'grow h-28'}
-                    value={wrongAnswers[1].text}
-                    onChange={handleWrongAnswerTextChange(1)}
-                    errorMessage={errors['wrongAnswer2'] as string}
-                    required
-                />
-                <TextAreaInput
-                    id={'wrongAnswer3'}
-                    name={'wrongAnswer3'}
-                    label={'Falsche Antwort 3'}
-                    className={'grow h-28'}
-                    value={wrongAnswers[2].text}
-                    onChange={handleWrongAnswerTextChange(2)}
-                    errorMessage={errors['wrongAnswer3'] as string}
-                    required
-                />
+                {wrongAnswers.map((answer, index) => (
+                    <QuestionFormAnswer
+                        textClassName={'bg-red-100'}
+                        explanationClassName={'h-28 bg-red-200'}
+                        id={`wrongAnswer${index + 1}`}
+                        labelText={`Falsche Antwort ${index + 1}`}
+                        labelExplanation={`Falsche Antwort ${index + 1} Erklärung`}
+                        answer={answer}
+                        onTextChange={handleWrongAnswerTextChange(index as 0 | 1 | 2)}
+                        onExplanationChange={handleWrongAnswerExplanationTextChange(index as 0 | 1 | 2)}
+                        textErrorMessage={errors[`wrongAnswer${index + 1}`] as string}
+                    />
+                ))}
             </div>
 
             <div className={'w-full flex items-end mt-8 justify-end gap-4'}>

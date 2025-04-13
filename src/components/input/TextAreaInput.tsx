@@ -17,7 +17,7 @@ interface TextAreaInputProps {
 const TextAreaInput: React.FC<TextAreaInputProps> = ({ id, name, className, onChange, label, placeholder, value, errorMessage, required }) => {
 
     return (
-        <div className={'flex flex-col grow'}>
+        <div className={'flex flex-col'}>
             {label && <InputLabel id={id} label={label} htmlFor={id} required={required} className={'mb-2'}/>}
             <InputError id={id} message={errorMessage}/>
             <textarea

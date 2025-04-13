@@ -2,7 +2,7 @@ import { FC } from 'react';
 import Box from "@components/Box.tsx";
 import Button from "@components/Button.tsx";
 import QuestionsTable from "@pages/question/QuestionTable.tsx";
-import {getAllQuestionsByUser, getUser} from "@services/Api.ts";
+import {getAllQuestionsByUser} from "@services/Api.ts";
 
 export const QuestionTableWrapper: FC = () => {
 

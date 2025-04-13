@@ -49,7 +49,7 @@ const QuestionTable: FC<QuestionTableProps> = ({ fetchQuestions }) => {
             columns={[
                 { accessorKey: 'uuid', header: 'UUID' },
                 { accessorKey: 'text', header: 'Text' },
-                { header: 'Aktion', cell: ({ row }) => renderActions(row.original) },
+                { header: 'Aktion', cell: ({ row }) => renderActions(row.original as Question) },
             ]}
         />
     );
