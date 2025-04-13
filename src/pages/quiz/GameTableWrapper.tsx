@@ -9,8 +9,7 @@ export const GameTableWrapper: FC = () => {
         <Box className={'w-full flex-col gap-4 min-h-full'}>
             <GameTable
                 fetchGameSessions={async (page) => {
-                    const user = await getUser();
-                    return await getAllGameSessionsByUser(user, page, 10);
+                    return await getAllGameSessionsByUser(page, 10);
                 }}
             />
         </Box>

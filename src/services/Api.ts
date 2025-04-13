@@ -133,7 +133,6 @@ export async function saveQuestion(question: Question): Promise<boolean> {
 
 export async function updateQuestion(question: Question): Promise<boolean> {
     try {
-        question.created_by = '23479lsdfkjPhilipp';
         const response = await apiClient.put(`/question/${question.uuid}`, question);
         console.log('Response data of updated question:', response.data);
         return true;
@@ -156,7 +155,12 @@ export async function deleteQuestion(uuid: string | null | undefined, course: st
     }
 
     try {
-        const response = await apiClient.delete(`/question/${uuid}?course=${course}`);
+        const response = await apiClient.delete(`/question/${uuid}`, {
+            params: {
+                course: course,
+            },
+        });
+
         console.log('Response data of one question:', response.data);
     } catch (error) {
         console.error('Failed to delete question:', error);
@@ -164,13 +168,15 @@ export async function deleteQuestion(uuid: string | null | undefined, course: st
     }
 }
 
-export async function getAllQuestionsByUser(user: User, page: number, pageSize: number): Promise<{items: Question[], total: number}> {
-    const userId = '23479lsdfkjPhilipp';
-
-    console.log(`Getting all questions by user:${userId}`);
-
+export async function getAllQuestionsByUser(page: number, pageSize: number): Promise<{items: Question[], total: number}> {
     try {
-        const response = await apiClient.get(`/questions?user_id=${userId}&page=${page}&page_size=${pageSize}`);
+        const response = await apiClient.get('/questions', {
+            params: {
+                page: page,
+                page_size: pageSize,
+            },
+        });
+
         console.log('Response data of questions:', response.data);
         return {
             items: response.data.items as Question[],
@@ -185,13 +191,14 @@ export async function getAllQuestionsByUser(user: User, page: number, pageSize: 
     }
 }
 
-export async function getAllGameSessionsByUser(user: User, page: number, pageSize: number): Promise<{ items: GameSession[], total: number }> {
-    const userId = 'Philipp';
-
-    console.log(`Getting all game sessions by user:${userId}`);
-
+export async function getAllGameSessionsByUser(page: number, pageSize: number): Promise<{ items: GameSession[], total: number }> {
     try {
-        const response = await apiClient.get(`/game/game-sessions?user_id=${userId}&page=${page}&page_size=${pageSize}`);
+        const response = await apiClient.get(`/game/game-sessions`, {
+            params: {
+                page: page,
+                page_size: pageSize,
+            },
+        });
         console.log('Response data of session:', response.data);
 
         return {
