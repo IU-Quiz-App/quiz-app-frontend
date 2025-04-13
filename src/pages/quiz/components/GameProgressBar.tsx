@@ -73,21 +73,21 @@ const GameProgressBar: React.FC<GameProgressBarProps> = ({ start, seconds, onFin
                 className={'fill-blue-200'}
                 width={width}
                 height={height}
-                clip-path="url(#clip-path-border)"
+                clipPath="url(#clip-path-border)"
             />
 
             <rect
                 className={'fill-gray-200'}
                 width={width}
                 height={height}
-                clip-path="url(#clip-path)"
+                clipPath="url(#clip-path)"
             />
 
             <rect
                 className={'fill-blue-200'}
                 width={width * progress}
                 height={height}
-                clip-path="url(#clip-path)"
+                clipPath="url(#clip-path)"
             />
         </svg>
     );
