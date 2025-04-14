@@ -1,4 +1,4 @@
-import {Context, createContext, useState} from "react";
+import {Context, createContext, useEffect, useState} from "react";
 import { AuthenticationResult, EventType, PublicClientApplication } from "@azure/msal-browser";
 import { msalConfig } from "../AuthConfig.ts";
 import { MsalProvider } from "@azure/msal-react";
@@ -27,16 +27,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const account = authenticationResult?.account;
         if (event.eventType === EventType.LOGIN_SUCCESS && account) {
             msalInstance.setActiveAccount(account);
-
-            getUser()
-                .then((response) => {
-                    setUser(response);
-                })
-                .catch((error) => {
-                    console.error("Failed to fetch user:", error);
-                });
         }
     });
+
+    useEffect(() => {
+        getUser()
+            .then((response) => {
+                setUser(response);
+            })
+            .catch(() => {});
+    }, []);
 
     return (
         <AuthContext.Provider value={{ user }}>

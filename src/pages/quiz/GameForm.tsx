@@ -141,7 +141,7 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
                 </div>
             </Box>
                 <Box className={'grow h-full flex flex-col justify-between'}>
-                    {gameSession.created_by == user.user_uuid ?
+                    {gameSession.created_by == user?.user_uuid ?
                         <>
                             <div className={'w-full grow flex flex-col gap-4'}>
                                 <div className={'flex justify-between w-full'}>
