@@ -128,13 +128,15 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
 
     return (
         <div className={'flex flex-row gap-6 h-full max-w-2xl mx-auto'}>
-            <Box className={'min-w-40 h-full flex flex-col items-start justify-start gap-4'}>
+            <Box className={'min-w-52 h-full flex flex-col items-start justify-start gap-4'}>
                 <span className={'text-sm'}>Spieler</span>
                 <div className={'flex flex-col gap-2 pl-2 w-full'}>
                 {gameSession.users && gameSession.users.map((user, index) => (
-                        <Box className={'w-full !px-2 !py-2 flex flex-row justify-between items-center'} key={`user-${index}`}>
-                            <Profile user={user} className={'w-6 h-6'}/>
-                            <span>{user.nickname}</span>
+                        <Box className={'w-full !px-2 !py-2 flex flex-row items-center gap-2'} key={`user-${index}`}>
+                            <div className={'w-6 h-6'}>
+                                <Profile user={user} className={'w-6 h-6'}/>
+                            </div>
+                            <span className={'whitespace-nowrap'}>{user.nickname}</span>
                             {user.nickname === gameSession.created_by && <Crown className={'w-6 h-6'}/>}
                         </Box>
                 ))}
