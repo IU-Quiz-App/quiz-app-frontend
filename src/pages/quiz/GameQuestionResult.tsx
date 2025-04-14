@@ -48,6 +48,7 @@ const GameQuestionResult: FC<GameQuestionResultProps> = ({ users, question }) =>
                                     step={'question-result'}
                                     key={index}
                                     isGiven={isGiven}
+                                    users={users}
                                 />
                             )
                         })}
