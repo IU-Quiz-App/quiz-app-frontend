@@ -35,7 +35,7 @@ const App = () => {
                 setUser(response);
             })
             .catch(() => {});
-    }, []);
+    });
 
 
     return (

@@ -52,7 +52,7 @@ export async function getDecodedToken(): Promise<any> {
     try {
         const token = await getToken();
         if (!token) {
-            throw new Error("No token found");
+            return null;
         }
 
         const decodedToken = jwtDecode<JwtPayload>(token);
@@ -132,6 +132,10 @@ export async function getEphemeralToken(): Promise<string|undefined> {
 
 export async function getUser(): Promise<User> {
     const token = await getDecodedToken();
+
+    if (!token) {
+        return null;
+    }
 
     const firstName = token.name.split(' ')[0];
 
