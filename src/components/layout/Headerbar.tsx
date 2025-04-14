@@ -4,7 +4,7 @@ import Dropdown from "./Dropdown.tsx";
 import {useMsal} from "@azure/msal-react";
 import Button from "@components/Button.tsx";
 import Profile from "@components/Profile.tsx";
-import {AuthContext} from "../../auth/hooks/AuthProvider.tsx";
+import {AuthContext} from "../../App.tsx";
 
 const Headerbar: FC = () => {
     const navigate = useNavigate();

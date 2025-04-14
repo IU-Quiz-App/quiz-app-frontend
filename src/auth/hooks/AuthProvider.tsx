@@ -1,21 +1,8 @@
-import {Context, createContext, useEffect, useState} from "react";
 import { AuthenticationResult, EventType, PublicClientApplication } from "@azure/msal-browser";
 import { msalConfig } from "../AuthConfig.ts";
 import { MsalProvider } from "@azure/msal-react";
-import { getUser } from "@services/Api.ts";
-import { User } from "@services/Types.ts";
-
-interface AuthContextType {
-    user: User|undefined;
-}
-
-export const AuthContext = createContext<AuthContextType | undefined>(
-    undefined
-) as Context<AuthContextType>;
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<User | undefined>(undefined);
-
     const msalInstance = new PublicClientApplication(msalConfig);
 
     if (!msalInstance.getActiveAccount() && msalInstance.getAllAccounts().length > 0) {
@@ -30,18 +17,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     });
 
-    useEffect(() => {
-        getUser()
-            .then((response) => {
-                setUser(response);
-            })
-            .catch(() => {});
-    }, []);
-
     return (
-        <AuthContext.Provider value={{ user }}>
             <MsalProvider instance={msalInstance}>{children}</MsalProvider>
-        </AuthContext.Provider>
     );
 };
 
