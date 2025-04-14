@@ -21,6 +21,7 @@ jobs:
 
       - name: Build
         env:
+          VITE_APP_URL: ${{ vars.APP_URL_DEV }}
           VITE_API_URL: ${{ vars.API_URL_DEV }}
           VITE_WS_URL: ${{ vars.WS_URL_DEV }}
           VITE_MSAL_CLIENT_ID: ${{ vars.MSAL_CLIENT_ID_DEV }}

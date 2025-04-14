@@ -8,6 +8,7 @@ import {Course, GameSession} from "@services/Types.ts";
 import { Crown } from "lucide-react";
 import Button from "@components/Button.tsx";
 import Loader from "@components/Loader.tsx";
+import Config from "@services/Config.ts";
 
 interface GameFormProps {
     gameSession: GameSession;
@@ -103,6 +104,16 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
         startGame(questionQuantity, courseUUID, questionAnswerTime);
     }
 
+    function copyLinkToClipboard() {
+        navigator.clipboard.writeText(`${Config.AppURL}/join-game/${gameSession.uuid}`)
+            .then(() => {
+                alert('Link copied to clipboard');
+            })
+            .catch((error) => {
+                console.error('Error copying link to clipboard', error);
+            });
+    }
+
     if (loading) {
         return (
             <div className={'w-full h-full flex items-center justify-center'}>
@@ -159,6 +170,23 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
                             onChange={onQuestionAnswerTimeChange}
                         />
                     </div>
+
+                    <div className={'flex max-w-full overflow-hidden justify-between'}>
+                        <Box className={'py-0.5 grow rounded-r-none overflow-auto px-0'}>
+                            <div className={'overflow-auto max-w-full scrollbar-hide'}>
+                                <span className={'whitespace-nowrap mx-2'}>
+                                    {`${Config.AppURL}/join-game/${gameSession.uuid}`}
+                                </span>
+                            </div>
+                        </Box>
+                        <Button
+                            onClick={copyLinkToClipboard}
+                            className={'py-0.5 rounded-l-none'}
+                        >
+                            Kopieren
+                        </Button>
+                    </div>
+
                 </div>
                 <div className={'w-full h-20 flex items-end justify-end'}>
                     <Button variant={'primary'} className={''} onClick={handleStartGame}>

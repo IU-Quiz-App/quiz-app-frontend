@@ -25,6 +25,7 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.0.2",
     "react-use-websocket": "^4.13.0",
+    "tailwind-scrollbar-hide": "^2.0.0",
     "tippy.js": "^6.3.7"
   },
   "devDependencies": {

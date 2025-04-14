@@ -16,6 +16,7 @@ const GameUserJoin: FC = () => {
 
         joinGameSession(uuid)
             .then(function (result) {
+
                 if (result) {
                     console.log("Game session joined successfully");
                     navigate(`/game/${uuid}`);

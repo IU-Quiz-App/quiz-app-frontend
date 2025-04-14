@@ -315,12 +315,7 @@ export async function joinGameSession(uuid: string): Promise<boolean> {
 
         console.log('Response data of joined game session:', response.data);
 
-        if (response.data.status === 200) {
-            return true;
-        } else {
-            console.error('Failed to join game session:', response.data.message);
-            return false;
-        }
+        return true;
     } catch (error) {
         console.error('Failed to join game session:', error);
         throw error;
