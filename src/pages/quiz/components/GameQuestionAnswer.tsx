@@ -3,6 +3,7 @@ import Button from "@components/Button.tsx";
 import {FC} from "react";
 import Profile from "@components/Profile.tsx";
 import {Popover} from "@components/Popover.tsx";
+import {InfoIcon} from "lucide-react";
 
 interface GameQuestionAnswerProps {
     answer: Answer;
@@ -38,9 +39,16 @@ const GameQuestionAnswer: FC<GameQuestionAnswerProps> = ({answer, isGiven, onCli
             <Button
                 onClick={() => onClick(answer)}
                 {...attributes}
-                className={'w-full h-full absolute'}
+                className={'w-full h-full absolute flex flex-row gap-2'}
             >
-                {answer.text}
+                <span>
+                    {answer.text}
+                </span>
+                {step === 'question-result' ? (
+                    <Popover id={`quiz-result-answer-${answer.uuid}`} key={answer.uuid} info={answer.explanation ? answer.explanation : "Keine Erklärung vorhanden"}>
+                        <InfoIcon className={'h-5 w-5'}/>
+                    </Popover>
+                ) : null}
             </Button>
             <div className={'w-full h-full absolute p-2 pointer-events-none flex flex-row'}>
                 {answer.user_answers?.map((userAnswer, index) => {
