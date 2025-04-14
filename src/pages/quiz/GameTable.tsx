@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import {EyeIcon} from "@heroicons/react/24/outline";
 import Loader from "@components/Loader.tsx";
 import {formatDate} from "@services/Utils.ts";
+import {Popover} from "@components/Popover.tsx";
+import Profile from "@components/Profile.tsx";
 
 interface GameTableProps {
     fetchGameSessions: (page: number, pageSize: number) => Promise<{items: GameSession[], total: number}>;
@@ -27,12 +29,28 @@ const GameTable: FC<GameTableProps> = ({ fetchGameSessions }) => {
 
     const renderEndedAt = (game: GameSession) => {
         if (game.ended_at) {
-            return game.ended_at
+            return formatDate(game.ended_at);
         }
 
         return (
             <div className={'w-full h-full flex items-center justify-center'}>
                 <Loader className={'w-6'} />
+            </div>
+        )
+    }
+
+    const renderUsers = (game: GameSession) => {
+        return (
+            <div className={'flex flex-row'}>
+                {game.users.map((user, index) => {
+                    return (
+                        <div className={'w-5 h-8 pointer-events-auto'} key={index}>
+                            <Popover id={`quiz-result-profile-${user.user_uuid}`} info={user.nickname} key={index}>
+                                <Profile user={user} key={index} className={'h-8 w-8'}/>
+                            </Popover>
+                        </div>
+                    )
+                })}
             </div>
         )
     }
@@ -44,7 +62,7 @@ const GameTable: FC<GameTableProps> = ({ fetchGameSessions }) => {
             queryKey={'gameSession'}
             fetchData={fetchGameSessions}
             columns={[
-                { accessorKey: 'uuid', header: 'UUID' },
+                { header: 'Spieler', cell: ({ row }) => renderUsers((row.original as GameSession)) },
                 { accessorKey: 'created_at', header: 'Erstellt am', cell: ({ row }) => formatDate((row.original as GameSession).created_at) },
                 { accessorKey: 'started_at', header: 'Gestartet am', cell: ({ row }) => formatDate((row.original as GameSession).started_at) },
                 { header: 'Beendet am', cell: ({ row }) => renderEndedAt((row.original as GameSession)) },

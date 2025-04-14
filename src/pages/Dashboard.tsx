@@ -21,7 +21,7 @@ const Dashboard: React.FC = () => {
             <Button variant={'secondary'} className={'w-fit h-fit'} onClick={startGame}>
                 Spiel starten
             </Button>
-            <div className="flex items-center justify-center gap-6 grow">
+            <div className="flex items-center justify-center gap-6 grow w-full px-52">
                 <GameTableWrapper/>
             </div>
         </div>
