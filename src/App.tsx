@@ -9,6 +9,7 @@ import Login from "@pages/Login.tsx";
 import {AuthenticatedTemplate, UnauthenticatedTemplate, useMsal} from "@azure/msal-react";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import GameTableWrapper from "@pages/quiz/GameTableWrapper.tsx";
+import GameUserJoin from "@pages/quiz/GameUserJoin.tsx";
 
 const App = () => {
     /**
@@ -37,6 +38,7 @@ const App = () => {
 
                                 <Route path="/" element={<Navigate to={'/dashboard'} />} />
                                 <Route path="*" element={<Navigate to={'/dashboard'} />} />
+                                <Route path="/join-game/:uuid" element={<GameUserJoin/>} />
                             </Route>
                         </Routes>
                     </QueryClientProvider>
