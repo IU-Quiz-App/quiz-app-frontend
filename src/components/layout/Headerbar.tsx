@@ -1,29 +1,16 @@
-import {FC, useEffect, useState} from "react";
+import {FC, useContext} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown.tsx";
 import {useMsal} from "@azure/msal-react";
-import {getUser} from "@services/Api.ts";
-import {User} from "@services/Types.ts";
 import Button from "@components/Button.tsx";
 import Profile from "@components/Profile.tsx";
+import {AuthContext} from "../../auth/hooks/AuthProvider.tsx";
 
 const Headerbar: FC = () => {
     const navigate = useNavigate();
     const { instance } = useMsal();
 
-    const [user, setUser] = useState<User|null>(null);
-
-    useEffect(() => {
-
-        async function fetchUser() {
-            const user = await getUser();
-
-            setUser(user);
-        }
-
-        fetchUser()
-            .catch((error) => console.error('Error fetching user', error));
-    }, []);
+    const { user } = useContext(AuthContext);
 
     const handleLogoutRedirect = () => {
         instance.logoutRedirect({

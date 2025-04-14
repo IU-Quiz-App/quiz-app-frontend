@@ -1,6 +1,6 @@
 import Box from "../../components/Box.tsx";
 import Select from "@components/input/Select.tsx";
-import React, {ChangeEvent, useEffect, useState} from "react";
+import React, {ChangeEvent, useContext, useEffect, useState} from "react";
 import { getAllCourses } from "@services/Api.ts";
 import NumberInput from "@components/input/NumberInput.tsx";
 import InputLabel from "@components/input/InputLabel.tsx";
@@ -10,6 +10,7 @@ import Button from "@components/Button.tsx";
 import Loader from "@components/Loader.tsx";
 import Config from "@services/Config.ts";
 import Profile from "@components/Profile.tsx";
+import {AuthContext} from "../../auth/hooks/AuthProvider.tsx";
 
 interface GameFormProps {
     gameSession: GameSession;
@@ -27,6 +28,8 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
     const [loading, setLoading] = useState<boolean>(true);
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+    const { user } = useContext(AuthContext);
 
     useEffect(() => {
         async function fetchCourses() {
@@ -137,65 +140,73 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
                 ))}
                 </div>
             </Box>
-            <Box className={'grow h-full flex flex-col justify-between'}>
-                <div className={'w-full grow flex flex-col gap-4'}>
-                    <div className={'flex justify-between w-full'}>
-                        <InputLabel id={"course"} htmlFor={"course"} label={"Kurs"} required={true}/>
-                        <Select id={"course"} name={"course"} className={'w-48'} placeholder={'Kurs auswählen'}
-                                options={courses.map((course) => ({
-                                    label: course.description && course.description.trim() !== ''
-                                        ? `${course.name} - ${course.description}`
-                                        : course.name,
-                                    value: course.uuid
-                                }))}
-                                errorMessage={errors['course']}
-                                onChange={(event) => setCourseUUID(event.target.value)}
-                        />
-                    </div>
-                    <div className={'flex justify-between w-full'}>
-                        <InputLabel id={"question-quantity"} htmlFor={"question-quantity"} label={"Fragenanzahl"} required={true}/>
-                        <NumberInput
-                            errorMessage={errors['question-quantity']}
-                            id={"question-quantity"}
-                            name={'question-quantity'}
-                            value={questionQuantity}
-                            onChange={onQuestionQuantityChange}
-                        />
-                    </div>
-                    <div className={'flex justify-between w-full'}>
-                        <InputLabel id={"question-answer-time"} htmlFor={"question-answer-time"} label={"Antwortzeit"} required={true}/>
-                        <NumberInput
-                            errorMessage={errors['question-answer-time']}
-                            id={"question-answer-time"}
-                            name={'question-answer-time'}
-                            value={questionAnswerTime}
-                            onChange={onQuestionAnswerTimeChange}
-                        />
-                    </div>
+                <Box className={'grow h-full flex flex-col justify-between'}>
+                    {gameSession.created_by == user.user_uuid ?
+                        <>
+                            <div className={'w-full grow flex flex-col gap-4'}>
+                                <div className={'flex justify-between w-full'}>
+                                    <InputLabel id={"course"} htmlFor={"course"} label={"Kurs"} required={true}/>
+                                    <Select id={"course"} name={"course"} className={'w-48'} placeholder={'Kurs auswählen'}
+                                            options={courses.map((course) => ({
+                                                label: course.description && course.description.trim() !== ''
+                                                    ? `${course.name} - ${course.description}`
+                                                    : course.name,
+                                                value: course.uuid
+                                            }))}
+                                            errorMessage={errors['course']}
+                                            onChange={(event) => setCourseUUID(event.target.value)}
+                                    />
+                                </div>
+                                <div className={'flex justify-between w-full'}>
+                                    <InputLabel id={"question-quantity"} htmlFor={"question-quantity"} label={"Fragenanzahl"} required={true}/>
+                                    <NumberInput
+                                        errorMessage={errors['question-quantity']}
+                                        id={"question-quantity"}
+                                        name={'question-quantity'}
+                                        value={questionQuantity}
+                                        onChange={onQuestionQuantityChange}
+                                    />
+                                </div>
+                                <div className={'flex justify-between w-full'}>
+                                    <InputLabel id={"question-answer-time"} htmlFor={"question-answer-time"} label={"Antwortzeit"} required={true}/>
+                                    <NumberInput
+                                        errorMessage={errors['question-answer-time']}
+                                        id={"question-answer-time"}
+                                        name={'question-answer-time'}
+                                        value={questionAnswerTime}
+                                        onChange={onQuestionAnswerTimeChange}
+                                    />
+                                </div>
 
-                    <div className={'flex max-w-full overflow-hidden justify-between'}>
-                        <Box className={'py-0.5 grow rounded-r-none overflow-auto px-0'}>
-                            <div className={'overflow-auto max-w-full scrollbar-hide'}>
-                                <span className={'whitespace-nowrap mx-2'}>
-                                    {`${Config.AppURL}/join-game/${gameSession.uuid}`}
-                                </span>
+                                <div className={'flex max-w-full overflow-hidden justify-between'}>
+                                    <Box className={'py-0.5 grow rounded-r-none overflow-auto px-0'}>
+                                        <div className={'overflow-auto max-w-full scrollbar-hide'}>
+                                            <span className={'whitespace-nowrap mx-2'}>
+                                                {`${Config.AppURL}/join-game/${gameSession.uuid}`}
+                                            </span>
+                                        </div>
+                                    </Box>
+                                    <Button
+                                        onClick={copyLinkToClipboard}
+                                        className={'py-0.5 rounded-l-none'}
+                                    >
+                                        Kopieren
+                                    </Button>
+                                </div>
+
                             </div>
-                        </Box>
-                        <Button
-                            onClick={copyLinkToClipboard}
-                            className={'py-0.5 rounded-l-none'}
-                        >
-                            Kopieren
-                        </Button>
-                    </div>
-
-                </div>
-                <div className={'w-full h-20 flex items-end justify-end'}>
-                    <Button variant={'primary'} className={''} onClick={handleStartGame}>
-                        Spiel starten
-                    </Button>
-                </div>
-            </Box>
+                            <div className={'w-full h-20 flex items-end justify-end'}>
+                                <Button variant={'primary'} className={''} onClick={handleStartGame}>
+                                    Spiel starten
+                                </Button>
+                            </div>
+                        </>
+                        :
+                        <div className={'w-full h-full flex items-center justify-center'}>
+                            <span className={'text-sm text-gray-400'}>Warte auf den Spielleiter...</span>
+                        </div>
+                    }
+                </Box>
         </div>
     )
 
