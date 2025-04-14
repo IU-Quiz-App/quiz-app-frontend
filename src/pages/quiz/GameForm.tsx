@@ -9,6 +9,7 @@ import { Crown } from "lucide-react";
 import Button from "@components/Button.tsx";
 import Loader from "@components/Loader.tsx";
 import Config from "@services/Config.ts";
+import Profile from "@components/Profile.tsx";
 
 interface GameFormProps {
     gameSession: GameSession;
@@ -128,7 +129,8 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
                 <span className={'text-sm'}>Spieler</span>
                 <div className={'flex flex-col gap-2 pl-2 w-full'}>
                 {gameSession.users && gameSession.users.map((user, index) => (
-                        <Box className={'w-full !px-1 !py-2 flex flex-row justify-between'} key={`user-${index}`}>
+                        <Box className={'w-full !px-2 !py-2 flex flex-row justify-between items-center'} key={`user-${index}`}>
+                            <Profile user={user} className={'w-6 h-6'}/>
                             <span>{user.nickname}</span>
                             {user.nickname === gameSession.created_by && <Crown className={'w-6 h-6'}/>}
                         </Box>
