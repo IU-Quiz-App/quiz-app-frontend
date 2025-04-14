@@ -30,7 +30,7 @@ const Headerbar: FC = () => {
                         { label: "Startseite", onClick: () => navigate("/dashboard") },
                         { label: "Spiel starten", onClick: () => navigate("/game") },
                         { label: "Frage erstellen", onClick: () => navigate("/question/form") },
-                        { label: "Alle Fragen anzeigen", onClick: () => navigate("/questions") },
+                        { label: "Eigene Fragen anzeigen", onClick: () => navigate("/questions") },
                     ]}
                 >
                     <Button className={'py-1'}>
