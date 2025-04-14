@@ -30,11 +30,13 @@ const App = () => {
     const [user, setUser] = useState<User | undefined>(undefined);
 
     useEffect(() => {
-        getUser()
-            .then((response) => {
-                setUser(response);
-            })
-            .catch(() => {});
+        if (!user && activeAccount) {
+            getUser()
+                .then((response) => {
+                    setUser(response);
+                })
+                .catch(() => {});
+        }
     });
 
 
