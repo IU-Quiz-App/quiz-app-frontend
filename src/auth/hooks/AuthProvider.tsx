@@ -14,7 +14,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 ) as Context<AuthContextType>;
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | undefined>(undefined);
 
     const msalInstance = new PublicClientApplication(msalConfig);
 

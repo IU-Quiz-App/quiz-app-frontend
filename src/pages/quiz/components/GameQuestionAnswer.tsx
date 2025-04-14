@@ -2,6 +2,7 @@ import {Answer, User} from "@services/Types.ts";
 import Button from "@components/Button.tsx";
 import {FC} from "react";
 import Profile from "@components/Profile.tsx";
+import {Popover} from "@components/Popover.tsx";
 
 interface GameQuestionAnswerProps {
     answer: Answer;
@@ -49,9 +50,11 @@ const GameQuestionAnswer: FC<GameQuestionAnswerProps> = ({answer, isGiven, onCli
                     }
 
                     return (
-                        <div className={'w-5 h-8'} key={index}>
-                            <Profile user={user} key={index} className={'h-8 w-8'}/>
-                        </div>
+                            <div className={'w-5 h-8 pointer-events-auto'} key={index}>
+                                <Popover id={`quiz-result-profile-${user.user_uuid}`} info={user.nickname} key={index}>
+                                    <Profile user={user} key={index} className={'h-8 w-8'}/>
+                                </Popover>
+                            </div>
                     )
                 })}
             </div>
