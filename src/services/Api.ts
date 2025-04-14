@@ -317,6 +317,12 @@ export async function joinGameSession(uuid: string): Promise<boolean> {
 
         return true;
     } catch (error) {
+        if (error.response && error.response.status === 409) {
+            console.error('Game session not found:', error);
+            return true;
+        }
+
+
         console.error('Failed to join game session:', error);
         throw error;
     }
