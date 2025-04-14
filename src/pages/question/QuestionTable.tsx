@@ -47,7 +47,7 @@ const QuestionTable: FC<QuestionTableProps> = ({ fetchQuestions }) => {
             fetchData={fetchQuestions}
             ref={tableRef}
             columns={[
-                { accessorKey: 'uuid', header: 'UUID' },
+                { accessorKey: 'course', header: 'Kurs' },
                 { accessorKey: 'text', header: 'Text' },
                 { header: 'Aktion', cell: ({ row }) => renderActions(row.original as Question) },
             ]}
