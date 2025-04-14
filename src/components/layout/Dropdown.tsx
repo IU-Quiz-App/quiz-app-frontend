@@ -21,7 +21,7 @@ const Dropdown: React.FC<DropdownProps> = ({ children, options, className }) => 
             theme="transparent"
             placement="bottom-start"
             content={
-                <div className="bg-blue-600 border rounded-md shadow-md p-2 w-48">
+                <div className={`bg-blue-600 border rounded-md shadow-md p-2 w-48 ${className}`}>
                     {options.map((option, index) => (
                         <button
                             key={index}
@@ -37,9 +37,9 @@ const Dropdown: React.FC<DropdownProps> = ({ children, options, className }) => 
                 </div>
             }
         >
-            <button onClick={() => setVisible(!visible)} className={className}>
+            <div onClick={() => setVisible(!visible)} className={'cursor-pointer'}>
                 {children}
-            </button>
+            </div>
         </Tippy>
     );
 };
