@@ -110,8 +110,6 @@ const Game: React.FC = () => {
             return;
         }
 
-        console.log(gameSession);
-
         if (gameSession.ended_at) {
             setStep('quiz-result');
             return;
@@ -174,8 +172,6 @@ const Game: React.FC = () => {
                 console.error('Error fetching game session', error)
                 navigate('/dashboard');
             });
-
-        console.log('Game session uuid:', uuid);
     }, [uuid]);
 
     useEffect(() => {

@@ -122,7 +122,6 @@ export async function getEphemeralToken(): Promise<string|undefined> {
     try {
         const response = await apiClient.get(`/authorization/token`);
         const token = response.data.token;
-        console.log('Ephemeral token:', token);
         return token;
     } catch (error) {
         console.error('Failed getting ephemeral token:', error);
@@ -234,7 +233,6 @@ export async function getAllGameSessionsByUser(page: number, pageSize: number): 
                 page_size: pageSize,
             },
         });
-        console.log('Response data of session:', response.data);
 
         return {
             items: response.data.items as GameSession[],
@@ -250,9 +248,6 @@ export async function getAllGameSessionsByUser(page: number, pageSize: number): 
 }
 
 export async function getAllCourses(): Promise<Course[]> {
-    const decodedToken = await getDecodedToken();
-    console.log(decodedToken);
-
     const string = {
         securityEnabledOnly: true
     };
@@ -261,17 +256,11 @@ export async function getAllCourses(): Promise<Course[]> {
         .post(string);
 
     const userGroupsIds = userGroupsResponse.value;
-    console.log('User groups IDs:', userGroupsIds);
-
     const allGroupsResponse = await graphClient.api('/groups?$select=id,displayName,description').get();
 
     const allGroups = allGroupsResponse.value;
 
-    console.log('all groups:', allGroups);
-
     const userGroups = allGroups.filter((group: any) => userGroupsIds.includes(group.id));
-
-    console.log('user groups:', userGroups);
 
     return userGroups.map((group: any) => {
         return {
@@ -297,8 +286,6 @@ export async function createSession(): Promise<GameSession | null> {
 export async function getGameSession(uuid: string): Promise<GameSession> {
     try {
         const response = await apiClient.get(`/game/game-session/${uuid}`);
-
-        console.log('Response data of game session:', response.data);
 
         return response.data as GameSession;
     } catch (error) {

@@ -40,14 +40,12 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
 
         fetchCourses()
             .then(() => {
-                console.log('Courses fetched')
                 setLoading(false);
             })
             .catch((error) => console.error('Error fetching courses', error));
     }, [gameSession]);
 
     useEffect(() => {
-        console.log('Not enough questions:', notEnoughQuestions);
         if (notEnoughQuestions) {
             setErrors({
                 ...errors,

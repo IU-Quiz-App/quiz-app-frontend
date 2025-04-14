@@ -20,7 +20,6 @@ const Table = forwardRef(<T,>(
 
     async function queryFn(page: number) {
         const response = await fetchData(page, pageSize);
-        console.log(response);
         setTotalPages(Math.ceil(response.total / pageSize));
         return response.items;
     }
