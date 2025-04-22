@@ -41,6 +41,7 @@ export interface UserAnswer {
     answered_at: string;
     answer: string;
     correct_answer: string;
+    score?: number;
 }
 
 export interface User {

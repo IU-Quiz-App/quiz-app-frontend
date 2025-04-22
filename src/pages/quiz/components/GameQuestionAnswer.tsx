@@ -1,4 +1,4 @@
-import {Answer, User} from "@services/Types.ts";
+import {Answer, User, UserAnswer} from "@services/Types.ts";
 import Button from "@components/Button.tsx";
 import {FC} from "react";
 import Profile from "@components/Profile.tsx";
@@ -34,6 +34,17 @@ const GameQuestionAnswer: FC<GameQuestionAnswerProps> = ({answer, isGiven, onCli
         attributes.disabled = true;
     }
 
+    function getPopoverInfo(user: User, answer: UserAnswer) {
+        return (
+            <div className={'flex flex-row gap-2'}>
+                <span>{user.nickname}</span>
+                {answer.score ? (
+                    <span className={'text-green-500'}>+{answer.score}</span>
+                ) : null}
+            </div>
+        )
+    }
+
     return(
         <div className={'relative'}>
             <Button
@@ -59,7 +70,7 @@ const GameQuestionAnswer: FC<GameQuestionAnswerProps> = ({answer, isGiven, onCli
 
                     return (
                             <div className={'w-5 h-8 pointer-events-auto'} key={index}>
-                                <Popover id={`quiz-result-profile-${user.user_uuid}`} info={user.nickname} key={index}>
+                                <Popover id={`quiz-result-profile-${user.user_uuid}`} info={getPopoverInfo(user, userAnswer)} key={index}>
                                     <Profile user={user} key={index} className={'h-8 w-8'}/>
                                 </Popover>
                             </div>

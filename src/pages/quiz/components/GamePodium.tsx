@@ -1,4 +1,4 @@
-import {GameSession, User} from "@services/Types.ts";
+import {GameSession, User, UserAnswer} from "@services/Types.ts";
 import {useEffect, useState} from "react";
 import Box from "@components/Box.tsx";
 
@@ -9,31 +9,52 @@ interface GamePodiumProps {
 const GamePodium: React.FC<GamePodiumProps> = ({ gameSession }) => {
 
     const [ sortedUsers, setSortedUsers ] = useState(gameSession.users);
+    const [ allUserAnswers, setAllUserAnswers ] = useState<UserAnswer[]>([]);
 
     useEffect(() => {
+        const allAnswers: UserAnswer[] = [];
+        gameSession.questions?.forEach(question => {
+            question.answers.forEach(answer => {
+                if (answer.user_answers) {
+                    answer.user_answers.forEach(userAnswer => {
+                        allAnswers.push(userAnswer);
+                    });
+                }
+            });
+            if (question.timed_out_answers) {
+                question.timed_out_answers.forEach(userAnswer => {
+                    allAnswers.push(userAnswer);
+                });
+            }
+        });
+        setAllUserAnswers(allAnswers);
+
+
         const sorted = gameSession.users.map(user => {
             return {
                 ...user,
                 score: getScore(user)
             }
         })
-        .sort((a, b) => {
-            if (a.score === b.score) {
-                return a.nickname.localeCompare(b.nickname);
-            }
-            return b.score - a.score;
-        });
+            .sort((a, b) => {
+                if (a.score === b.score) {
+                    return a.nickname.localeCompare(b.nickname);
+                }
+                return b.score - a.score;
+            });
 
         setSortedUsers(sorted);
     }, [gameSession]);
 
     function getScore(user: User): number {
         let score = 0;
-        gameSession.questions?.forEach((question) => {
-            const correctAnswer = question.answers.filter(answer => answer.isTrue)[0];
 
-            if (correctAnswer.user_answers?.some(userAnswer => userAnswer.user_uuid === user.user_uuid)) {
-                score++;
+        allUserAnswers.filter(userAnswer => {
+            return userAnswer.user_uuid === user.user_uuid;
+        })
+        .forEach(userAnswer => {
+            if (userAnswer.score) {
+                score += userAnswer.score;
             }
         });
 
@@ -41,7 +62,7 @@ const GamePodium: React.FC<GamePodiumProps> = ({ gameSession }) => {
     }
 
     return (
-        <Box className={'flex flex-col gap-4 w-1/2 mx-auto'}>
+        <Box className={'flex flex-col gap-4 !w-1/2 mx-auto'}>
             <div className={'flex flex-col gap-4'}>
                 {sortedUsers.map(function (user, index) {
                     return (
