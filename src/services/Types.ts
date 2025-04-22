@@ -46,6 +46,7 @@ export interface UserAnswer {
 export interface User {
     nickname: string;
     user_uuid: string;
+    score?: number;
 }
 
 export interface Course {

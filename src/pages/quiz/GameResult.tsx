@@ -1,6 +1,7 @@
 import {GameSession} from "@services/Types.ts";
 import Button from "@components/Button.tsx";
 import GameQuestionResult from "./GameQuestionResult";
+import GamePodium from "@pages/quiz/components/GamePodium.tsx";
 
 interface GameResultProps {
     gameSession: GameSession,
@@ -17,7 +18,8 @@ const GameResult: React.FC<GameResultProps> = ({ gameSession }) => {
     }
 
     return (
-        <div className={'flex flex-col gap-4'}>‚
+        <div className={'flex flex-col gap-4'}>
+            <GamePodium gameSession={gameSession}/>
             {gameSession.questions.map(function (question, index) {
                 return (
                     <GameQuestionResult
