@@ -2,7 +2,7 @@
 export interface Question extends Item {
     course: string;
     text: string;
-    public: "true" | "false";
+    public: boolean;
     status: "created" | "waiting_for_approval" | "approved" | "rejected";
     created_at?: string;
     created_by?: string;

@@ -8,6 +8,8 @@ import Loader from "@components/Loader.tsx";
 import Box from "@components/Box.tsx";
 import Select from "@components/input/Select.tsx";
 import QuestionFormAnswer from "@pages/question/QuestionFormAnswer.tsx";
+import CheckBox from "@components/input/CheckBox.tsx";
+import InputLabel from "@components/input/InputLabel.tsx";
 
 interface QuestionFormProps {
     uuid?: string | undefined;
@@ -31,6 +33,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [loading, setLoading] = useState<boolean>(true);
     const [courses, setCourses] = useState<Course[]>([]);
+    const [publicQuestion, setPublicQuestion] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -47,6 +50,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
             console.log(question);
 
             setCourse(question.course);
+            setPublicQuestion(question.public);
             setQuestionText(question.text);
             setWrongAnswers(question.answers.slice(1));
             setCorrectAnswer(question.answers[0]);
@@ -129,6 +133,10 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
         });
     }
 
+    const handlePublicQuestionChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setPublicQuestion(event.target.checked);
+    }
+
     const handleSave = () => {
         setErrors({});
 
@@ -191,7 +199,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
 
         const newQuestion: Question = {
             uuid: uuid,
-            public: 'false',
+            public: publicQuestion,
             status: 'created',
             course: course,
             text: questionText,
@@ -263,6 +271,10 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                         onChange={handleCourseChange}
                         errorMessage={errors['course'] as string}
                     />
+                    <div className={'w-full flex items-start gap-2 items-center'}>
+                        <InputLabel id={'public-question'} label={'Öffentliche Frage'} htmlFor={'public-question'} className={'w-min whitespace-nowrap'} />
+                        <CheckBox id={'public-question'} name={'public-question'} checked={publicQuestion} onChange={handlePublicQuestionChange}/>
+                    </div>
                 </div>
 
                 <QuestionFormAnswer
@@ -290,7 +302,6 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                     />
                 ))}
             </div>
-
             <div className={'w-full flex items-end mt-8 justify-end gap-4'}>
                 <Button onClick={handleSave}>
                     Speichern
