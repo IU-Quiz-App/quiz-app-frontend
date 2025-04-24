@@ -1,15 +1,13 @@
 import axios from 'axios';
 import config from './Config.ts';
 import {Course, GameSession, Question, User} from "./Types.ts";
-import {InteractionRequiredAuthError, InteractionType, PublicClientApplication} from "@azure/msal-browser";
-import { msalConfig } from "../auth/AuthConfig.ts";
+import {InteractionRequiredAuthError, InteractionType } from "@azure/msal-browser";
+import { msalInstance} from "../auth/AuthConfig.ts";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import {Client} from "@microsoft/microsoft-graph-client";
 import {
     AuthCodeMSALBrowserAuthenticationProvider
 } from "@microsoft/microsoft-graph-client/lib/src/authentication/msal-browser";
-
-const msalInstance = new PublicClientApplication(msalConfig);
 
 const apiClient = axios.create({
     baseURL: config.ApiURL,

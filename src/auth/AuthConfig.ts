@@ -1,4 +1,4 @@
-import { LogLevel } from '@azure/msal-browser';
+import {LogLevel, PublicClientApplication} from '@azure/msal-browser';
 import Config from "@services/Config.ts";
 
 export const msalConfig = {
@@ -10,8 +10,8 @@ export const msalConfig = {
         navigateToLoginRequestUrl: false,
     },
     cache: {
-        cacheLocation: 'sessionStorage',
-        storeAuthStateInCookie: false,
+        cacheLocation: 'localStorage',
+        storeAuthStateInCookie: true,
     },
     system: {
         loggerOptions: {
@@ -40,3 +40,7 @@ export const msalConfig = {
 export const loginRequest = {
     scopes: [],
 };
+
+export const msalInstance = new PublicClientApplication(msalConfig);
+
+await msalInstance.initialize();
