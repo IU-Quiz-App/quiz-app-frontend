@@ -1,8 +1,8 @@
-name: Build and Deploy Frontend to dev environemnt
+name: Build and Deploy Frontend to prod environment
 on:
   push:
     branches:
-      - develop
+      - main
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,12 +21,12 @@ jobs:
 
       - name: Build
         env:
-          VITE_APP_URL: ${{ vars.APP_URL_DEV }}
-          VITE_API_URL: ${{ vars.API_URL_DEV }}
-          VITE_WS_URL: ${{ vars.WS_URL_DEV }}
+          VITE_APP_URL: ${{ vars.APP_URL_PROD }}
+          VITE_API_URL: ${{ vars.API_URL_PROD }}
+          VITE_WS_URL: ${{ vars.WS_URL_PROD }}
           VITE_MSAL_CLIENT_ID: ${{ vars.MSAL_CLIENT_ID_DEV }}
           VITE_MSAL_TENANT_ID: ${{ vars.MSAL_TENANT_ID_DEV }}
-          VITE_MSAL_REDIRECT_URI: ${{ vars.APP_URL_DEV }}
+          VITE_MSAL_REDIRECT_URI: ${{ vars.APP_URL_PROD }}
         run: npm run build
 
       - name: Configure AWS credentials
@@ -37,11 +37,11 @@ jobs:
           aws-region: eu-central-1
 
       - name: Deploy to S3
-        run: aws s3 sync dist s3://iu-quiz-frontend-dev --delete
+        run: aws s3 sync dist s3://iu-quiz-frontend-prod --delete
 
       - name: Invalidate CloudFront Cache
         run: |
-          DISTRIBUTION_ID=$(aws cloudfront list-distributions --output json | jq -r '.DistributionList.Items[] | select(.Aliases.Items[] == "dev.iu-quiz.de") | .Id')
+          DISTRIBUTION_ID=$(aws cloudfront list-distributions --output json | jq -r '.DistributionList.Items[] | select(.Aliases.Items[] == "iu-quiz.de") | .Id')
           aws cloudfront create-invalidation \
             --distribution-id $DISTRIBUTION_ID \
             --paths "/*"
