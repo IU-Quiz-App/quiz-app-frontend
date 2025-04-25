@@ -6,7 +6,7 @@ import GameTable from "@pages/quiz/GameTable.tsx";
 export const GameTableWrapper: FC = () => {
 
     return (
-        <Box className={'w-full flex-col gap-4 min-h-full'}>
+        <Box className={'w-full flex-col gap-4 min-h-full !overflow-auto'}>
             <GameTable
                 fetchGameSessions={async (page) => {
                     return await getAllGameSessionsByUser(page, 10);
