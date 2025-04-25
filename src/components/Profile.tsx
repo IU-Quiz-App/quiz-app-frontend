@@ -4,9 +4,10 @@ interface ProfileProps {
     user: User;
     onClick?: () => void
     className?: string
+    [key: string]: any;
 }
 
-const Profile: React.FC<ProfileProps> = ({ user, onClick, className }) => {
+const Profile: React.FC<ProfileProps> = ({ user, onClick, className, ...props }) => {
 
     function getColorFromUUID(uuid: string): string {
         let hash = 0;
@@ -65,7 +66,7 @@ const Profile: React.FC<ProfileProps> = ({ user, onClick, className }) => {
     }
 
     return (
-        <svg className={className} onClick={onClick} viewBox="0 0 50 50">
+        <svg className={className} onClick={onClick} viewBox="0 0 50 50" {...props}>
             <defs>
                 <linearGradient id={`gradient-profile-${user.user_uuid}`} x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor={getColorFromUUID(user.user_uuid)} />
