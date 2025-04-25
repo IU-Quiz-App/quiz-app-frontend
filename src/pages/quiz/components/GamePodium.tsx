@@ -2,6 +2,7 @@ import { User } from "@services/Types.ts";
 import {useEffect, useState} from "react";
 import Profile from "@components/Profile.tsx";
 import tippy from "tippy.js";
+import confetti from 'canvas-confetti';
 
 interface GamePodiumProps {
     users: User[],
@@ -67,6 +68,13 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
         await delay(secondsPerStep);
         setShowFirstPlace({bar: true, profile: true});
         showPopover('first');
+
+        confetti({
+            particleCount: 100,
+            spread: 80,
+            origin: { y: 0.5 },
+            zIndex: 9999,
+        });
     };
 
     function showPopover(place: 'first' | 'second' | 'third') {
