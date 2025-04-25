@@ -90,18 +90,23 @@ const GameResult: React.FC<GameResultProps> = ({ gameSession }) => {
         <div className={'flex flex-col items-center gap-4'}>
 
             <GamePodium users={sortedUsers} className={'w-96 h-96'} startAnimation={showPodium} />
-            {/*<Box className={'flex flex-col gap-4 !w-1/2 mx-auto'}>*/}
-            {/*    <div className={'flex flex-col gap-4'}>*/}
-            {/*        {sortedUsers.map(function (user, index) {*/}
-            {/*            return (*/}
-            {/*                <div key={index} className={'flex flex-row justify-between items-center'}>*/}
-            {/*                    <span className={'text-xl font-bold'}>{index + 1}. {user.nickname}</span>*/}
-            {/*                    <span className={'text-xl font-bold'}>{user.score} Punkte</span>*/}
-            {/*                </div>*/}
-            {/*            )*/}
-            {/*        })}*/}
-            {/*    </div>*/}
-            {/*</Box>*/}
+            <Box className={'flex flex-col gap-4 !w-1/2 mx-auto'}>
+                <div className={'flex flex-col gap-4'}>
+                    {sortedUsers && sortedUsers.map(function (user, index) {
+                        return (
+                            <div key={index}
+                                 style={{
+                                        transitionDelay: `${(index * 0.1) + 11}s`,
+                                 }}
+                                 className={`${showPodium ? 'opacity-100' : 'opacity-0'} flex flex-row justify-between transition-all duration-500 items-center`}
+                            >
+                                <span className={'text-xl font-bold'}>{index + 1}. {user.nickname}</span>
+                                <span className={'text-xl font-bold'}>{user.score} Punkte</span>
+                            </div>
+                        )
+                    })}
+                </div>
+            </Box>
             {gameSession.questions.map(function (question, index) {
                 return (
                     <GameQuestionResult

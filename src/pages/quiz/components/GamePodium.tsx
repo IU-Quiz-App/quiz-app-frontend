@@ -8,9 +8,10 @@ interface GamePodiumProps {
     showPodium?: boolean,
     className?: string,
     startAnimation?: boolean,
+    secondsPerStep?: number,
 }
 
-const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, className = '', startAnimation = false }) => {
+const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, className = '', startAnimation = false, secondsPerStep = 1 }) => {
     const [firstPlace, setFirstPlace] = useState<User | undefined>(undefined);
     const [secondPlace, setSecondPlace] = useState<User | undefined>(undefined);
     const [thirdPlace, setThirdPlace] = useState<User | undefined>(undefined);
@@ -50,21 +51,20 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
     }, [startAnimation]);
 
     async function animatePodium() {
-        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+        const delay = (s: number) => new Promise(resolve => setTimeout(resolve, s*1000));
 
-        await delay(100);
         setShowThirdPlace({bar: true, profile: false});
-        await delay(3000);
+        await delay(secondsPerStep);
         setShowSecondPlace({bar: true, profile: false});
-        await delay(3000);
+        await delay(secondsPerStep);
         setShowFirstPlace({bar: true, profile: false});
-        await delay(3000);
+        await delay(secondsPerStep);
         setShowThirdPlace({bar: true, profile: true});
         showPopover('third');
-        await delay(3000);
+        await delay(secondsPerStep);
         setShowSecondPlace({bar: true, profile: true});
         showPopover('second');
-        await delay(3000);
+        await delay(secondsPerStep);
         setShowFirstPlace({bar: true, profile: true});
         showPopover('first');
     };
@@ -115,6 +115,20 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
     return (
         <>
             <svg viewBox="0 0 300 250" className={className}>
+                <defs>
+                    <linearGradient id="thirdPlaceGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#f59e07" />
+                        <stop offset="100%" stopColor="#78350f" />
+                    </linearGradient>
+                    <linearGradient id="firstPlaceGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#fef08a" />
+                        <stop offset="100%" stopColor="#78350f" />
+                    </linearGradient>
+                    <linearGradient id="secondPlaceGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#ffffdd" />
+                        <stop offset="100%" stopColor="#78350f" />
+                    </linearGradient>
+                </defs>
                 {showPodium && (
                     <>
                         {/* Third place - left bar */}
@@ -124,8 +138,8 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
                                     x="20"
                                     y={250 - (showThirdPlace.bar ? getBarHeight(thirdPlace?.score) : 0)}
                                     width={80}
-                                    className={'fill-amber-700'}
-                                    style={{ transition: 'all 3s ease'}}
+                                    fill="url(#thirdPlaceGradient)"
+                                    style={{ transition: `all ${secondsPerStep}s ease`}}
                                     height={showThirdPlace.bar ? getBarHeight(thirdPlace?.score) : 0}
                                 />
                                 <foreignObject
@@ -134,7 +148,7 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
                                     width={50}
                                     height={50}
                                     opacity={showThirdPlace.profile ? 1 : 0}
-                                    style={{ transition: 'all 3s ease' }}
+                                    style={{ transition: `all ${secondsPerStep}s ease` }}
                                 >
                                     <Profile user={thirdPlace} id={'third-place-profile'} />
                                 </foreignObject>
@@ -148,8 +162,8 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
                                     x="110"
                                     y={250 - (showFirstPlace.bar ? getBarHeight(firstPlace.score) : 0)}
                                     width={80}
-                                    className={'fill-amber-200'}
-                                    style={{ transition: 'all 3s ease' }}
+                                    fill="url(#firstPlaceGradient)"
+                                    style={{ transition: `all ${secondsPerStep}s ease` }}
                                     height={showFirstPlace.bar ? getBarHeight(firstPlace.score) : 0}
                                 />
                                 <foreignObject
@@ -159,7 +173,7 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
                                     height={50}
                                     opacity={showFirstPlace.profile ? 1 : 0}
                                     className={'fill-amber-200'}
-                                    style={{ transition: 'all 3s ease' }}
+                                    style={{ transition: `all ${secondsPerStep}s ease` }}
                                 >
                                     <Profile user={firstPlace} id={'first-place-profile'} />
                                 </foreignObject>
@@ -173,8 +187,8 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
                                     x="200"
                                     y={250 - (showSecondPlace.bar ? getBarHeight(secondPlace?.score) : 0)}
                                     width={80}
-                                    className={'fill-amber-50'}
-                                    style={{ transition: 'all 3s ease' }}
+                                    fill="url(#secondPlaceGradient)"
+                                    style={{ transition: `all ${secondsPerStep}s ease` }}
                                     height={showSecondPlace.bar ? getBarHeight(secondPlace?.score) : 0}
                                 />
                                 <foreignObject
@@ -183,7 +197,7 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
                                     width={50}
                                     height={50}
                                     opacity={showSecondPlace.profile ? 1 : 0}
-                                    style={{ transition: 'all 3s ease' }}
+                                    style={{ transition: `all ${secondsPerStep}s ease` }}
                                 >
                                     <Profile user={secondPlace} id={'second-place-profile'} />
                                 </foreignObject>
