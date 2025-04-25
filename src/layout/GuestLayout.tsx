@@ -1,7 +1,6 @@
 import {Outlet} from "react-router-dom";
-import Headerbar from "@components/layout/Headerbar.tsx";
 
-const AppLayout: React.FC = () => {
+const GuestLayout: React.FC = () => {
 
     return (
         <main
@@ -9,11 +8,10 @@ const AppLayout: React.FC = () => {
 
         >
             <div className={'flex flex-col w-full backdrop-blur-sm'}>
-                <Headerbar/>
                 <div className={'absolute w-full h-full -z-10 bg-cover bg-center bg-no-repeat blur-sm'}
                     style={{ backgroundImage: "url('/background.webp')" }}
                 />
-                <div className={'overflow-scroll grow py-24 px-8'}>
+                <div className={'overflow-scroll grow py-24 px-32'}>
                     <Outlet/>
                 </div>
             </div>
@@ -21,4 +19,4 @@ const AppLayout: React.FC = () => {
     )
 }
 
-export default AppLayout
+export default GuestLayout

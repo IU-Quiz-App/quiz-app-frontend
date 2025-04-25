@@ -1,41 +1,29 @@
-import { FC, useEffect, useState } from 'react';
-import {getAllQuestions} from "@services/Api.ts";
-import {Question} from "@services/Types.ts";
+import { FC } from 'react';
 import Box from "@components/Box.tsx";
-import QuestionTable from "@pages/question/QuestionTable.tsx";
 import Button from "@components/Button.tsx";
+import QuestionsTable from "@pages/question/QuestionTable.tsx";
+import {getAllQuestionsByUser} from "@services/Api.ts";
 
-export const FlyersTableWrapper: FC = () => {
+export const QuestionTableWrapper: FC = () => {
 
-    const [questions, setQuestions] = useState<Question[]>([]);
+    return (
+        <Box className={'w-full flex-col gap-4 min-h-full'}>
+            <div className={'flex flex-row justify-between w-full'}>
+                <Button variant={'primary'} className={'w-fit h-fit'} route={'/dashboard'}>
+                    Zurück
+                </Button>
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const questions = await getAllQuestions();
-            setQuestions(questions);
-        }
-
-        fetchData()
-            .catch((error) => {
-                console.error(error);
-            });
-    }, []);
-
-
-  return (
-      <Box className={'w-full flex-col gap-4'}>
-          <div className={'flex flex-row justify-between w-full'}>
-              <Button variant={'primary'} className={'w-fit h-fit'} route={'/dashboard'}>
-                  Zurück
-              </Button>
-
-              <Button variant={'primary'} className={'w-fit h-fit whitespace-nowrap'} route={'/question/form'}>
-                  Frage hinzufügen
-              </Button>
-          </div>
-         <QuestionTable questions={questions} />
-      </Box>
-  );
+                <Button variant={'primary'} className={'w-fit h-fit whitespace-nowrap'} route={'/question/form'}>
+                    Frage hinzufügen
+                </Button>
+            </div>
+            <QuestionsTable
+                fetchQuestions={async (page, pageSize) => {
+                    return await getAllQuestionsByUser(page, pageSize)
+                }}
+            />
+        </Box>
+    );
 };
 
-export default FlyersTableWrapper;
+export default QuestionTableWrapper;
