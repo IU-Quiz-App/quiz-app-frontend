@@ -8,9 +8,10 @@ import Loader from "@components/Loader.tsx";
 
 interface GameResultProps {
     gameSession: GameSession,
+    animationDuration?: number;
 }
 
-const GameResult: React.FC<GameResultProps> = ({ gameSession }) => {
+const GameResult: React.FC<GameResultProps> = ({ gameSession, animationDuration = 10 }) => {
     const [ sortedUsers, setSortedUsers ] = useState<User[]|null>(null);
     const [ allUserAnswers, setAllUserAnswers ] = useState<UserAnswer[]>([]);
     const [ showPodium, setShowPodium ] = useState<boolean>(false);
@@ -52,7 +53,7 @@ const GameResult: React.FC<GameResultProps> = ({ gameSession }) => {
 
         setTimeout(() => {
             setShowPodium(true);
-        }, 1000);
+        }, 500);
     }, [gameSession]);
 
     function getScore(user: User): number {
@@ -89,14 +90,14 @@ const GameResult: React.FC<GameResultProps> = ({ gameSession }) => {
     return (
         <div className={'flex flex-col items-center gap-4'}>
 
-            <GamePodium users={sortedUsers} className={'w-96 h-96'} startAnimation={showPodium} />
+            <GamePodium users={sortedUsers} className={'w-96 h-96'} startAnimation={showPodium} secondsPerStep={animationDuration/6 - 0.1} />
             <Box className={'flex flex-col gap-4 !w-1/2 mx-auto'}>
                 <div className={'flex flex-col gap-4'}>
                     {sortedUsers && sortedUsers.map(function (user, index) {
                         return (
                             <div key={index}
                                  style={{
-                                        transitionDelay: `${(index * 0.1) + 11}s`,
+                                        transitionDelay: `${(index * 0.1) + animationDuration - 1}s`,
                                  }}
                                  className={`${showPodium ? 'opacity-100' : 'opacity-0'} flex flex-row justify-between transition-all duration-500 items-center`}
                             >

@@ -128,6 +128,42 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
                         <stop offset="0%" stopColor="#ffffdd" />
                         <stop offset="100%" stopColor="#78350f" />
                     </linearGradient>
+
+                    <clipPath id={'thirdPlaceClipPath'}>
+                        <rect
+                            x="20"
+                            y={250 - (showThirdPlace.bar ? getBarHeight(thirdPlace?.score) : 0)}
+                            rx={5}
+                            ry={5}
+                            width={80}
+                            style={{ transition: `all ${secondsPerStep}s ease`}}
+                            height={300}
+                        />
+                    </clipPath>
+
+                    <clipPath id={'firstPlaceClipPath'}>
+                        <rect
+                            x="110"
+                            y={250 - (showFirstPlace.bar ? getBarHeight(firstPlace?.score) : 0)}
+                            rx={5}
+                            ry={5}
+                            width={80}
+                            style={{ transition: `all ${secondsPerStep}s ease` }}
+                            height={300}
+                        />
+                    </clipPath>
+
+                    <clipPath id={'secondPlaceClipPath'}>
+                        <rect
+                            x="200"
+                            y={250 - (showSecondPlace.bar ? getBarHeight(secondPlace?.score) : 0)}
+                            rx={5}
+                            ry={5}
+                            width={80}
+                            style={{ transition: `all ${secondsPerStep}s ease` }}
+                            height={300}
+                        />
+                    </clipPath>
                 </defs>
                 {showPodium && (
                     <>
@@ -136,11 +172,11 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
                             <>
                                 <rect
                                     x="20"
-                                    y={250 - (showThirdPlace.bar ? getBarHeight(thirdPlace?.score) : 0)}
+                                    y={250 - getBarHeight(thirdPlace?.score)}
                                     width={80}
                                     fill="url(#thirdPlaceGradient)"
-                                    style={{ transition: `all ${secondsPerStep}s ease`}}
-                                    height={showThirdPlace.bar ? getBarHeight(thirdPlace?.score) : 0}
+                                    height={getBarHeight(thirdPlace?.score)}
+                                    clipPath={`url(#thirdPlaceClipPath)`}
                                 />
                                 <foreignObject
                                     x="35"
@@ -160,11 +196,11 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
                             <>
                                 <rect
                                     x="110"
-                                    y={250 - (showFirstPlace.bar ? getBarHeight(firstPlace.score) : 0)}
+                                    y={250 - getBarHeight(firstPlace.score)}
                                     width={80}
                                     fill="url(#firstPlaceGradient)"
-                                    style={{ transition: `all ${secondsPerStep}s ease` }}
-                                    height={showFirstPlace.bar ? getBarHeight(firstPlace.score) : 0}
+                                    height={getBarHeight(firstPlace.score)}
+                                    clipPath={`url(#firstPlaceClipPath)`}
                                 />
                                 <foreignObject
                                     x="125"
@@ -185,11 +221,11 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
                             <>
                                 <rect
                                     x="200"
-                                    y={250 - (showSecondPlace.bar ? getBarHeight(secondPlace?.score) : 0)}
+                                    y={250 - getBarHeight(secondPlace?.score)}
                                     width={80}
                                     fill="url(#secondPlaceGradient)"
-                                    style={{ transition: `all ${secondsPerStep}s ease` }}
-                                    height={showSecondPlace.bar ? getBarHeight(secondPlace?.score) : 0}
+                                    height={getBarHeight(secondPlace?.score)}
+                                    clipPath={`url(#secondPlaceClipPath)`}
                                 />
                                 <foreignObject
                                     x="215"
