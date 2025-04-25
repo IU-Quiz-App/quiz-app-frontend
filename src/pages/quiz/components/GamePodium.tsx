@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import Profile from "@components/Profile.tsx";
 import tippy from "tippy.js";
 import confetti from 'canvas-confetti';
+import {delay} from "@services/Utils.ts";
 
 interface GamePodiumProps {
     users: User[],
@@ -52,8 +53,6 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
     }, [startAnimation]);
 
     async function animatePodium() {
-        const delay = (s: number) => new Promise(resolve => setTimeout(resolve, s*1000));
-
         setShowThirdPlace({bar: true, profile: false});
         await delay(secondsPerStep);
         setShowSecondPlace({bar: true, profile: false});
@@ -69,6 +68,7 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
         setShowFirstPlace({bar: true, profile: true});
         showPopover('first');
 
+        await delay(0.3);
         confetti({
             particleCount: 100,
             spread: 80,

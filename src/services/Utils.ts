@@ -19,3 +19,7 @@ export function formatDate(dateString: string|undefined): string {
     };
     return date.toLocaleString('de-DE', options);
 }
+
+export async function delay(s: number) {
+    await new Promise(resolve => setTimeout(resolve, s*1000));
+}

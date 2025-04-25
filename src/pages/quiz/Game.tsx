@@ -281,7 +281,7 @@ const Game: React.FC = () => {
 
     if (step === 'quiz-result') {
         return (
-            <GameResult gameSession={gameSession} />
+            <GameResult gameSession={gameSession} animationDuration={websocketUrlSet ? 3 : 0} />
         )
     }
 

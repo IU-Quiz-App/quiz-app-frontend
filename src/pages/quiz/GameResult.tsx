@@ -5,6 +5,7 @@ import Box from "@components/Box.tsx";
 import React, {useEffect, useState} from "react";
 import GamePodium from "@pages/quiz/components/GamePodium.tsx";
 import Loader from "@components/Loader.tsx";
+import {delay} from "@services/Utils.ts";
 
 interface GameResultProps {
     gameSession: GameSession,
@@ -15,6 +16,7 @@ const GameResult: React.FC<GameResultProps> = ({ gameSession, animationDuration 
     const [ sortedUsers, setSortedUsers ] = useState<User[]|null>(null);
     const [ allUserAnswers, setAllUserAnswers ] = useState<UserAnswer[]>([]);
     const [ showPodium, setShowPodium ] = useState<boolean>(false);
+    const [ showQuestionResults, setShowQuestionResults ] = useState<boolean>(false);
 
     useEffect(() => {
         const allAnswers: UserAnswer[] = [];
@@ -53,6 +55,11 @@ const GameResult: React.FC<GameResultProps> = ({ gameSession, animationDuration 
 
         setTimeout(() => {
             setShowPodium(true);
+
+            delay(animationDuration + 1)
+                .then(() => {
+                    setShowQuestionResults(true);
+                });
         }, 500);
     }, [gameSession]);
 
@@ -88,10 +95,10 @@ const GameResult: React.FC<GameResultProps> = ({ gameSession, animationDuration 
     }
 
     return (
-        <div className={'flex flex-col items-center gap-4'}>
+        <div className={'flex flex-col items-center gap-4 max-w-2xl w-full mx-auto'}>
 
             <GamePodium users={sortedUsers} className={'w-96 h-96'} startAnimation={showPodium} secondsPerStep={animationDuration/6 - 0.1} />
-            <Box className={'flex flex-col gap-4 !w-1/2 mx-auto'}>
+            <Box className={'flex flex-col gap-4 w-full'}>
                 <div className={'flex flex-col gap-4'}>
                     {sortedUsers && sortedUsers.map(function (user, index) {
                         return (
@@ -108,20 +115,25 @@ const GameResult: React.FC<GameResultProps> = ({ gameSession, animationDuration 
                     })}
                 </div>
             </Box>
-            {gameSession.questions.map(function (question, index) {
-                return (
-                    <GameQuestionResult
-                        key={index}
-                        users={gameSession.users}
-                        question={question}
-                    />
-                )
-            })}
-            <div className={'flex flex-row flex-end gap-4'}>
-                <Button variant={'primary'} route={'/dashboard'}>
-                    zum Dashboard
-                </Button>
-            </div>
+                <div className={`flex w-full flex-col gap-4 ${showQuestionResults ? 'opacity-100' : 'opacity-0'} transition-all duration-500`}>
+                    <div className={'text-white text-2xl font-bold'}>
+                        Ergebnisse der Fragen:
+                    </div>
+                    {gameSession.questions.map(function (question, index) {
+                        return (
+                            <GameQuestionResult
+                                key={index}
+                                users={gameSession.users}
+                                question={question}
+                            />
+                        )
+                    })}
+                    <div className={'flex flex-row flex-end gap-4'}>
+                        <Button variant={'primary'} route={'/dashboard'}>
+                            zum Dashboard
+                        </Button>
+                    </div>
+                </div>
         </div>
     )
 
