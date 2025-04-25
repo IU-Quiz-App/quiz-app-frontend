@@ -6,6 +6,9 @@ export default defineConfig(() => {
 
   return {
     plugins: [react()],
+    build: {
+      target: 'esnext',
+    },
     resolve: {
       alias: {
         '@assets': '/src/assets',
