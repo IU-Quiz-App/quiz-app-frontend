@@ -263,7 +263,7 @@ const Game: React.FC = () => {
 
     if (currentQuestion && (step === 'next-question' || step === 'waiting-for-result' || step === 'question-result')) {
         return (
-            <GameQuestion question={currentQuestion} answerQuestion={answerQuestion} seconds={seconds} step={step} />
+            <GameQuestion question={currentQuestion} answerQuestion={answerQuestion} seconds={seconds} step={step} users={gameSession.users} />
         )
     }
 

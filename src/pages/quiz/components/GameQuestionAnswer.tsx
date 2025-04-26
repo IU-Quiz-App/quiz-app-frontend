@@ -1,9 +1,10 @@
 import {Answer, User, UserAnswer} from "@services/Types.ts";
 import Button from "@components/Button.tsx";
-import {FC} from "react";
+import {FC, useContext} from "react";
 import Profile from "@components/Profile.tsx";
 import {Popover} from "@components/Popover.tsx";
 import {InfoIcon} from "lucide-react";
+import {AuthContext} from "../../../auth/hooks/AuthProvider.tsx";
 
 interface GameQuestionAnswerProps {
     answer: Answer;
@@ -14,6 +15,11 @@ interface GameQuestionAnswerProps {
 }
 
 const GameQuestionAnswer: FC<GameQuestionAnswerProps> = ({answer, isGiven, onClick = () => {}, step, users = []}) => {
+
+    const { user } = useContext(AuthContext);
+
+    isGiven = answer.user_answers?.some(userAnswer => userAnswer.user_uuid === user?.user_uuid) || isGiven;
+
     const attributes = {
         variant: isGiven ? 'primary' : 'tertiary',
     } as any;

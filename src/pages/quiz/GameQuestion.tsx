@@ -1,6 +1,6 @@
 import Box from "../../components/Box.tsx";
 import {useEffect, useState} from "react";
-import {Answer, Question} from "@services/Types.ts";
+import {Answer, Question, User} from "@services/Types.ts";
 import GameTimer from "@pages/quiz/components/GameTimer.tsx";
 import GameProgressBar from "@pages/quiz/components/GameProgressBar.tsx";
 import GameCountdown from "@pages/quiz/components/GameCountdown.tsx";
@@ -11,9 +11,10 @@ interface QuestionProps {
     answerQuestion?: (answer: Answer) => void,
     seconds?: number
     step: 'next-question' | 'waiting-for-result' | 'question-result',
+    users: User[]
 }
 
-const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, seconds, step }) => {
+const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, seconds, step, users }) => {
 
     const[answer, setAnswer] = useState<Answer|null>(null);
     const[questionUUID, setQuestionUUID] = useState<string|undefined>(undefined);
@@ -24,6 +25,12 @@ const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, secon
             setQuestionUUID(question.uuid);
         }
     }, [question]);
+
+    useEffect(() => {
+        if (step === 'question-result' && seconds) {
+            setAnswer(null);
+        }
+    }, [step]);
 
     async function handleOnClick(newAnswer: Answer) {
         if (answer || step !== 'next-question') {
@@ -52,6 +59,7 @@ const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, secon
                         <div className={'grid grid-cols-2 gap-4 h-full *:w-full *:h-28'}>
                             {question.answers.map((answerItem, index) => (
                                  <GameQuestionAnswer
+                                     users={users}
                                      answer={answerItem}
                                      step={step}
                                      onClick={handleOnClick}
