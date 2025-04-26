@@ -7,6 +7,7 @@ import {InfoIcon} from "lucide-react";
 import {AuthContext} from "../../../auth/hooks/AuthProvider.tsx";
 
 interface GameQuestionAnswerProps {
+    id?: string;
     answer: Answer;
     onClick?: (answer: Answer) => void;
     isGiven?: boolean;
@@ -14,11 +15,12 @@ interface GameQuestionAnswerProps {
     users?: User[];
 }
 
-const GameQuestionAnswer: FC<GameQuestionAnswerProps> = ({answer, isGiven, onClick = () => {}, step, users = []}) => {
+const GameQuestionAnswer: FC<GameQuestionAnswerProps> = ({answer, isGiven, onClick = () => {}, step, users = [], id}) => {
 
     const { user } = useContext(AuthContext);
 
-    isGiven = answer.user_answers?.some(userAnswer => userAnswer.user_uuid === user?.user_uuid) || isGiven;
+    const inUserAnswers = answer.user_answers?.some(userAnswer => userAnswer.user_uuid === user?.user_uuid);
+    isGiven = inUserAnswers || isGiven;
 
     const attributes = {
         variant: isGiven ? 'primary' : 'tertiary',
@@ -52,7 +54,7 @@ const GameQuestionAnswer: FC<GameQuestionAnswerProps> = ({answer, isGiven, onCli
     }
 
     return(
-        <div className={'relative'}>
+        <div className={'relative'} id={id}>
             <Button
                 onClick={() => onClick(answer)}
                 {...attributes}
