@@ -50,11 +50,28 @@ const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, secon
                     const x = rect.left + rect.width / 2;
                     const y = rect.top + rect.height / 2;
 
-                    confetti({
+                    const confettiOptions = {
+                        particleCount: 25,
+                        colors: ['#0a0', '#0f0', '#090'],
+                        opacity: 0.1,
+                        startVelocity: 10,
+                        gravity: 0,
+                        spread: 90,
+                        decay: 0.9,
+                        ticks: 30,
                         origin: {
                             x: x / window.innerWidth,
                             y: y / window.innerHeight,
                         },
+                    }
+
+                    confetti({
+                        ...confettiOptions,
+                        angle: 0,
+                    });
+                    confetti({
+                        ...confettiOptions,
+                        angle: 180,
                     });
                 }
             }
