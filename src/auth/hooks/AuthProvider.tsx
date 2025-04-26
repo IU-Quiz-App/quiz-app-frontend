@@ -26,9 +26,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     msalInstance.addEventCallback((event) => {
         var authenticationResult = event?.payload as AuthenticationResult;
         if (event.eventType === EventType.LOGIN_SUCCESS && authenticationResult?.account) {
-            const account = authenticationResult?.account;
+            const account = authenticationResult.account;
             msalInstance.setActiveAccount(account);
-            window.location.reload();
+
+            //@ts-ignore
+            const state = event?.payload?.state;
+            try {
+                const parsedState = state ? JSON.parse(state) : {};
+                const redirectTo = parsedState.redirectTo || '/dashboard';
+                window.location.replace(redirectTo); // 👈 safer than reload()
+            } catch (e) {
+                console.warn("Failed to parse redirect state:", e);
+                window.location.replace('/dashboard');
+            }
         }
     });
 

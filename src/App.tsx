@@ -45,7 +45,10 @@ const App = () => {
                     <Route element={<GuestLayout />}>
                         <Route element={<Login />} path={"/login"} />
                         <Route path="/" element={<Navigate to={'/login'} />} />
-                        <Route path="*" element={<Navigate to={'/login'} />} />
+                        <Route
+                            path="*"
+                            element={<Navigate to="/login" state={{ from: window.location.pathname }} replace />}
+                        />
                     </Route>
                 </Routes>
             </UnauthenticatedTemplate>
