@@ -10,7 +10,7 @@ import Button from "@components/Button.tsx";
 import Loader from "@components/Loader.tsx";
 import Config from "@services/Config.ts";
 import Profile from "@components/Profile.tsx";
-import {AuthContext} from "../../App.tsx";
+import {AuthContext} from "../../auth/hooks/AuthProvider.tsx";
 
 interface GameFormProps {
     gameSession: GameSession;

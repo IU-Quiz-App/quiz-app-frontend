@@ -12,7 +12,7 @@ const Dashboard: React.FC = () => {
     }
 
     return (
-        <div className="w-full h-full flex flex-col items-center justify-center gap-6">
+        <div className="w-full flex flex-col items-center justify-center gap-6">
             {/* Welcome */}
             <h1 className="text-2xl font-bold text-blue-700 text-center">
                 Willkommen bei der IU-Quiz-App!
@@ -21,7 +21,7 @@ const Dashboard: React.FC = () => {
             <Button variant={'secondary'} className={'w-fit h-fit'} onClick={startGame}>
                 Spiel starten
             </Button>
-            <div className="flex items-center justify-center gap-6 grow w-full px-52">
+            <div className="flex items-center justify-center gap-6 grow max-w-3xl w-full mx-auto">
                 <GameTableWrapper/>
             </div>
         </div>

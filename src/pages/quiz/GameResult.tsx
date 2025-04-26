@@ -13,35 +13,36 @@ interface GameResultProps {
 }
 
 const GameResult: React.FC<GameResultProps> = ({ gameSession, animationDuration = 10 }) => {
-    const [ sortedUsers, setSortedUsers ] = useState<User[]|null>(null);
-    const [ allUserAnswers, setAllUserAnswers ] = useState<UserAnswer[]>([]);
+    const [ sortedUsers, setSortedUsers ] = useState<User[]>([]);
     const [ showPodium, setShowPodium ] = useState<boolean>(false);
+    const [ showSortedUsers, setShowSortedUsers ] = useState<boolean>(false);
     const [ showQuestionResults, setShowQuestionResults ] = useState<boolean>(false);
 
     useEffect(() => {
-        const allAnswers: UserAnswer[] = [];
-        gameSession.questions?.forEach(question => {
-            question.answers.forEach(answer => {
-                if (answer.user_answers) {
-                    answer.user_answers.forEach(userAnswer => {
-                        allAnswers.push(userAnswer);
-                    });
-                }
-            });
-            if (question.timed_out_answers) {
-                question.timed_out_answers.forEach(userAnswer => {
-                    allAnswers.push(userAnswer);
-                });
-            }
-        });
-        setAllUserAnswers(allAnswers);
+        if (gameSession && gameSession.users) {
+            init();
+        }
+    }, [gameSession]);
 
+    async function init() {
+        console.log("second", animationDuration);
+        const sortedUsers = sortUsers();
+        await delay(1);
+        setShowPodium(true);
+        const waitTime = sortedUsers.length >=3 ? animationDuration : (animationDuration/3)*sortedUsers.length;
+        await delay(waitTime);
+        setShowSortedUsers(true);
+        setShowQuestionResults(true);
+    }
 
+    function sortUsers() {
         const sorted = gameSession.users
             .map(user => {
+                const score = getScore(user)
+
                 return {
                     ...user,
-                    score: getScore(user)
+                    score: score,
                 }
             })
             .sort((a, b) => {
@@ -52,30 +53,46 @@ const GameResult: React.FC<GameResultProps> = ({ gameSession, animationDuration 
             });
 
         setSortedUsers(sorted);
-
-        setTimeout(() => {
-            setShowPodium(true);
-
-            delay(animationDuration + 1)
-                .then(() => {
-                    setShowQuestionResults(true);
-                });
-        }, 500);
-    }, [gameSession]);
+        return sorted;
+    }
 
     function getScore(user: User): number {
         let score = 0;
 
-        allUserAnswers.filter(userAnswer => {
-            return userAnswer.user_uuid === user.user_uuid;
-        })
-            .forEach(userAnswer => {
-                if (userAnswer.score) {
-                    score += userAnswer.score;
-                }
-            });
+        const userAnswers = collectUsersAnswers(user.user_uuid);
+
+        userAnswers.forEach(userAnswer => {
+            if (userAnswer.score) {
+                score += userAnswer.score;
+            }
+        });
 
         return score;
+    }
+
+    function collectUsersAnswers(user_uuid: string) {
+        const allAnswers: UserAnswer[] = [];
+
+        gameSession.questions?.forEach(question => {
+            question.answers.forEach(answer => {
+                if (answer.user_answers) {
+                    answer.user_answers.forEach(userAnswer => {
+                        if (userAnswer.user_uuid === user_uuid) {
+                            allAnswers.push(userAnswer);
+                        }
+                    });
+                }
+            });
+            if (question.timed_out_answers) {
+                question.timed_out_answers.forEach(userAnswer => {
+                    if (userAnswer.user_uuid === user_uuid) {
+                        allAnswers.push(userAnswer);
+                    }
+                });
+            }
+        });
+
+        return allAnswers;
     }
 
     if (!gameSession.questions) {
@@ -100,13 +117,10 @@ const GameResult: React.FC<GameResultProps> = ({ gameSession, animationDuration 
             <GamePodium users={sortedUsers} className={'w-96 h-96'} startAnimation={showPodium} secondsPerStep={animationDuration/6 - 0.1} />
             <Box className={'flex flex-col gap-4 w-full'}>
                 <div className={'flex flex-col gap-4'}>
-                    {sortedUsers && sortedUsers.map(function (user, index) {
+                    {sortedUsers.map(function (user, index) {
                         return (
                             <div key={index}
-                                 style={{
-                                        transitionDelay: `${(index * 0.1) + animationDuration - 1}s`,
-                                 }}
-                                 className={`${showPodium ? 'opacity-100' : 'opacity-0'} flex flex-row justify-between transition-all duration-500 items-center`}
+                                 className={`${showSortedUsers ? 'opacity-100' : 'opacity-0'} flex flex-row justify-between transition-all duration-500 items-center`}
                             >
                                 <span className={'text-xl font-bold'}>{index + 1}. {user.nickname}</span>
                                 <span className={'text-xl font-bold'}>{user.score} Punkte</span>

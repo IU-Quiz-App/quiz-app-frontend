@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from './Config.ts';
-import {Course, GameSession, Question, User} from "./Types.ts";
+import {Course, GameSession, Question} from "./Types.ts";
 import {InteractionRequiredAuthError, InteractionType } from "@azure/msal-browser";
 import { msalInstance} from "../auth/AuthConfig.ts";
 import { jwtDecode, JwtPayload } from "jwt-decode";
@@ -125,22 +125,6 @@ export async function getEphemeralToken(): Promise<string|undefined> {
         console.error('Failed getting ephemeral token:', error);
         throw error;
     }
-}
-
-
-export async function getUser(): Promise<User> {
-    const token = await getDecodedToken();
-
-    if (!token) {
-        return null;
-    }
-
-    const firstName = token.name.split(' ')[0];
-
-    return {
-        'nickname': firstName as string,
-        'user_uuid': token.oid as string,
-    } as User;
 }
 
 export async function getQuestion(uuid: string): Promise<Question> {
