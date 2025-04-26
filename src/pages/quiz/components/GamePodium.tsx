@@ -53,18 +53,29 @@ const GamePodium: React.FC<GamePodiumProps> = ({ users, showPodium = true, class
     }, [startAnimation]);
 
     async function animatePodium() {
-        setShowThirdPlace({bar: true, profile: false});
-        await delay(secondsPerStep);
-        setShowSecondPlace({bar: true, profile: false});
-        await delay(secondsPerStep);
-        setShowFirstPlace({bar: true, profile: false});
-        await delay(secondsPerStep);
-        setShowThirdPlace({bar: true, profile: true});
-        showPopover('third');
-        await delay(secondsPerStep);
-        setShowSecondPlace({bar: true, profile: true});
-        showPopover('second');
-        await delay(secondsPerStep);
+        if (thirdPlace) {
+            setShowThirdPlace({bar: true, profile: false});
+            await delay(secondsPerStep);
+        }
+        if (secondPlace) {
+            setShowSecondPlace({bar: true, profile: false});
+            await delay(secondsPerStep);
+        }
+        if (firstPlace) {
+            setShowFirstPlace({bar: true, profile: false});
+            await delay(secondsPerStep);
+        }
+        if (thirdPlace) {
+            setShowThirdPlace({bar: true, profile: true});
+            showPopover('third');
+            await delay(secondsPerStep);
+        }
+        if (secondPlace) {
+            setShowSecondPlace({bar: true, profile: true});
+            showPopover('second');
+            await delay(secondsPerStep);
+        }
+
         setShowFirstPlace({bar: true, profile: true});
         showPopover('first');
 
