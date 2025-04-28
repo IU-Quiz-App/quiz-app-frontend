@@ -28,9 +28,9 @@ const Select: React.FC<TextInputProps> = ({ id, name, options, className, onChan
                     onChange={onChange}
                     value={value}
                 >
-                    <option value={''} className={'bg-yellow-200'}>
-                        {placeholder ?? 'Bitte auswählen'}
-                    </option>
+                    {placeholder && <option value={''} className={'bg-yellow-200'}>
+                        {placeholder}
+                    </option>}
 
                     {options.map((option, index) => (
                         <option key={index} value={option.value}>
