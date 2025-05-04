@@ -14,7 +14,7 @@ import {AuthContext} from "../../auth/hooks/AuthProvider.tsx";
 
 interface GameFormProps {
     gameSession: GameSession;
-    startGame: (questionQuantity: number, course: string, questionAnswerTime: number) => void;
+    startGame: (questionQuantity: number, course: string, questionAnswerTime: number, questionType: 'public'|'private'|'all') => void;
     notEnoughQuestions: boolean;
 }
 
@@ -24,6 +24,7 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
     const [questionQuantity, setQuestionQuantity] = useState<number>(3);
     const [questionAnswerTime, setQuestionAnswerTime] = useState<number>(5);
     const [courseUUID, setCourseUUID] = useState<string|null>(null);
+    const [questionType, setQuestionType] = useState<'public'|'private'|'all'>('all');
 
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -103,7 +104,7 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
             return;
         }
 
-        startGame(questionQuantity, courseUUID, questionAnswerTime);
+        startGame(questionQuantity, courseUUID, questionAnswerTime, questionType);
     }
 
     function copyLinkToClipboard() {
@@ -155,6 +156,19 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
                                             }))}
                                             errorMessage={errors['course']}
                                             onChange={(event) => setCourseUUID(event.target.value)}
+                                    />
+                                </div>
+                                <div className={'flex justify-between w-full'}>
+                                    <InputLabel id={"question-type"} htmlFor={"question-type"} label={"Fragentyp"} required={true}/>
+                                    <Select id={"question-type"} name={"question-type"} className={'w-48'}
+                                            options={[
+                                                { label: 'Alle Fragen', value: 'all' },
+                                                { label: 'Nur private Frage', value: 'private' },
+                                                { label: 'Nur öffentliche Frage', value: 'public' },
+                                            ]}
+                                            value={questionType}
+                                            errorMessage={errors['question-type']}
+                                            onChange={(event) => setQuestionType(event.target.value as 'public'|'private'|'all')}
                                     />
                                 </div>
                                 <div className={'flex justify-between w-full'}>

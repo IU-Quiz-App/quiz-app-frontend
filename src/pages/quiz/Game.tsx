@@ -189,7 +189,7 @@ const Game: React.FC = () => {
         }
     }, []);
 
-    function startGame(quiz_length: number, course: string, questionAnswerTime: number) {
+    function startGame(quiz_length: number, course: string, questionAnswerTime: number, questionType: 'public'|'private'|'all') {
         console.log('Start game session');
         sendMessage(
             JSON.stringify({
@@ -198,6 +198,7 @@ const Game: React.FC = () => {
                 quiz_length: quiz_length,
                 course_name: course,
                 question_response_time: questionAnswerTime,
+                question_type: questionType,
             })
         );
     }
