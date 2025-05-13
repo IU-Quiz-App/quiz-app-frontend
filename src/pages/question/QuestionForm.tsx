@@ -225,14 +225,16 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
 
     if (loading) {
         return (
-            <Loader />
+            <div className={'w-full h-full flex items-center justify-center'}>
+                <Loader className={'w-28'} />
+            </div>
         )
     }
 
     return (
         <Box className={'w-full flex flex-col gap-6 text-white'}>
             <div className={'text-2xl mb-6'}>
-                Frage erstellen
+                { uuid ? 'Frage bearbeiten' : 'Neue Frage erstellen' }
             </div>
 
             <div className={'grid grid-cols-2 gap-4'}>

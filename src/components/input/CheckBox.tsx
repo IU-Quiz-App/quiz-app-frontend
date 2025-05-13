@@ -8,6 +8,14 @@ interface CheckBoxProps {
 }
 
 const CheckBox: React.FC<CheckBoxProps> = ({ id, name, onChange, checked }) => {
+    if (typeof checked === "string") {
+        checked = checked === "true";
+    }
+
+    if (typeof checked === "undefined") {
+        checked = false;
+    }
+
     return (
         <input
             id={id}
