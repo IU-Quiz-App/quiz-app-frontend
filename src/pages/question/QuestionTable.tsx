@@ -64,7 +64,7 @@ const QuestionTable: FC<QuestionTableProps> = ({ fetchQuestions }) => {
             columns={[
                 { header: 'Kurs', cell: ({ row }) => {
                     const course = allCourses.find(course => course.uuid === (row.original as Question).course);
-                    return course ? course.name : 'Unbekannt' + ' (' + (row.original as Question).course + ')';
+                    return course ? course.name + ' - ' + course.description : 'Unbekannt' + ' (' + (row.original as Question).course + ')';
                 }},
                 { accessorKey: 'text', header: 'Text' },
                 { header: 'Aktion', cell: ({ row }) => renderActions(row.original as Question) },

@@ -81,7 +81,7 @@ const GameTable: FC<GameTableProps> = ({ fetchGameSessions }) => {
                 { header: 'Spieler', cell: ({ row }) => renderUsers((row.original as GameSession)) },
                 { header: 'Kurs', cell: ({ row }) => {
                         const course = allCourses.find(course => course.uuid === (row.original as GameSession).course);
-                        return course ? course.name : 'Unbekannt' + ' (' + (row.original as GameSession).course + ')';
+                        return course ? course.name + ' - ' + course.description : 'Unbekannt' + ' (' + (row.original as GameSession).course + ')';
                     }},
                 { header: 'Beendet am', cell: ({ row }) => renderEndedAt((row.original as GameSession)) },
                 { header: 'Aktion', cell: ({ row }) => renderActions((row.original as GameSession)) },
