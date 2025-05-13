@@ -1,13 +1,11 @@
 import Box from "../../components/Box.tsx";
 import Select from "@components/input/Select.tsx";
 import React, {ChangeEvent, useContext, useEffect, useState} from "react";
-import { getAllCourses } from "@services/Api.ts";
 import NumberInput from "@components/input/NumberInput.tsx";
 import InputLabel from "@components/input/InputLabel.tsx";
-import {Course, GameSession} from "@services/Types.ts";
+import {GameSession} from "@services/Types.ts";
 import { Crown } from "lucide-react";
 import Button from "@components/Button.tsx";
-import Loader from "@components/Loader.tsx";
 import Config from "@services/Config.ts";
 import Profile from "@components/Profile.tsx";
 import {AuthContext} from "../../auth/hooks/AuthProvider.tsx";
@@ -20,31 +18,14 @@ interface GameFormProps {
 
 const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQuestions }) => {
 
-    const [courses, setCourses] = useState<Course[]>([]);
     const [questionQuantity, setQuestionQuantity] = useState<number>(3);
     const [questionAnswerTime, setQuestionAnswerTime] = useState<number>(5);
     const [courseUUID, setCourseUUID] = useState<string|null>(null);
     const [questionType, setQuestionType] = useState<'public'|'private'|'all'>('all');
 
-    const [loading, setLoading] = useState<boolean>(true);
-
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     const { user } = useContext(AuthContext);
-
-    useEffect(() => {
-        async function fetchCourses() {
-            const courses = await getAllCourses();
-
-            setCourses(courses);
-        }
-
-        fetchCourses()
-            .then(() => {
-                setLoading(false);
-            })
-            .catch((error) => console.error('Error fetching courses', error));
-    }, [gameSession]);
 
     useEffect(() => {
         if (notEnoughQuestions) {
@@ -117,14 +98,6 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
             });
     }
 
-    if (loading) {
-        return (
-            <div className={'w-full h-full flex items-center justify-center'}>
-                <Loader className={'w-28'}/>
-            </div>
-        )
-    }
-
     return (
         <div className={'flex flex-row gap-6 h-full max-w-2xl mx-auto'}>
             <Box className={'min-w-52 h-full flex flex-col items-start justify-start gap-4'}>
@@ -148,7 +121,7 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
                                 <div className={'flex justify-between w-full'}>
                                     <InputLabel id={"course"} htmlFor={"course"} label={"Kurs"} required={true}/>
                                     <Select id={"course"} name={"course"} className={'w-48'} placeholder={'Kurs auswählen'}
-                                            options={courses.map((course) => ({
+                                            options={user.courses.map((course) => ({
                                                 label: course.description && course.description.trim() !== ''
                                                     ? `${course.name} - ${course.description}`
                                                     : course.name,

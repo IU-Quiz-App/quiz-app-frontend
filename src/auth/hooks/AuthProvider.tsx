@@ -3,6 +3,7 @@ import { msalInstance } from "../AuthConfig.ts";
 import { MsalProvider } from "@azure/msal-react";
 import {User} from "@services/Types.ts";
 import {Context, createContext, useEffect, useState} from "react";
+import {getAllCourses, getUserCoursesIDs} from "@services/Api.ts";
 
 interface AuthContextType {
     user: User|undefined;
@@ -14,7 +15,11 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
-    const [user, setUser] = useState<User | undefined>(undefined);
+    const [user, setUser] = useState<User>({
+        nickname: '',
+        user_uuid: '',
+        courses: [],
+    } as User);
 
     if (!msalInstance.getActiveAccount() && msalInstance.getAllAccounts().length > 0) {
         const account = msalInstance.getAllAccounts()[0];
@@ -53,7 +58,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 user_uuid: uuid,
             } as User;
 
-            setUser(user);
+
+            async function fetchUserGroups() {
+                const courses = await getAllCourses();
+                const userCoursesIDs = await getUserCoursesIDs();
+
+                console.debug(courses);
+                console.debug(userCoursesIDs);
+                return courses.filter((course) => userCoursesIDs.includes(course.uuid));
+            }
+
+            fetchUserGroups()
+                .then((courses) => {
+                    console.log(courses);
+                    user.courses = courses;
+                    setUser(user);
+                });
         }
     }, []);
 

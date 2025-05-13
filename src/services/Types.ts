@@ -47,6 +47,7 @@ export interface UserAnswer {
 export interface User {
     nickname: string;
     user_uuid: string;
+    courses: Course[];
     score?: number;
 }
 
