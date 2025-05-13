@@ -99,52 +99,60 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
     }
 
     return (
-        <div className={'flex flex-row gap-6 h-full max-w-2xl mx-auto'}>
-            <Box className={'min-w-52 h-full flex flex-col items-start justify-start gap-4'}>
+        <div className={'flex sm:flex-row flex-col gap-6 h-full max-w-3xl mx-auto'}>
+            <Box className={'sm:w-1/3 w-full sm:h-full flex flex-col items-start justify-start gap-4'}>
                 <span className={'text-sm'}>Spieler</span>
-                <div className={'flex flex-col gap-2 pl-2 w-full'}>
-                {gameSession.users && gameSession.users.map((user, index) => (
-                        <Box className={'w-full !px-2 !py-2 flex flex-row items-center gap-2'} key={`user-${index}`}>
+                <div className={'flex sm:flex-col flex-row gap-2 sm:pl-2 w-full h-16 items-start'}>
+                    {gameSession.users && gameSession.users.map((user, index) => (
+                        <Box className={'w-full !p-2 flex flex-row items-center sm:gap-2 w-min sm:w-full'} key={`user-${index}`}>
                             <div className={'w-6 h-6'}>
                                 <Profile user={user} className={'w-6 h-6'}/>
                             </div>
-                            <span className={'whitespace-nowrap'}>{user.nickname}</span>
+                            <span className={'whitespace-nowrap hidden sm:block'}>{user.nickname}</span>
                             {user.nickname === gameSession.created_by && <Crown className={'w-6 h-6'}/>}
                         </Box>
-                ))}
+                    ))}
                 </div>
             </Box>
-                <Box className={'grow h-full flex flex-col justify-between'}>
+                <Box className={'grow h-full flex flex-col justify-between w-full'}>
                     {gameSession.created_by == user?.user_uuid ?
                         <>
                             <div className={'w-full grow flex flex-col gap-4'}>
-                                <div className={'flex justify-between w-full'}>
-                                    <InputLabel id={"course"} htmlFor={"course"} label={"Kurs"} required={true}/>
-                                    <Select id={"course"} name={"course"} className={'w-48'} placeholder={'Kurs auswählen'}
-                                            options={user.courses.map((course) => ({
-                                                label: course.description && course.description.trim() !== ''
-                                                    ? `${course.name} - ${course.description}`
-                                                    : course.name,
-                                                value: course.uuid
-                                            }))}
-                                            errorMessage={errors['course']}
-                                            onChange={(event) => setCourseUUID(event.target.value)}
-                                    />
+                                <div className={'flex justify-between w-full sm:flex-row flex-col'}>
+                                    <div className={'w-1/3'}>
+                                        <InputLabel id={"course"} htmlFor={"course"} label={"Kurs"} required={true}/>
+                                    </div>
+                                    <div className={'w-1/2'}>
+                                        <Select id={"course"} name={"course"} placeholder={'Kurs auswählen'} className={'truncate'}
+                                                options={user.courses.map((course) => ({
+                                                    label: course.description && course.description.trim() !== ''
+                                                        ? `${course.name} - ${course.description}`
+                                                        : course.name,
+                                                    value: course.uuid
+                                                }))}
+                                                errorMessage={errors['course']}
+                                                onChange={(event) => setCourseUUID(event.target.value)}
+                                        />
+                                    </div>
                                 </div>
-                                <div className={'flex justify-between w-full'}>
-                                    <InputLabel id={"question-type"} htmlFor={"question-type"} label={"Fragentyp"} required={true}/>
-                                    <Select id={"question-type"} name={"question-type"} className={'w-48'}
-                                            options={[
-                                                { label: 'Alle Fragen', value: 'all' },
-                                                { label: 'Nur private Frage', value: 'private' },
-                                                { label: 'Nur öffentliche Frage', value: 'public' },
-                                            ]}
-                                            value={questionType}
-                                            errorMessage={errors['question-type']}
-                                            onChange={(event) => setQuestionType(event.target.value as 'public'|'private'|'all')}
-                                    />
+                                <div className={'flex justify-between w-full sm:flex-row flex-col'}>
+                                    <div className={'w-1/3'}>
+                                        <InputLabel id={"question-type"} htmlFor={"question-type"} label={"Fragentyp"} required={true}/>
+                                    </div>
+                                    <div className={'w-1/2'}>
+                                        <Select id={"question-type"} name={"question-type"} className={'truncate'}
+                                                options={[
+                                                    { label: 'Alle Fragen', value: 'all' },
+                                                    { label: 'Nur private Frage', value: 'private' },
+                                                    { label: 'Nur öffentliche Frage', value: 'public' },
+                                                ]}
+                                                value={questionType}
+                                                errorMessage={errors['question-type']}
+                                                onChange={(event) => setQuestionType(event.target.value as 'public'|'private'|'all')}
+                                        />
+                                    </div>
                                 </div>
-                                <div className={'flex justify-between w-full'}>
+                                <div className={'flex justify-between w-full sm:flex-row flex-col'}>
                                     <InputLabel id={"question-quantity"} htmlFor={"question-quantity"} label={"Fragenanzahl"} required={true}/>
                                     <NumberInput
                                         errorMessage={errors['question-quantity']}
@@ -154,7 +162,7 @@ const GameForm: React.FC<GameFormProps> = ({ gameSession, startGame, notEnoughQu
                                         onChange={onQuestionQuantityChange}
                                     />
                                 </div>
-                                <div className={'flex justify-between w-full'}>
+                                <div className={'flex justify-between w-full sm:flex-row flex-col'}>
                                     <InputLabel id={"question-answer-time"} htmlFor={"question-answer-time"} label={"Antwortzeit"} required={true}/>
                                     <NumberInput
                                         errorMessage={errors['question-answer-time']}
