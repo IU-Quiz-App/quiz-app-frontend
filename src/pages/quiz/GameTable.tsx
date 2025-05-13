@@ -1,20 +1,36 @@
 import Table from '@components/table/Table';
-import {GameSession} from "@services/Types.ts";
-import { FC } from "react";
+import {Course, GameSession } from "@services/Types.ts";
+import {FC, useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import {EyeIcon} from "@heroicons/react/24/outline";
 import Loader from "@components/Loader.tsx";
 import {formatDate} from "@services/Utils.ts";
 import {Popover} from "@components/Popover.tsx";
 import Profile from "@components/Profile.tsx";
+import {getAllCourses} from "@services/Api.ts";
 
-interface GameTableProps {
-    fetchGameSessions: (page: number, pageSize: number) => Promise<{items: GameSession[], total: number}>;
+interface GameTableProps {fetchGameSessions: (page: number, pageSize: number) => Promise<{items: GameSession[], total: number}>;
 }
 
 const GameTable: FC<GameTableProps> = ({ fetchGameSessions }) => {
 
     const navigate = useNavigate();
+
+    const [allCourses, setAllCourses] = useState<Course[]>([]);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const courses = await getAllCourses();
+                setAllCourses(courses);
+            } catch (error) {
+                console.error('Error fetching courses', error);
+            }
+        };
+
+        fetchCourses();
+    }, []);
+
 
     const renderActions = (game: GameSession) => {
         return (
@@ -63,8 +79,10 @@ const GameTable: FC<GameTableProps> = ({ fetchGameSessions }) => {
             fetchData={fetchGameSessions}
             columns={[
                 { header: 'Spieler', cell: ({ row }) => renderUsers((row.original as GameSession)) },
-                { accessorKey: 'created_at', header: 'Erstellt am', cell: ({ row }) => formatDate((row.original as GameSession).created_at) },
-                { accessorKey: 'started_at', header: 'Gestartet am', cell: ({ row }) => formatDate((row.original as GameSession).started_at) },
+                { header: 'Kurs', cell: ({ row }) => {
+                        const course = allCourses.find(course => course.uuid === (row.original as GameSession).course);
+                        return course ? course.name + ' - ' + course.description : 'Unbekannt' + ' (' + (row.original as GameSession).course + ')';
+                    }},
                 { header: 'Beendet am', cell: ({ row }) => renderEndedAt((row.original as GameSession)) },
                 { header: 'Aktion', cell: ({ row }) => renderActions((row.original as GameSession)) },
             ]}

@@ -221,7 +221,12 @@ export async function getAllGameSessionsByUser(page: number, pageSize: number): 
         });
 
         return {
-            items: response.data.items as GameSession[],
+            items: response.data.items.map((item: any) => {
+                return {
+                    ...item,
+                    course: item.course_name as string,
+                } as GameSession;
+            }),
             total: response.data.total_items as number,
         }
     } catch (error) {
@@ -233,7 +238,7 @@ export async function getAllGameSessionsByUser(page: number, pageSize: number): 
     }
 }
 
-export async function getAllCourses(): Promise<Course[]> {
+export async function getUserCoursesIDs(): Promise<string[]> {
     const string = {
         securityEnabledOnly: true
     };
@@ -242,13 +247,16 @@ export async function getAllCourses(): Promise<Course[]> {
         .post(string);
 
     const userGroupsIds = userGroupsResponse.value;
+
+    return userGroupsIds;
+}
+
+export async function getAllCourses(): Promise<Course[]> {
     const allGroupsResponse = await graphClient.api('/groups?$select=id,displayName,description').get();
 
     const allGroups = allGroupsResponse.value;
 
-    const userGroups = allGroups.filter((group: any) => userGroupsIds.includes(group.id));
-
-    return userGroups.map((group: any) => {
+    return allGroups.map((group: any) => {
         return {
             uuid: group.id,
             name: group.displayName,

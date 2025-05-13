@@ -1,8 +1,8 @@
 import TextAreaInput from "../../components/input/TextAreaInput.tsx";
 import Button from "../../components/Button.tsx";
-import {Answer, Course, Question} from "../../services/Types.ts";
-import React, { ChangeEvent, useEffect, useState } from "react";
-import { getQuestion, saveQuestion, deleteQuestion, updateQuestion, getAllCourses } from "../../services/Api.ts";
+import {Answer, Question} from "../../services/Types.ts";
+import React, {ChangeEvent, useContext, useEffect, useState} from "react";
+import { getQuestion, saveQuestion, deleteQuestion, updateQuestion } from "../../services/Api.ts";
 import { useNavigate, useParams } from "react-router-dom";
 import Loader from "@components/Loader.tsx";
 import Box from "@components/Box.tsx";
@@ -10,6 +10,7 @@ import Select from "@components/input/Select.tsx";
 import QuestionFormAnswer from "@pages/question/QuestionFormAnswer.tsx";
 import CheckBox from "@components/input/CheckBox.tsx";
 import InputLabel from "@components/input/InputLabel.tsx";
+import {AuthContext} from "../../auth/hooks/AuthProvider.tsx";
 
 interface QuestionFormProps {
     uuid?: string | undefined;
@@ -32,8 +33,9 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [loading, setLoading] = useState<boolean>(true);
-    const [courses, setCourses] = useState<Course[]>([]);
     const [publicQuestion, setPublicQuestion] = useState<boolean>(false);
+
+    const { user } = useContext(AuthContext);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -56,12 +58,6 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
             setCorrectAnswer(question.answers[0]);
         }
 
-        async function fetchCourses() {
-            const courses = await getAllCourses();
-
-            setCourses(courses);
-        }
-
         fetchData()
             .then(() => {
                 setLoading(false);
@@ -69,10 +65,6 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
             .catch((error) => {
                 console.error(error);
             });
-
-        fetchCourses()
-            .then(() => console.log('Courses fetched'))
-            .catch((error) => console.error('Error fetching courses', error));
     }, [uuid]);
 
     const setDefaultValues = () => {
@@ -233,14 +225,16 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
 
     if (loading) {
         return (
-            <Loader />
+            <div className={'w-full h-full flex items-center justify-center'}>
+                <Loader className={'w-28'} />
+            </div>
         )
     }
 
     return (
         <Box className={'w-full flex flex-col gap-6 text-white'}>
             <div className={'text-2xl mb-6'}>
-                Frage erstellen
+                { uuid ? 'Frage bearbeiten' : 'Neue Frage erstellen' }
             </div>
 
             <div className={'grid grid-cols-2 gap-4'}>
@@ -259,15 +253,15 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                         id={'course'}
                         name={'course'}
                         label={'Kurs'}
-                        className={'w-32'}
+                        className={'w-1/2 truncate'}
                         value={course}
                         required
-                        options={courses.map((course) => ({
+                        options={user?.courses.map((course) => ({
                             label: course.description && course.description.trim() !== ''
                                 ? `${course.name} - ${course.description}`
                                 : course.name,
                             value: course.uuid
-                        }))}
+                        })) ?? []}
                         onChange={handleCourseChange}
                         errorMessage={errors['course'] as string}
                     />
@@ -290,6 +284,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
 
                 {wrongAnswers.map((answer, index) => (
                     <QuestionFormAnswer
+                        key={`wrongAnswer${index + 1}`}
                         textClassName={'bg-red-100'}
                         explanationClassName={'h-28 bg-red-200'}
                         id={`wrongAnswer${index + 1}`}
