@@ -63,14 +63,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 const courses = await getAllCourses();
                 const userCoursesIDs = await getUserCoursesIDs();
 
-                console.debug(courses);
-                console.debug(userCoursesIDs);
                 return courses.filter((course) => userCoursesIDs.includes(course.uuid));
             }
 
             fetchUserGroups()
                 .then((courses) => {
-                    console.log(courses);
                     user.courses = courses;
                     setUser(user);
                 });
