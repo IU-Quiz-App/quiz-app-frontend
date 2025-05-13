@@ -253,7 +253,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                         id={'course'}
                         name={'course'}
                         label={'Kurs'}
-                        className={'w-32'}
+                        className={'w-1/2 truncate'}
                         value={course}
                         required
                         options={user?.courses.map((course) => ({
