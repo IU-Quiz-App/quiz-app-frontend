@@ -221,7 +221,12 @@ export async function getAllGameSessionsByUser(page: number, pageSize: number): 
         });
 
         return {
-            items: response.data.items as GameSession[],
+            items: response.data.items.map((item: any) => {
+                return {
+                    ...item,
+                    course: item.course_name as string,
+                } as GameSession;
+            }),
             total: response.data.total_items as number,
         }
     } catch (error) {

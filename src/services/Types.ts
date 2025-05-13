@@ -26,6 +26,7 @@ export interface GameSession {
     created_by: string;
     created_at: string;
     users: User[];
+    course: string;
     questions?: Question[];
     started_at?: string;
     ended_at?: string;
