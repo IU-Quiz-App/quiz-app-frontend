@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 
-interface GameProgressBarProps {
+interface ProgressBarProps {
     start: boolean;
     seconds: number;
     onFinish?: () => void;
@@ -9,7 +9,7 @@ interface GameProgressBarProps {
     height?: number;
 }
 
-const GameProgressBar: React.FC<GameProgressBarProps> = ({ start, seconds, onFinish = () => {}, className, width = 100, height = 10 }) => {
+const ProgressBar: React.FC<ProgressBarProps> = ({ start, seconds, onFinish = () => {}, className, width = 100, height = 10 }) => {
     const [progress, setProgress] = useState(1);
     const startTimeRef = useRef<number | null>(null);
     const animationFrameRef = useRef<number | null>(null);
@@ -93,5 +93,5 @@ const GameProgressBar: React.FC<GameProgressBarProps> = ({ start, seconds, onFin
     );
 };
 
-export default GameProgressBar;
+export default ProgressBar;
 

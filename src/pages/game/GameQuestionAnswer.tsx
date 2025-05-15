@@ -4,7 +4,7 @@ import {FC, useContext} from "react";
 import Profile from "@components/Profile.tsx";
 import {Popover} from "@components/Popover.tsx";
 import {InfoIcon} from "lucide-react";
-import {AuthContext} from "../../../auth/hooks/AuthProvider.tsx";
+import {AuthContext} from "../../auth/hooks/AuthProvider.tsx";
 
 interface GameQuestionAnswerProps {
     id?: string;

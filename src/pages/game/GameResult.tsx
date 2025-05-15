@@ -3,7 +3,7 @@ import Button from "@components/Button.tsx";
 import GameQuestionResult from "./GameQuestionResult";
 import Box from "@components/Box.tsx";
 import React, {useEffect, useState} from "react";
-import GamePodium from "@pages/quiz/components/GamePodium.tsx";
+import GamePodium from "@pages/game/GamePodium.tsx";
 import Loader from "@components/Loader.tsx";
 import {delay} from "@services/Utils.ts";
 

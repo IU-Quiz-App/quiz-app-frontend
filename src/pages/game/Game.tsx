@@ -1,15 +1,15 @@
-import GameForm from "@pages/quiz/GameForm.tsx";
+import GameForm from "@pages/game/GameForm.tsx";
 import React, {useEffect, useRef, useState} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Answer, GameSession, Question } from "@services/Types.ts";
 import { createSession, getEphemeralToken, getGameSession } from "@services/Api.ts";
-import GameQuestion from "@pages/quiz/GameQuestion.tsx";
+import GameQuestion from "@pages/game/GameQuestion.tsx";
 import Loader from "@components/Loader.tsx";
 
 import useWebSocket from "react-use-websocket";
 import Config from "@services/Config.ts";
-import GameResult from "@pages/quiz/GameResult.tsx";
-import GameCountdown from "@pages/quiz/components/GameCountdown.tsx";
+import GameResult from "@pages/game/GameResult.tsx";
+import Countdown from "@components/Countdown.tsx";
 
 const Game: React.FC = () => {
     const { uuid: uuid } = useParams();
@@ -244,7 +244,7 @@ const Game: React.FC = () => {
                 <span>Die erste Frage kommt gleich...</span>
 
                 <div className="flex flex-col w-full h-10">
-                    <GameCountdown start={true} seconds={seconds} />
+                    <Countdown start={true} seconds={seconds} />
                 </div>
             </div>
         )
@@ -256,7 +256,7 @@ const Game: React.FC = () => {
                 <span>Nächste Frage kommt gleich...</span>
 
                 <div className="flex flex-col w-full h-10">
-                    <GameCountdown start={true} seconds={seconds} />
+                    <Countdown start={true} seconds={seconds} />
                 </div>
             </div>
         )
@@ -274,7 +274,7 @@ const Game: React.FC = () => {
                 <span>Quiz beendet...</span>
 
                 <div className="flex flex-col w-full h-10">
-                    <GameCountdown start={true} seconds={seconds} />
+                    <Countdown start={true} seconds={seconds} />
                 </div>
             </div>
         )

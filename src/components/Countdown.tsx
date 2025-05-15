@@ -1,13 +1,13 @@
 import { useEffect, useState, useRef } from "react";
 
-interface GameTimerProps {
+interface CountdownProps {
     start?: boolean;
     seconds: number;
     onFinish?: () => void;
     className?: string;
 }
 
-const GameTimer: React.FC<GameTimerProps> = ({ start = true, seconds, onFinish = () => {}, className }) => {
+const Countdown: React.FC<CountdownProps> = ({ start = true, seconds, onFinish = () => {}, className }) => {
     const [timeLeft, setTimeLeft] = useState(seconds);
     const startTimeRef = useRef<number | null>(null);
     const animationFrameRef = useRef<number | null>(null);
@@ -67,5 +67,5 @@ const GameTimer: React.FC<GameTimerProps> = ({ start = true, seconds, onFinish =
     );
 };
 
-export default GameTimer;
+export default Countdown;
 
