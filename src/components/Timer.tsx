@@ -1,13 +1,13 @@
 import { useEffect, useState, useRef } from "react";
 
-interface GameTimerProps {
+interface TimerProps {
     start: boolean;
     seconds: number;
     onFinish?: () => void;
     className?: string;
 }
 
-const GameTimer: React.FC<GameTimerProps> = ({ start, seconds, onFinish = () => {}, className }) => {
+const Timer: React.FC<TimerProps> = ({ start, seconds, onFinish = () => {}, className }) => {
     const [timeLeft, setTimeLeft] = useState(seconds * 1000);
     const [progress, setProgress] = useState(1);
     const startTimeRef = useRef<number | null>(null);
@@ -126,5 +126,5 @@ const GameTimer: React.FC<GameTimerProps> = ({ start, seconds, onFinish = () => 
     );
 };
 
-export default GameTimer;
+export default Timer;
 

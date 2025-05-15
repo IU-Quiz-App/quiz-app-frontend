@@ -3,7 +3,7 @@ import Box from "@components/Box.tsx";
 import {FC, useEffect, useState} from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import {useMsal} from "@azure/msal-react";
-import GameQuestionAnswer from "@pages/quiz/components/GameQuestionAnswer.tsx";
+import GameQuestionAnswer from "@pages/game/GameQuestionAnswer.tsx";
 
 interface GameQuestionResultProps {
     users: User[];

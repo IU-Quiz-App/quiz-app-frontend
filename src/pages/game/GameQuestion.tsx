@@ -1,10 +1,10 @@
 import Box from "../../components/Box.tsx";
 import {useContext, useEffect, useState} from "react";
 import {Answer, Question, User} from "@services/Types.ts";
-import GameTimer from "@pages/quiz/components/GameTimer.tsx";
-import GameProgressBar from "@pages/quiz/components/GameProgressBar.tsx";
-import GameCountdown from "@pages/quiz/components/GameCountdown.tsx";
-import GameQuestionAnswer from "@pages/quiz/components/GameQuestionAnswer.tsx";
+import Timer from "@components/Timer.tsx";
+import ProgressBar from "@components/ProgressBar.tsx";
+import Countdown from "@components/Countdown.tsx";
+import GameQuestionAnswer from "@pages/game/GameQuestionAnswer.tsx";
 import {AuthContext} from "../../auth/hooks/AuthProvider.tsx";
 import confetti from 'canvas-confetti';
 
@@ -119,19 +119,19 @@ const GameQuestion: React.FC<QuestionProps> = ({ question, answerQuestion, secon
                     <div className={`w-full flex flex-col items-center justify-center`}>
                         {step === 'question-result' && seconds &&
                             <div className="flex flex-col w-full">
-                                <GameProgressBar start={true} seconds={seconds} height={5} width={100} />
+                                <ProgressBar start={true} seconds={seconds} height={5} width={100} />
                             </div>
                         }
                         {step === 'waiting-for-result' && seconds &&
                             <div className="flex flex-col w-full h-10">
-                                <GameCountdown start={true} seconds={seconds} />
+                                <Countdown start={true} seconds={seconds} />
                             </div>
                         }
                     </div>
                 </div>
                 <div className={`w-64`}>
                     {step === 'next-question' && seconds &&
-                        <GameTimer start={true} seconds={seconds} />
+                        <Timer start={true} seconds={seconds} />
                     }
                 </div>
             </div>

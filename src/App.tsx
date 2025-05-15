@@ -3,13 +3,13 @@ import AppLayout from "./layout/AppLayout.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import QuestionForm from "./pages/question/QuestionForm.tsx";
 import QuestionTableWrapper from "@pages/question/QuestionTableWrapper.tsx";
-import Game from "@pages/quiz/Game.tsx";
+import Game from "@pages/game/Game.tsx";
 import GuestLayout from "@layout/GuestLayout.tsx";
 import Login from "@pages/Login.tsx";
 import {AuthenticatedTemplate, UnauthenticatedTemplate, useMsal} from "@azure/msal-react";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import GameTableWrapper from "@pages/quiz/GameTableWrapper.tsx";
-import GameUserJoin from "@pages/quiz/GameUserJoin.tsx";
+import GameTableWrapper from "@pages/game/GameTableWrapper.tsx";
+import GameUserJoin from "@pages/game/GameUserJoin.tsx";
 
 const App = () => {
     const { instance } = useMsal();

@@ -1,4 +1,4 @@
-import GameTableWrapper from "@pages/quiz/GameTableWrapper.tsx";
+import GameTableWrapper from "@pages/game/GameTableWrapper.tsx";
 import Button from "@components/Button.tsx";
 import {useNavigate} from "react-router-dom";
 

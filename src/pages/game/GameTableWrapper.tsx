@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import Box from "@components/Box.tsx";
 import {getAllGameSessionsByUser} from "@services/Api.ts";
-import GameTable from "@pages/quiz/GameTable.tsx";
+import GameTable from "@pages/game/GameTable.tsx";
 
 export const GameTableWrapper: FC = () => {
 
