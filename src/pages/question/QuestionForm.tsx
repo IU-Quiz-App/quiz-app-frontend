@@ -256,6 +256,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                         className={'w-1/2 truncate'}
                         value={course}
                         required
+                        placeholder={'Kurs auswählen'}
                         options={user?.courses.map((course) => ({
                             label: course.description && course.description.trim() !== ''
                                 ? `${course.name} - ${course.description}`
@@ -280,6 +281,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ uuid }) => {
                     answer={correctAnswer}
                     onTextChange={handleCorrectAnswerTextChange}
                     onExplanationChange={handleCorrectAnswerExplanationTextChange}
+                    textErrorMessage={errors['correctAnswer'] as string}
                 />
 
                 {wrongAnswers.map((answer, index) => (
